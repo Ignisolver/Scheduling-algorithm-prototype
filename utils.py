@@ -29,3 +29,8 @@ def check_capacity_sufficiency(group: Group, room: Room):
 def check_all_group_in_lecture(lecture: Lecture, field: Field):
     pass
 
+
+def generate_classes():
+    pass
+
+
