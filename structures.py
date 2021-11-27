@@ -1,3 +1,11 @@
+from typing import Iterable
+
+
+
+class Classes:  # zajęcia - ogólnie
+    pass
+
+
 class Student:
     def __init__(self):
         self.id_ = ...
@@ -10,13 +18,14 @@ class Lecturer:
         self.subject_id = ...
         self.amount_of_hours = ...
         self.group_id = ...
+        self.week_schedule: WeekSchedule = ...
 
 
 class Room:  # sala
     def __init__(self):
         self.id_ = ...
         self.capacity = ...
-        self.week_schedule = ...
+        self.week_schedule: WeekSchedule = ...
 
 
 class Group:  # grupa
@@ -24,7 +33,7 @@ class Group:  # grupa
         self.id_ = ...
         self.students_ids = ...
         self.subjects_ids = ...
-        self.week_schedule = ...
+        self.week_schedule: WeekSchedule = ...
 
 
 class Subject:  # przedmiot
@@ -34,10 +43,6 @@ class Subject:  # przedmiot
         self.week_lecture_duration = ...
         self.lecturers_ids = ...
         self.groups_ids = ...
-
-
-class Classes:  # zajęcia - ogólnie
-    pass
 
 
 class Lecture(Classes):  # wykład
@@ -70,15 +75,45 @@ class WeekSchedule:
     def __init__(self):
         self.day_schedules = ...
 
+    def calc_goal_function(self):
+        pass
+
+    def _calc_week_FO(self):
+        pass
+
+    def _calc_week_FD(self):
+        pass
+
+    def calc_week_FP(self):
+        pass
+
+    def _calc_week_FR(self):
+        pass
+
 
 class DaySchedule:
     def __init__(self):
-        self.classes = ...
+        self.classes: Iterable[Classes] = ...
+
+    def add_classes(self):
+        pass
+
+    def check_daily_maximum(self):
+        pass
+
+    def calc_day_FO(self):
+        pass
+
+    def calc_day_FP(self):
+        pass
+
+    def calc_day_FR(self):
+        pass
 
 
 class GlobalSchedule:
     def __init__(self):
-        self.lecturers = ...
-        self.students = ...
-        self.rooms = ...
+        self.lecturers: Iterable[Lecturer] = ...
+        self.groups: Iterable[Group] = ...
+        self.rooms: Iterable[Room] = ...
 
