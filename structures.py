@@ -1,3 +1,4 @@
+from __future__ import annotations
 from abc import abstractmethod
 from typing import Iterable, List, Dict, NewType, Tuple
 
@@ -5,8 +6,18 @@ from typing import Iterable, List, Dict, NewType, Tuple
 class ClassesID(int):
     pass
 
+
 class RoomID(int):
     pass
+
+
+class LecturerError:
+    pass
+
+
+class RoomError:
+    pass
+
 
 class Hour:
     def __init__(self,hour, minute):
@@ -42,37 +53,30 @@ class Time:
 
 class Classes:  # zajęcia - ogólnie
     def __init__(self):
-        self.id_ = ...
-        self.lecturer_id = ...
+        self.id_: ClassesID = ...
+        self.lecturer: Lecturer = ...
         self.time: Time = ...
-        self.available_room_ids = ...
-
-    def assign(self):
-        """
-        znajdź pierwsze minimum funkcji celu
-        sprawdź czy może prowadzący
-            jak nie weź kolejne minimum
-        wybierze najlepszą salę
-            jak nie ma wolnych weź kolejne minimum
-        przypisz
-        """
+        self.available_rooms: Tuple[Room] = ...
+        self.room: Room = ...
 
     @abstractmethod
-    def _get_best_time(self) -> Time:
+    def get_best_time(self, next_=False) -> Time:
+        """
+        coś z yield-em
+        """
         pass
 
-    def _is_lecturer_available(self) -> bool:
+    def is_lecturer_available(self, time: Time) -> bool:
         pass
 
     @abstractmethod
-    def _assign(self):
+    def _assign(self, time: Time, room: Room):
         pass
 
-
-class Student:
-    def __init__(self):
-        self.id_ = ...
-        self.group_id = ...
+    def assign(self, time: Time, room: Room):
+        self._assign(time, room)
+        room.assign(self)
+        self.lecturer.assign(self)
 
 
 class Lecturer:
@@ -82,6 +86,9 @@ class Lecturer:
         self.amount_of_hours = ...
         self.group_id = ...
         self.week_schedule: WeekSchedule = ...
+
+    def assign(self, classes):
+        pass
 
 
 class Room:  # sala
@@ -101,12 +108,12 @@ class Room:  # sala
         self.current_occupation += classes.time.duration
         self.priority = (self.availability-self.current_occupation) / self.predicted_occupation
 
-    def assign(self):
-        self._assign()
-        self._update()
+    def assign(self, classes):
+        self._assign(classes)
+        self._update(classes)
         pass
 
-    def _assign(self):
+    def _assign(self, classes: Classes):
         pass
 
 
@@ -114,10 +121,13 @@ class Registrar:
     def __init__(self):
         self.assignments = ...
 
-    def register_assignment(self):
+    def register_assignment(self, class_: Classes):
         pass
 
-    def revert_assignment(self):
+    def revert_assignments(self, cause):
+        pass
+
+    def get_current_class_number(self) -> int:
         pass
 
 
@@ -206,11 +216,21 @@ class DaySchedule:
         pass
 
 
+class NoRoomAvailable(Exception):
+    def __init__(self):
+        super().__init__()
+
+
+class NoAvailableTime(Exception):
+    def __init__(self):
+        super().__init__()
+
+
 class RoomManager:
     def __init__(self, rooms: Tuple[Room]):
         self.rooms = rooms
 
-    def _get_best_room(self, ids: Tuple[RoomID]) -> RoomID:
+    def get_best_room(self, ids: Tuple[Room]) -> Room:
         """
         weź dostępne sale
         sprawdź które mają dostępny ten czas
