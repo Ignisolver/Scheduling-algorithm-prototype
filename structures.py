@@ -20,16 +20,16 @@ class RoomError:
 
 
 class Hour:
-    def __init__(self,hour, minute):
+    def __init__(self, hour, minute):
         self.hour = hour
         self.minute = minute
 
     def __add__(self, other):
         if isinstance(other, int):
-            hours2add = int(other/60)
-            mins2add = int(other%60)
+            hours2add = int(other / 60)
+            mins2add = int(other % 60)
 
-            hour = self.hour+hours2add
+            hour = self.hour + hours2add
             minute = self.minute + mins2add
 
             if minute > 60:
@@ -87,6 +87,9 @@ class Lecturer:
         self.group_id = ...
         self.week_schedule: WeekSchedule = ...
 
+    def is_time_available(self) -> bool:
+        pass
+
     def assign(self, classes):
         pass
 
@@ -134,7 +137,7 @@ class Registrar:
 class Group:  # grupa
     def __init__(self):
         self.id_ = ...
-        self.students_ids = ...
+        self.students_amount = ...
         self.subjects_ids = ...
         self.week_schedule: WeekSchedule = ...
 
@@ -144,8 +147,8 @@ class Subject:  # przedmiot
         self.id_ = ...
         self.week_classes_duration = ...
         self.week_lecture_duration = ...
-        self.lecturers_ids = ...
-        self.groups_ids = ...
+        self.lecturers = ...
+        self.groups = ...
 
     def generate_classes(self) -> List[Classes]:
         pass
@@ -156,11 +159,23 @@ class Lecture(Classes):  # wykład
         super().__init__()
         self.field_id = ...
 
+    def get_best_time(self, next_=False) -> Time:
+        pass
+
+    def _assign(self, time: Time, room: Room):
+        pass
+
 
 class Exercises(Classes):  # ćwiczenia
     def __init__(self):
         super().__init__()
         self.group_id = ...
+
+    def get_best_time(self, next_=False) -> Time:
+        pass
+
+    def _assign(self, time: Time, room: Room):
+        pass
 
 
 class Field:  # kierunek
@@ -178,7 +193,6 @@ class WeekSchedule:
 
     def is_time_available(self) -> bool:
         pass
-
 
     def _calc_goal_function(self):
         pass
