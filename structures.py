@@ -79,6 +79,30 @@ class Classes:  # zajęcia - ogólnie
         self.lecturer.assign(self)
 
 
+class Lecture(Classes):  # wykład
+    def __init__(self):
+        super().__init__()
+        self.field_id = ...
+
+    def get_best_time(self, next_=False) -> Time:
+        pass
+
+    def _assign(self, time: Time, room: Room):
+        pass
+
+
+class Exercises(Classes):  # ćwiczenia
+    def __init__(self):
+        super().__init__()
+        self.group_id = ...
+
+    def get_best_time(self, next_=False) -> Time:
+        pass
+
+    def _assign(self, time: Time, room: Room):
+        pass
+
+
 class Lecturer:
     def __init__(self):
         self.id_ = ...
@@ -151,30 +175,6 @@ class Subject:  # przedmiot
         self.groups = ...
 
     def generate_classes(self) -> List[Classes]:
-        pass
-
-
-class Lecture(Classes):  # wykład
-    def __init__(self):
-        super().__init__()
-        self.field_id = ...
-
-    def get_best_time(self, next_=False) -> Time:
-        pass
-
-    def _assign(self, time: Time, room: Room):
-        pass
-
-
-class Exercises(Classes):  # ćwiczenia
-    def __init__(self):
-        super().__init__()
-        self.group_id = ...
-
-    def get_best_time(self, next_=False) -> Time:
-        pass
-
-    def _assign(self, time: Time, room: Room):
         pass
 
 
