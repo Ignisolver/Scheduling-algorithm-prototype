@@ -50,7 +50,7 @@ while True:
             continue
 
         try:
-            room = room_manager.get_best_room(class_.available_rooms)
+            room = room_manager.get_best_room(class_.available_rooms, time)
         except NoRoomAvailable:
             error_cause = RoomError
             continue

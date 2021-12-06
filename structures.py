@@ -2,6 +2,10 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import Iterable, List, Dict, NewType, Tuple
 
+UTIME = 5 # jednostka czasu #TODO znaleźć lepsze miejsce na te stałe
+STARTOFDAY = Hour(7, 30) # od której mogą zaczynać się zajęcia
+ENDOFDAY = Hour(20, 30) # do której najpóźniej mogą być zajęcia
+
 
 class ClassesID(int):
     pass
@@ -34,13 +38,24 @@ class Hour:
 
             if minute > 60:
                 minute = minute % 60
-                over_hours = int(minute/60)
+                over_hours = int(minute / 60)
                 hour += over_hours
 
             if hour > 24:
                 raise Exception
 
             return Hour(hour, minute)
+
+    def __sub__(self, other):
+        if isinstance(other, Hour):
+            return 60 * (self.hour - other.hour) + self.minute - other.minute
+
+
+    def __lt__(self, other):
+        if isinstance(other, Hour):
+            if self.hour == other.hour:
+                return self.minute < other.minute
+            return self.hour < other.minute
 
 
 class Time:
@@ -111,8 +126,8 @@ class Lecturer:
         self.group_id = ...
         self.week_schedule: WeekSchedule = ...
 
-    def is_time_available(self) -> bool:
-        pass
+    def is_time_available(self, time) -> bool:
+        return self.week_schedule.is_time_available(time)
 
     def assign(self, classes):
         pass
@@ -133,7 +148,7 @@ class Room:  # sala
         self.potential_occupation_probability[classes.id_] = 0  # todo cofanie
         self.predicted_occupation = sum(self.potential_occupation_probability.values())
         self.current_occupation += classes.time.duration
-        self.priority = (self.availability-self.current_occupation) / self.predicted_occupation
+        self.priority = (self.availability - self.current_occupation) / self.predicted_occupation
 
     def assign(self, classes):
         self._assign(classes)
@@ -142,6 +157,9 @@ class Room:  # sala
 
     def _assign(self, classes: Classes):
         pass
+
+    def is_time_available(self, time) -> bool:
+        return self.week_schedule.is_time_available(time)
 
 
 class Registrar:
@@ -191,7 +209,7 @@ class WeekSchedule:
     def get_best_place(self, duration, next_=True):
         pass
 
-    def is_time_available(self) -> bool:
+    def is_time_available(self, time) -> bool:
         pass
 
     def _calc_goal_function(self):
@@ -244,7 +262,7 @@ class RoomManager:
     def __init__(self, rooms: Tuple[Room]):
         self.rooms = rooms
 
-    def get_best_room(self, ids: Tuple[Room]) -> Room:
+    def get_best_room(self, ids: Tuple[Room], time: Time) -> Room:
         """
         weź dostępne sale
         sprawdź które mają dostępny ten czas
@@ -252,4 +270,75 @@ class RoomManager:
         wybierz tą która ma największy priorytet
             ostatnie dwie można zamienić
         """
-        pass
+        available_rooms = []
+        # sprawdzanie czasu i dodanie do available_rooms
+        for room in ids:
+            if room.is_time_available(time):
+                available_rooms.append(room)
+
+        # sprawdzam czy jest więcej niż jedna sala dostępna
+        if len(available_rooms) < 1:
+            raise NoRoomAvailable
+        if len(available_rooms) == 1:
+            return available_rooms[0]
+
+        # podział na sekcje względem długości przerw przed i po czasie
+        available_rooms_sections = [[] for _ in range(self._fun_of_gap(0, True))]
+        for room in available_rooms:
+            fgap = self._fun_of_gap(sum(self._availability_around_time(room, time)))
+            available_rooms_sections[fgap] = room
+
+        # Wybór najwyższego priorytetu z uwzględnieniem sekcji
+        for section in available_rooms_sections:
+            if len(section) > 1:
+                max_priority_room = section[0]
+                for room in section[1:]:
+                    if max_priority_room.priority < room.priority:
+                        max_priority_room = room
+                return max_priority_room
+            elif section:
+                return section[0]
+        raise InterruptedError("Popsułem funkcję get_best_room")
+
+    def _availability_around_time(self, room, time):
+        """
+        Funkcja pomocnicza do sprawdzania ile czasu do następnych zajęć i ile czasu od ostatnich zajęć
+        :return: (a, b) - a = czas od ostatnich zajęć , b = czas do następnych zajęć
+        """
+        last_end_before = STARTOFDAY
+        first_start_after = ENDOFDAY
+        for classes in room.week_schedule[time.day_nr].day_schedule.classes:
+            if classes.time.end < time.start:
+                if last_end_before < classes.time.end:
+                    last_end_before = time
+            elif time.end < classes.time.start:
+                if classes.time.start < first_start_after:
+                    first_start_after = time
+        return time - last_end_before, first_start_after - time
+
+    def _fun_of_gap(self, gap_length: int, num_of_class: bool =False):
+        """
+        Funkcja zwraca wartość zależną od rozmiaru okienka między zajęciami #TODO zobacz czy ma to sens
+        :param gap_length: długość okienka
+        :param num_of_class ponieważ liczba oceny długości wpisana ręcznie, może być przydatne określenie ile ich może być
+                trzeba niestety zmieniać ręcznie - mało profesjonalne, ale znacznie ułatwia
+                jeśli True zwraca tylko liczbę klas
+        :return: wartość oceny długości zakres [0,5) lub
+        """
+        if num_of_class:
+            return 5
+
+        if gap_length < 0:
+            raise ValueError("Długość przerwy mniejsza od zera")
+        if gap_length % 90 == (
+                gap_length // 90 + 1) * UTIME:  # okienko wielokrotnością 90 min zajęć + 5 przerwy przed i po
+            return 0
+        if gap_length % 45 == (
+                gap_length // 45 + 1) * UTIME:  # okienko wielokrotnością 45 min zajęć + 5 przerwy przed i po
+            return 1
+        if gap_length % 45 <= (
+                gap_length // 45 + 1) * 4 * UTIME:  # przerwa między miejscami na zajęciami <=20min ale dłuższa niż 5 min
+            return 2
+        if gap_length % 45 == 0:  # braknie przerw między zajęciami
+            return 3
+        return 4  # pozostałe
