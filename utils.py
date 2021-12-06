@@ -76,8 +76,12 @@ def sort_classes(classes_: Tuple[Classes], n_sections) -> Tuple[Classes]:
     return tuple(sorted_classes)
 
 
-
 def group_sort_(classes):
+    """
+    Pomocnicza funkcja do sortowania grup
+    :param classes:
+    :return: id grupy lub -1 gdy wykład
+    """
     if isinstance(classes, Lecture):
         return -1
     else:
@@ -89,4 +93,8 @@ def add_occupation(rooms_: Tuple[Room], classes_: Tuple[Classes]):
     X = Policz w ilu salach mogą się odbywać dane zajęcia
     każdej sali przypisz dla każdych zajęć szansę że akurat w niej się odbędą 1/X*czas_zajeć
     """
-    pass
+    for classes in classes_:
+        X = len(classes.available_rooms)
+        for room in rooms_:
+            if room in classes.available_rooms:
+                room.potential_occupation_probability[classes.id_] = classes.time.duration / X
