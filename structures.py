@@ -46,10 +46,6 @@ class Hour:
 
             return Hour(hour, minute)
 
-    def __sub__(self, other):
-        if isinstance(other, Hour):
-            return 60 * (self.hour - other.hour) + self.minute - other.minute
-
     def __lt__(self, other):
         if isinstance(other, Hour):
             if self.hour == other.hour:
@@ -87,7 +83,7 @@ class Classes:  # zajęcia - ogólnie
         pass
 
     def is_lecturer_available(self, time: Time) -> bool:
-        pass
+        return self.lecturer.week_schedule.is_time_available(time)
 
     @abstractmethod
     def _assign(self, time: Time, room: Room):
@@ -194,6 +190,7 @@ class Subject:  # przedmiot
         self.id_ = ...
         self.week_classes_duration = ...
         self.week_lecture_duration = ...
+        self.week_classes_division = ...
         self.lecturers = ...
         self.groups = ...
 
@@ -329,7 +326,7 @@ class RoomManager:
             elif time.end < classes.time.start:
                 if classes.time.start < first_start_after:
                     first_start_after = time
-        return time - last_end_before, first_start_after - time
+        return time.difference(last_end_before), first_start_after.difference(time)
 
     def _fun_of_gap(self, gap_length: int, num_of_class: bool = False):
         """
