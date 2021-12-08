@@ -2,9 +2,9 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import Iterable, List, Dict, NewType, Tuple
 
-UTIME = 5 # jednostka czasu #TODO znaleźć lepsze miejsce na te stałe
-STARTOFDAY = Hour(7, 30) # od której mogą zaczynać się zajęcia
-ENDOFDAY = Hour(20, 30) # do której najpóźniej mogą być zajęcia
+UTIME = 5  # jednostka czasu #TODO znaleźć lepsze miejsce na te stałe
+STARTOFDAY = Hour(7, 30)  # od której mogą zaczynać się zajęcia
+ENDOFDAY = Hour(20, 30)  # do której najpóźniej mogą być zajęcia
 
 
 class ClassesID(int):
@@ -50,12 +50,17 @@ class Hour:
         if isinstance(other, Hour):
             return 60 * (self.hour - other.hour) + self.minute - other.minute
 
-
     def __lt__(self, other):
         if isinstance(other, Hour):
             if self.hour == other.hour:
                 return self.minute < other.minute
             return self.hour < other.minute
+
+    def __le__(self, other):
+        if isinstance(other, Hour):
+            if self.hour == other.hour:
+                return self.minute <= other.minute
+            return self.hour <= other.minute
 
 
 class Time:
@@ -204,13 +209,23 @@ class Field:  # kierunek
 
 class WeekSchedule:
     def __init__(self):
-        self.day_schedules = ...
+        self.day_schedules = (DaySchedule(), ) * 5
 
     def get_best_place(self, duration, next_=True):
         pass
 
     def is_time_available(self, time) -> bool:
-        pass
+        """
+        Funkcja sprawdza czy czas jest dostępny uwaga! pozwala na sklejanie zajęć (koniec jednych i początek kolejnych np. równo o 10
+        :param time: przedział czasu, który sprawdzamy czy jest wolny
+        :return: bool czy jest wolny
+        """
+        for classes in self.day_schedules[time.day_nr].classes:
+            if classes.time.start <= time.start < classes.time.end:
+                return False
+            if classes.time.start < time.end <= classes.time.end:
+                return False
+        return True
 
     def _calc_goal_function(self):
         pass
@@ -316,7 +331,7 @@ class RoomManager:
                     first_start_after = time
         return time - last_end_before, first_start_after - time
 
-    def _fun_of_gap(self, gap_length: int, num_of_class: bool =False):
+    def _fun_of_gap(self, gap_length: int, num_of_class: bool = False):
         """
         Funkcja zwraca wartość zależną od rozmiaru okienka między zajęciami #TODO zobacz czy ma to sens
         :param gap_length: długość okienka
