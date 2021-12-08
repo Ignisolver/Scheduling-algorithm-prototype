@@ -59,6 +59,14 @@ class Hour:
             return self.hour <= other.minute
 
 
+def difference(gHour, lHour):
+    """
+    Różnica czasu między dwiema godzinami w minutach
+    """
+    if isinstance(gHour, lHour):
+        return 60 * (gHour.hour - lHour.hour) + gHour.minute - lHour.minute
+
+
 class Time:
     def __init__(self, day_nr, start: Hour, duration_mins: int):
         self.day_nr = day_nr
@@ -326,7 +334,7 @@ class RoomManager:
             elif time.end < classes.time.start:
                 if classes.time.start < first_start_after:
                     first_start_after = time
-        return time.difference(last_end_before), first_start_after.difference(time)
+        return difference(time, last_end_before), difference(first_start_after, time)
 
     def _fun_of_gap(self, gap_length: int, num_of_class: bool = False):
         """

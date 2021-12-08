@@ -3,14 +3,6 @@ from typing import Tuple
 from structures import Room, Subject, Classes, Lecture, Exercises, Hour
 
 
-def difference(gHour, lHour):
-    """
-    Różnica czasu między dwiema godzinami w minutach
-    """
-    if isinstance(gHour, lHour):
-        return 60 * (gHour.hour - lHour.hour) + gHour.minute - lHour.minute
-
-
 def calc_goal_function(groups):
     goal_fcn_val = 0
     for group in groups:
