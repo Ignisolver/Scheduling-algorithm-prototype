@@ -235,17 +235,17 @@ class WeekSchedule:
     def _calc_goal_function(self):
         pass
 
-    def _calc_week_FO(self):
-        pass
+    def _calc_week_FO(self) -> float:
+        return sum([day.calc_day_FO() for day in self.day_schedules])
 
     def _calc_week_FD(self):
         pass
 
     def calc_week_FP(self):
-        pass
+        return sum([day.calc_day_FP() for day in self.day_schedules])
 
     def _calc_week_FR(self):
-        pass
+        return sum([day.calc_day_FR() for day in self.day_schedules])
 
 
 class DaySchedule:
