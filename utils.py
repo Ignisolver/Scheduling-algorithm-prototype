@@ -1,13 +1,13 @@
-from typing import Tuple
+from typing import Tuple, Iterable, Callable, List
 
-from structures import Room, Subject, Classes, Lecture, Exercises, Hour
+from structures import Room, Subject, Classes, Lecture, Exercises, Hour, Time
 
 
 def calc_goal_function(groups, fun_weights: Iterable[float], weights_FP: Callable[[Time], float],
                        weights_FD: Iterable[float]) -> float:
     goal_fcn_val = 0
     for group in groups:
-        gr_gaol_fcn_val = group.week_schedule.calc_goal_function(fun_weights, weights_FP, weights_FD: Iterable[float])
+        gr_gaol_fcn_val = group.week_schedule.calc_goal_function(fun_weights, weights_FP, weights_FD)
         goal_fcn_val += gr_gaol_fcn_val * len(group.students_ids)
     return goal_fcn_val
 
@@ -38,12 +38,13 @@ def sort_classes(classes_: Tuple[Classes], n_sections) -> Tuple[Classes]:
     :return  zajęcia posortowane w pierwszej kolejności: wykłady, zajęcia o małej dostępności sal, najdłuższe zajęcia
     """
     # sortowanie zajęć wg id grupy (id grupy wykładu = -1) i dzielenie
-    sorted_by_groups = list(classes_).sort(key=group_sort_)
+    sorted_by_groups = list(classes_)
+    sorted_by_groups.sort(key=group_sort_)
     group_division = [[], []]
     gid = 0
     for classes in sorted_by_groups:
         try:
-            if classes.group_id == gid:
+            if classes.id_ == gid:
                 group_division[gid + 1].append(classes)
             else:
                 group_division.append([classes])
@@ -65,7 +66,7 @@ def sort_classes(classes_: Tuple[Classes], n_sections) -> Tuple[Classes]:
         sorted_groups.append(sorted_group)
 
     # biorę po jednej z każdej grupy na zmianę
-    sorted_classes = sorted_groups[0][:]
+    sorted_classes: List[Classes] = sorted_groups[0][:]
     while len(sorted_groups) > 0:
         for group in sorted_groups:
             if len(group) > 1:

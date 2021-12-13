@@ -40,7 +40,7 @@ while True:
 
     while True:
         try:
-            time = class_.get_best_time(next_=True)
+            time = class_.get_best_time(next_=True)  # coś nie tak
         except NoAvailableTime:
             register.revert_assignments(error_cause)
             class_nr = register.get_current_class_number()

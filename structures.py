@@ -1,10 +1,8 @@
 from __future__ import annotations
 from abc import abstractmethod
-from typing import Iterable, List, Dict, NewType, Tuple, Callable
-
-UTIME = 5  # jednostka czasu #TODO znaleźć lepsze miejsce na te stałe
-STARTOFDAY = Hour(7, 30)  # od której mogą zaczynać się zajęcia
-ENDOFDAY = Hour(20, 30)  # do której najpóźniej mogą być zajęcia
+from typing import Iterable, List, Dict, Tuple, Callable
+from constans import ENDOFDAY, STARTOFDAY
+from scheduler.constans import UTIME
 
 
 class ClassesID(int):
@@ -50,13 +48,13 @@ class Hour:
         if isinstance(other, Hour):
             if self.hour == other.hour:
                 return self.minute < other.minute
-            return self.hour < other.minute
+            return self.hour < other.minute  # todo tu nie powinno być hour dwa razy?
 
     def __le__(self, other):
         if isinstance(other, Hour):
             if self.hour == other.hour:
                 return self.minute <= other.minute
-            return self.hour <= other.minute
+            return self.hour <= other.minute  # todo tu nie powinno być hour dwa razy?
 
 
 def difference(gHour, lHour):
