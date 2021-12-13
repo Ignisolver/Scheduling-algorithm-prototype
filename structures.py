@@ -225,6 +225,13 @@ class WeekSchedule:
             time += day.get_day_classes_time()
         return time
 
+    def get_amount_of_free_days(self) -> int:
+        free_days = 0
+        for day in self.day_schedules:
+            if day.is_day_free():
+                free_days += 1
+        return free_days
+
     def is_time_available(self, time) -> bool:
         """
         Funkcja sprawdza czy czas jest dostępny uwaga! pozwala na sklejanie zajęć (koniec jednych i początek kolejnych np. równo o 10
@@ -238,23 +245,27 @@ class WeekSchedule:
                 return False
         return True
 
-    def calc_goal_function(self, fun_weights: Iterable[float], weights_FP: Callable[[Time], float]) -> float:
+    def calc_goal_function(self, fun_weights: Iterable[float], weights_FP: Callable[[Time], float],
+                           weights_FD: Iterable[float]) -> float:
         return fun_weights[0] * self._calc_week_FO() +\
-               fun_weights[1] * self._calc_week_FD() +\
+               fun_weights[1] * self._calc_week_FD(weights_FD) +\
                fun_weights[2] * self._calc_week_FP(weights_FP, self.get_week_classes_time()) + \
                fun_weights[3] * self._calc_week_FR()
 
     def _calc_week_FO(self) -> float:
         return sum([day.calc_day_FO() for day in self.day_schedules])
 
-    def _calc_week_FD(self) -> float:
-        pass
+    def _calc_week_FD(self, weights: Iterable[float]) -> float:
+        satisfaction = 0
+        for i in range(5):
+            satisfaction += int(self.day_schedules[i].is_day_free()) * weights[i]
+        return satisfaction
 
     def _calc_week_FP(self, weights_FP: Callable[[Time], float], week_classes_time: int) -> float:
         return sum([day.calc_day_FP(weights_FP, week_classes_time) for day in self.day_schedules])
 
-    def _calc_week_FR(self) -> float:
-        return sum([day.calc_day_FR() for day in self.day_schedules])
+    def _calc_week_FR(self, week_classes_time: int, num_of_free_days: int) -> float:
+        return sum([day.calc_day_FR(week_classes_time, num_of_free_days) for day in self.day_schedules])
 
 
 class DaySchedule:
@@ -268,14 +279,17 @@ class DaySchedule:
     def get_best_time(self):
         pass
 
-    def get_day_classes_time(self):
+    def get_day_classes_time(self) -> int:
         time = 0
         for classes_ in self.classes:
             time += classes_.time.duration
         return time
 
-    def calc_day_FO(self):
-        classes = self.classes.sort(key= lambda c: c.time.start)
+    def is_day_free(self) -> bool:
+        return bool(self.classes)
+
+    def calc_day_FO(self) -> float:
+        classes = self.classes.sort(key=lambda c: c.time.start)
         break_time = 0
         for i in range(len(classes) - 1):
             break_time += abs(difference(classes[i+1].time.start, classes[i].time.end) - UTIME)
@@ -287,8 +301,8 @@ class DaySchedule:
             satisfaction += weights_FP(classes.time)
         return satisfaction / week_classes_time
 
-    def calc_day_FR(self):
-        pass
+    def calc_day_FR(self, week_classes_time: int, num_of_free_days: int) -> float:
+        return abs(week_classes_time / (5 - num_of_free_days) - self.get_day_classes_time())
 
 
 class NoRoomAvailable(Exception):

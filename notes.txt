@@ -1,2 +1,4 @@
 zrobic tylko dla wydziału
 algoryutm poprawy rozwiązania / konstrukcyjny
+
+trzeba uważać na wagi, lub dodać normalizację
