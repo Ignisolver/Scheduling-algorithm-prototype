@@ -1,6 +1,6 @@
 from __future__ import annotations
 from abc import abstractmethod
-from typing import Iterable, List, Dict, NewType, Tuple
+from typing import Iterable, List, Dict, NewType, Tuple, Callable
 
 UTIME = 5  # jednostka czasu #TODO znaleźć lepsze miejsce na te stałe
 STARTOFDAY = Hour(7, 30)  # od której mogą zaczynać się zajęcia
@@ -214,10 +214,16 @@ class Field:  # kierunek
 
 class WeekSchedule:
     def __init__(self):
-        self.day_schedules = (DaySchedule(), ) * 5
+        self.day_schedules = [DaySchedule()] * 5
 
-    def get_best_place(self, duration, next_=True):
+    def get_best_place(self, duration, next_=True): # to nie powinno być get_best_time?
         pass
+
+    def get_week_classes_time(self):
+        time = 0
+        for day in self.day_schedules:
+            time += day.get_day_classes_time()
+        return time
 
     def is_time_available(self, time) -> bool:
         """
@@ -232,25 +238,29 @@ class WeekSchedule:
                 return False
         return True
 
-    def _calc_goal_function(self):
-        pass
+    def calc_goal_function(self, fun_weights: Iterable[float], weights_FP: Callable[[Time], float]) -> float:
+        return fun_weights[0] * self._calc_week_FO() +\
+               fun_weights[1] * self._calc_week_FD() +\
+               fun_weights[2] * self._calc_week_FP(weights_FP, self.get_week_classes_time()) + \
+               fun_weights[3] * self._calc_week_FR()
 
     def _calc_week_FO(self) -> float:
         return sum([day.calc_day_FO() for day in self.day_schedules])
 
-    def _calc_week_FD(self):
+    def _calc_week_FD(self) -> float:
         pass
 
-    def calc_week_FP(self):
-        return sum([day.calc_day_FP() for day in self.day_schedules])
+    def _calc_week_FP(self, weights_FP: Callable[[Time], float], week_classes_time: int) -> float:
+        return sum([day.calc_day_FP(weights_FP, week_classes_time) for day in self.day_schedules])
 
-    def _calc_week_FR(self):
+    def _calc_week_FR(self) -> float:
         return sum([day.calc_day_FR() for day in self.day_schedules])
 
 
 class DaySchedule:
-    def __init__(self):
+    def __init__(self, weights):
         self.classes: Iterable[Classes] = ...
+        self.weights_FP: Callable[[Time], float] = weights
 
     def assign(self):
         pass
@@ -258,11 +268,24 @@ class DaySchedule:
     def get_best_time(self):
         pass
 
-    def calc_day_FO(self):
-        pass
+    def get_day_classes_time(self):
+        time = 0
+        for classes_ in self.classes:
+            time += classes_.time.duration
+        return time
 
-    def calc_day_FP(self):
-        pass
+    def calc_day_FO(self):
+        classes = self.classes.sort(key= lambda c: c.time.start)
+        break_time = 0
+        for i in range(len(classes) - 1):
+            break_time += abs(difference(classes[i+1].time.start, classes[i].time.end) - UTIME)
+        return break_time / len(classes)
+
+    def calc_day_FP(self, weights_FP: Callable[[Time], float], week_classes_time: int) -> float:
+        satisfaction = 0
+        for classes in self.classes:
+            satisfaction += weights_FP(classes.time)
+        return satisfaction / week_classes_time
 
     def calc_day_FR(self):
         pass

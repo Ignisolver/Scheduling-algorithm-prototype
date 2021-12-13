@@ -3,7 +3,7 @@ from typing import Tuple
 from structures import Room, Subject, Classes, Lecture, Exercises, Hour
 
 
-def calc_goal_function(groups):
+def calc_goal_function(groups, weights):
     goal_fcn_val = 0
     for group in groups:
         gr_gaol_fcn_val = group.week_schedule.calc_goal_function()
