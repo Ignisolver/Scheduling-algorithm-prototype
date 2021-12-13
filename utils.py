@@ -1,13 +1,13 @@
-from typing import Tuple
+from typing import Tuple, Iterable, Callable
 
-from structures import Room, Subject, Classes, Lecture, Exercises, Hour
+from structures import Room, Subject, Classes, Lecture, Time
 
 
 def calc_goal_function(groups, fun_weights: Iterable[float], weights_FP: Callable[[Time], float],
                        weights_FD: Iterable[float]) -> float:
     goal_fcn_val = 0
     for group in groups:
-        gr_gaol_fcn_val = group.week_schedule.calc_goal_function(fun_weights, weights_FP, weights_FD: Iterable[float])
+        gr_gaol_fcn_val = group.week_schedule.calc_goal_function(fun_weights, weights_FP, weights_FD)
         goal_fcn_val += gr_gaol_fcn_val * len(group.students_ids)
     return goal_fcn_val
 
