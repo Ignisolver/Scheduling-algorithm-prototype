@@ -48,13 +48,13 @@ class Hour:
         if isinstance(other, Hour):
             if self.hour == other.hour:
                 return self.minute < other.minute
-            return self.hour < other.minute  # todo tu nie powinno być hour dwa razy?
+            return self.hour < other.hour
 
     def __le__(self, other):
         if isinstance(other, Hour):
             if self.hour == other.hour:
                 return self.minute <= other.minute
-            return self.hour <= other.minute  # todo tu nie powinno być hour dwa razy?
+            return self.hour <= other.hour
 
 
 def difference(gHour, lHour):
@@ -248,7 +248,7 @@ class WeekSchedule:
         return fun_weights[0] * self._calc_week_FO() +\
                fun_weights[1] * self._calc_week_FD(weights_FD) +\
                fun_weights[2] * self._calc_week_FP(weights_FP, self.get_week_classes_time()) + \
-               fun_weights[3] * self._calc_week_FR()
+               fun_weights[3] * self._calc_week_FR(self.get_week_classes_time(), self.get_amount_of_free_days())
 
     def _calc_week_FO(self) -> float:
         return sum([day.calc_day_FO() for day in self.day_schedules])
@@ -286,14 +286,12 @@ class DaySchedule:
     def is_day_free(self) -> bool:
         return bool(self.classes)
 
-
     def calc_day_FO(self) -> float:
         self.classes.sort(key=lambda c: c.time.start)
         break_time = 0
         for i in range(len(self.classes) - 1):
             break_time += abs(difference(self.classes[i+1].time.start, self.classes[i].time.end) - UTIME)
         return break_time / len(self.classes)
-
 
     def calc_day_FP(self, weights_FP: Callable[[Time], float], week_classes_time: int) -> float:
         satisfaction = 0
@@ -380,7 +378,7 @@ class RoomManager:
         :param num_of_class ponieważ liczba oceny długości wpisana ręcznie, może być przydatne określenie ile ich może być
                 trzeba niestety zmieniać ręcznie - mało profesjonalne, ale znacznie ułatwia
                 jeśli True zwraca tylko liczbę klas
-        :return: wartość oceny długości zakres [0,5) lub
+        :return: wartość oceny długości zakres [0,5)
         """
         if num_of_class:
             return 5
