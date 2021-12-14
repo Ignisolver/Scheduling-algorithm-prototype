@@ -144,12 +144,12 @@ class Room:  # sala
     def __init__(self):
         self.id_ = ...
         self.capacity = ...
-        self.predicted_occupation: int = ...  # szacunkowy współczynnik ile będzie zajęta
-        self.current_occupation: int = ...  # ile już jest zajęta minuty
+        self.predicted_occupation: float = 0  # szacunkowy współczynnik ile będzie zajęta
+        self.current_occupation: int = 0  # ile już jest zajęta minuty
         self.availability: int = ...  # ile ma dostępnego czasu wogóle
-        self.priority = ...
-        self.week_schedule: WeekSchedule = ...
-        self.potential_occupation_probability: Dict[ClassesID, int] = ...
+        self.priority = None
+        self.week_schedule: WeekSchedule = None
+        self.potential_occupation_probability: Dict[ClassesID, float] = None
 
     def _update(self, classes: Classes):
         self.potential_occupation_probability[classes.id_] = 0  # todo cofanie
@@ -214,7 +214,7 @@ class WeekSchedule:
     def __init__(self):
         self.day_schedules = [DaySchedule()] * 5
 
-    def get_best_place(self, duration, next_=True): # to nie powinno być get_best_time?
+    def get_best_time(self, duration, next_=True):
         pass
 
     def get_week_classes_time(self):
@@ -243,7 +243,7 @@ class WeekSchedule:
                 return False
         return True
 
-    def calc_goal_function(self, fun_weights: Iterable[float], weights_FP: Callable[[Time], float],
+    def calc_goal_function(self, fun_weights: List[float], weights_FP: Callable[[Time], float],
                            weights_FD: Iterable[float]) -> float:
         return fun_weights[0] * self._calc_week_FO() +\
                fun_weights[1] * self._calc_week_FD(weights_FD) +\
@@ -268,7 +268,7 @@ class WeekSchedule:
 
 class DaySchedule:
     def __init__(self, weights):
-        self.classes: Iterable[Classes] = ...
+        self.classes: List[Classes] = ...
         self.weights_FP: Callable[[Time], float] = weights
 
     def assign(self):
@@ -286,12 +286,14 @@ class DaySchedule:
     def is_day_free(self) -> bool:
         return bool(self.classes)
 
+
     def calc_day_FO(self) -> float:
-        classes = self.classes.sort(key=lambda c: c.time.start)
+        self.classes.sort(key=lambda c: c.time.start)
         break_time = 0
-        for i in range(len(classes) - 1):
-            break_time += abs(difference(classes[i+1].time.start, classes[i].time.end) - UTIME)
-        return break_time / len(classes)
+        for i in range(len(self.classes) - 1):
+            break_time += abs(difference(self.classes[i+1].time.start, self.classes[i].time.end) - UTIME)
+        return break_time / len(self.classes)
+
 
     def calc_day_FP(self, weights_FP: Callable[[Time], float], week_classes_time: int) -> float:
         satisfaction = 0
@@ -371,7 +373,7 @@ class RoomManager:
                     first_start_after = time
         return difference(time, last_end_before), difference(first_start_after, time)
 
-    def _fun_of_gap(self, gap_length: int, num_of_class: bool = False):
+    def _fun_of_gap(self, gap_length: int, num_of_class: bool = False) -> int:
         """
         Funkcja zwraca wartość zależną od rozmiaru okienka między zajęciami #TODO zobacz czy ma to sens
         :param gap_length: długość okienka

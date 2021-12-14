@@ -39,7 +39,7 @@ def sort_classes(classes_: Tuple[Classes], n_sections) -> Tuple[Classes]:
     """
     # sortowanie zajęć wg id grupy (id grupy wykładu = -1) i dzielenie
     sorted_by_groups = list(classes_)
-    sorted_by_groups.sort(key=group_sort_)
+    sorted_by_groups.sort(key=_group_sort_)
     group_division = [[], []]
     gid = 0
     for classes in sorted_by_groups:
@@ -78,7 +78,7 @@ def sort_classes(classes_: Tuple[Classes], n_sections) -> Tuple[Classes]:
     return tuple(sorted_classes)
 
 
-def group_sort_(classes):
+def _group_sort_(classes):
     """
     Pomocnicza funkcja do sortowania grup
     :param classes:
