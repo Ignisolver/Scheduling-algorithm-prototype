@@ -1,5 +1,6 @@
 from typing import Tuple, Iterable, Callable, List
 
+from scheduler.structures import Group
 from structures import Room, Subject, Classes, Lecture, Exercises, Hour, Time
 
 
@@ -100,3 +101,7 @@ def add_occupation(rooms_: Tuple[Room], classes_: Tuple[Classes]):
         for room in rooms_:
             if room in classes.available_rooms:
                 room.potential_occupation_probability[classes.id_] = classes.time.duration / X
+
+
+def get_best_time_for_groups(groups: List[Group], duration: int):
+    pass

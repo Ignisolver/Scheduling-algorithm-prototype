@@ -1,6 +1,6 @@
 from __future__ import annotations
 from abc import abstractmethod
-from typing import Iterable, List, Dict, Tuple, Callable
+from typing import Iterable, List, Dict, Tuple, Callable, Union
 from constans import ENDOFDAY, STARTOFDAY
 from scheduler.constans import UTIME
 
@@ -20,6 +20,13 @@ class LecturerError:
 class RoomError:
     pass
 
+
+class Lecture:
+    pass
+
+
+class Exercises:
+    pass
 
 class Hour:
     def __init__(self, hour, minute):
@@ -74,70 +81,70 @@ class Time:
 
 
 class Classes:  # zajęcia - ogólnie
-    def __init__(self):
-        self.id_: ClassesID = ...
-        self.lecturer: Lecturer = ...
-        self.time: Time = ...
-        self.available_rooms: Tuple[Room] = ...
-        self.room: Room = ...
+    def __init__(self,
+                 id_: ClassesID,
+                 lecturer: Lecturer,
+                 duration: int,
+                 rooms: Tuple[Room],
+                 type_: Union[Lecture, Exercises],
+                 groups: List[Group]):
+        self.id_ = id_
+        self.type = type_
+        self.lecturer = lecturer
+        self.duration = duration
+        self.available_rooms = rooms
+        self.groups = groups
+        # TO ASSIGN
+        self.time: Time = None
+        self.room: Room = None
 
-    @abstractmethod
-    def get_best_time(self, next_=False) -> Time:
-        """
-        coś z yield-em
-        """
-        pass
+    def get_lecturer(self):
+        return self.lecturer
 
-    def is_lecturer_available(self, time: Time) -> bool:
-        return self.lecturer.week_schedule.is_time_available(time)
+    def get_rooms(self):
+        return self.available_rooms
 
-    @abstractmethod
-    def _assign(self, time: Time, room: Room):
-        pass
+    def get_duration(self):
+        return self.duration
 
     def assign(self, time: Time, room: Room):
-        self._assign(time, room)
-        room.assign(self)
+        self.time = time
+        self.room = room
         self.lecturer.assign(self)
+        self.room.assign(self)
+        for group in self.groups:
+            group.assign(self)
 
-
-class Lecture(Classes):  # wykład
-    def __init__(self):
-        super().__init__()
-        self.field_id = ...
-
-    def get_best_time(self, next_=False) -> Time:
-        pass
-
-    def _assign(self, time: Time, room: Room):
-        pass
-
-
-class Exercises(Classes):  # ćwiczenia
-    def __init__(self):
-        super().__init__()
-        self.group_id = ...
-
-    def get_best_time(self, next_=False) -> Time:
-        pass
-
-    def _assign(self, time: Time, room: Room):
-        pass
+    def revert_assign(self):
+        self.time = None
+        self.room = None
+        self.lecturer.revert_assign(self)
+        self.room.revert_assign(self)
+        for group in self.groups:
+            group.revert_assign(self)
 
 
 class Lecturer:
-    def __init__(self):
-        self.id_ = ...
-        self.subject_id = ...
-        self.amount_of_hours = ...
-        self.group_id = ...
-        self.week_schedule: WeekSchedule = ...
+    def __init__(self,
+                 id_,
+                 subject_id,
+                 amount_of_hours,
+                 groups: List[Group],
+                 ):
+        self.id_ = id_
+        self.subject_id = subject_id
+        self.amount_of_hours = amount_of_hours
+        self.groups = groups
+        self.week_schedule = WeekSchedule()
 
     def is_time_available(self, time) -> bool:
         return self.week_schedule.is_time_available(time)
 
     def assign(self, classes):
-        pass
+        self.week_schedule.assign(classes)
+
+    def revert_assign(self, classes):
+        self.week_schedule.revert_assign(classes)
 
 
 class Room:  # sala
