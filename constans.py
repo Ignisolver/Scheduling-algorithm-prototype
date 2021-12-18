@@ -6,5 +6,3 @@ ENDOFDAY = Hour(18, 00)  # do której najpóźniej mogą być zajęcia
 MIN_CLASS_DURATION = 90
 MIN_OK_BRAKE = 90 + 2 * UTIME
 
-class ClassesType:
-    pass

@@ -4,25 +4,29 @@ from scheduler.basic_structures import Time, NoRoomAvailable
 from scheduler.constans import STARTOFDAY, ENDOFDAY, UTIME
 from scheduler.structures import Classes, Room
 
-
+# todo
 class ClassesManager:
     def __init__(self):
         self.assignments = ...
 
+    # todo
     def get_next_classes(self) -> Classes:
         pass
 
+    # todo
     def register_assignment(self, class_: Classes):
         pass
 
+    # todo
     def can_not_assign(self, classes_):
         pass
 
-
+# todo
 class RoomManager:
     def __init__(self, rooms: Tuple[Room]):
         self.rooms = rooms
 
+    # todo - czy ok?
     def get_best_room(self, rooms: Tuple[Room], time: Time) -> Room:
         """
         weź dostępne sale

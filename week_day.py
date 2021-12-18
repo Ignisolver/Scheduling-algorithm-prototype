@@ -1,7 +1,10 @@
-from typing import Callable, List, Iterable
+from typing import Callable, List, Iterable, TYPE_CHECKING
 
 from scheduler.basic_structures import Time
-from scheduler.constans import UTIME, ClassesType
+from scheduler.constans import UTIME
+
+if TYPE_CHECKING:
+    from structures import Classes
 
 
 class WeekSchedule:
@@ -26,7 +29,6 @@ class WeekSchedule:
 
     def revert_assign(self, classes):
         self.day_schedules[classes.time.day_nr].revert_assign(classes)
-
 
     def _get_week_classes_time(self):
         time = 0
@@ -59,13 +61,13 @@ class WeekSchedule:
 
 class DaySchedule:
     def __init__(self):
-        self.classes: List[ClassesType] = ...
+        self.classes: List["Classes"] = ...
         self.weights_FP: Callable[[Time], float] = ...  # todo wagi z constans.py
 
-    def assign(self, classes: ClassesType):
+    def assign(self, classes: "Classes"):
         self.classes.append(classes)
 
-    def revert_assign(self, classess: ClassesType):
+    def revert_assign(self, classess: "Classes"):
         self.classes.remove(classess)
 
     def get_day_classes_time(self) -> int:

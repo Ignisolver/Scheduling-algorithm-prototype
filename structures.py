@@ -3,11 +3,11 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import List, Dict, Tuple,  Union
 from scheduler.basic_structures import ClassesID, Lecture, Exercises, Time
-from scheduler.constans import UTIME, ENDOFDAY, STARTOFDAY, ClassesType
+from scheduler.constans import UTIME, ENDOFDAY, STARTOFDAY
 from scheduler.week_day import WeekSchedule
 
 
-class Classes(ClassesType):  # zajęcia - ogólnie
+class Classes:  # zajęcia - ogólnie
     def __init__(self,
                  id_: ClassesID,
                  lecturer: Lecturer,
@@ -47,7 +47,8 @@ class Classes(ClassesType):  # zajęcia - ogólnie
         for group in self._groups:
             group.revert_assign(self)
 
-    def get_best_time(self, times, g_f_vals):
+    @staticmethod
+    def get_best_time(times, g_f_vals):
         all_ = list(zip(times, g_f_vals))
         while all_:
             best = min(all_, key=lambda x: x[1])

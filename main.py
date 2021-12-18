@@ -5,10 +5,13 @@ from structures import Classes, Group, Lecturer, Room
 from utils import sort_classes, add_occupation
 
 SECTIONS_AMOUNT = 3
-
+# todo
 lecturers: Tuple[Lecturer] = ...
+# todo
 groups: Tuple[Group] = ...
+# todo
 rooms: Tuple[Room] = ...
+# todo
 classes: Tuple[Classes] = ...
 
 classes = sort_classes(classes, SECTIONS_AMOUNT)
@@ -16,16 +19,6 @@ add_occupation(rooms, classes)
 
 room_manager = RoomManager(rooms)
 classes_manager = ClassesManager()
-
-
-"""
-znajdź pierwsze minimum funkcji celu
-sprawdź czy może prowadzący
-    jak nie weź kolejne minimum
-wybierze najlepszą salę
-    jak nie ma wolnych weź kolejne minimum
-przypisz
-"""
 
 
 while classes_ := classes_manager.get_next_classes():

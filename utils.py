@@ -1,24 +1,6 @@
-from typing import Tuple, Iterable, Callable, List
+from typing import Tuple, List
 
-from scheduler.constans import ENDOFDAY, STARTOFDAY, UTIME
-from structures import Room, Classes, Lecture, Time
-
-
-def calc_goal_function(groups, fun_weights: Iterable[float], weights_FP: Callable[[Time], float],
-                       weights_FD: Iterable[float]) -> float:
-    goal_fcn_val = 0
-    for group in groups:
-        gr_gaol_fcn_val = group.week_schedule.calc_goal_function(fun_weights, weights_FP, weights_FD)
-        goal_fcn_val += gr_gaol_fcn_val * len(group.students_ids)
-    return goal_fcn_val
-
-
-# def generate_classes(subjects_: Tuple[Subject]) -> Tuple[Classes]:
-#     classes = []
-#     for subject in subjects_:
-#         classes.extend(subject.generate_classes())
-#     classes = tuple(classes)
-#     return classes
+from structures import Room, Classes, Lecture
 
 
 def sort_classes(classes_: Tuple[Classes], n_sections) -> Tuple[Classes]:
@@ -40,7 +22,7 @@ def sort_classes(classes_: Tuple[Classes], n_sections) -> Tuple[Classes]:
     """
     # sortowanie zajęć wg id grupy (id grupy wykładu = -1) i dzielenie
     sorted_by_groups = list(classes_)
-    sorted_by_groups.sort(key=_group_sort_)
+    sorted_by_groups.sort(key=_group_sort)
     group_division = [[], []]
     gid = 0
     for classes in sorted_by_groups:
@@ -79,7 +61,7 @@ def sort_classes(classes_: Tuple[Classes], n_sections) -> Tuple[Classes]:
     return tuple(sorted_classes)
 
 
-def _group_sort_(classes):
+def _group_sort(classes):
     """
     Pomocnicza funkcja do sortowania grup
     :param classes:
