@@ -1,7 +1,7 @@
 from typing import Tuple, Iterable, Callable, List
 
-from scheduler.structures import Group
-from structures import Room, Subject, Classes, Lecture, Exercises, Hour, Time
+from scheduler.constans import ENDOFDAY, STARTOFDAY, UTIME
+from structures import Room, Classes, Lecture, Time
 
 
 def calc_goal_function(groups, fun_weights: Iterable[float], weights_FP: Callable[[Time], float],
@@ -13,12 +13,12 @@ def calc_goal_function(groups, fun_weights: Iterable[float], weights_FP: Callabl
     return goal_fcn_val
 
 
-def generate_classes(subjects_: Tuple[Subject]) -> Tuple[Classes]:
-    classes = []
-    for subject in subjects_:
-        classes.extend(subject.generate_classes())
-    classes = tuple(classes)
-    return classes
+# def generate_classes(subjects_: Tuple[Subject]) -> Tuple[Classes]:
+#     classes = []
+#     for subject in subjects_:
+#         classes.extend(subject.generate_classes())
+#     classes = tuple(classes)
+#     return classes
 
 
 def sort_classes(classes_: Tuple[Classes], n_sections) -> Tuple[Classes]:
@@ -61,7 +61,7 @@ def sort_classes(classes_: Tuple[Classes], n_sections) -> Tuple[Classes]:
         section_division = [group[i * len(group) // n_sections: (i + 1) * len(group) // n_sections] for i in range(n_sections)]
         # sortowanie w sekcjach po długości
         for section in section_division:
-            section.sort(key=lambda classes: classes.time.duration, reverse=True)
+            section.sort(key=lambda classes: classes.time._duration, reverse=True)
             sorted_group.extend(section)
         #scalenie wewnątrz grupy
         sorted_groups.append(sorted_group)
@@ -103,5 +103,3 @@ def add_occupation(rooms_: Tuple[Room], classes_: Tuple[Classes]):
                 room.potential_occupation_probability[classes.id_] = classes.time.duration / X
 
 
-def get_best_time_for_groups(groups: List[Group], duration: int):
-    pass

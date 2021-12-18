@@ -1,4 +1,10 @@
-from structures import Hour
-UTIME = 5  # jednostka czasu #TODO znaleźć lepsze miejsce na te stałe
-STARTOFDAY = Hour(7, 30)  # od której mogą zaczynać się zajęcia
-ENDOFDAY = Hour(20, 30)  # do której najpóźniej mogą być zajęcia
+from scheduler.basic_structures import Hour
+
+UTIME = 10  # jednostka czasu
+STARTOFDAY = Hour(8, 00)  # od której mogą zaczynać się zajęcia
+ENDOFDAY = Hour(18, 00)  # do której najpóźniej mogą być zajęcia
+MIN_CLASS_DURATION = 90
+MIN_OK_BRAKE = 90 + 2 * UTIME
+
+class ClassesType:
+    pass

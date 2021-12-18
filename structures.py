@@ -1,86 +1,13 @@
 from __future__ import annotations
-from abc import abstractmethod
-from typing import Iterable, List, Dict, Tuple, Callable, Union
-from constans import ENDOFDAY, STARTOFDAY
-from scheduler.constans import UTIME
+
+from copy import deepcopy
+from typing import List, Dict, Tuple,  Union
+from scheduler.basic_structures import ClassesID, Lecture, Exercises, Time
+from scheduler.constans import UTIME, ENDOFDAY, STARTOFDAY, ClassesType
+from scheduler.week_day import WeekSchedule
 
 
-class ClassesID(int):
-    pass
-
-
-class RoomID(int):
-    pass
-
-
-class LecturerError:
-    pass
-
-
-class RoomError:
-    pass
-
-
-class Lecture:
-    pass
-
-
-class Exercises:
-    pass
-
-class Hour:
-    def __init__(self, hour, minute):
-        self.hour = hour
-        self.minute = minute
-
-    def __add__(self, other):
-        if isinstance(other, int):
-            hours2add = int(other / 60)
-            mins2add = int(other % 60)
-
-            hour = self.hour + hours2add
-            minute = self.minute + mins2add
-
-            if minute > 60:
-                minute = minute % 60
-                over_hours = int(minute / 60)
-                hour += over_hours
-
-            if hour > 24:
-                raise Exception
-
-            return Hour(hour, minute)
-
-    def __lt__(self, other):
-        if isinstance(other, Hour):
-            if self.hour == other.hour:
-                return self.minute < other.minute
-            return self.hour < other.hour
-
-    def __le__(self, other):
-        if isinstance(other, Hour):
-            if self.hour == other.hour:
-                return self.minute <= other.minute
-            return self.hour <= other.hour
-
-
-def difference(gHour, lHour):
-    """
-    Różnica czasu między dwiema godzinami w minutach
-    """
-    if isinstance(gHour, lHour):
-        return 60 * (gHour.hour - lHour.hour) + gHour.minute - lHour.minute
-
-
-class Time:
-    def __init__(self, day_nr, start: Hour, duration_mins: int):
-        self.day_nr = day_nr
-        self.start = start
-        self.end = start + duration_mins
-        self.duration = duration_mins
-
-
-class Classes:  # zajęcia - ogólnie
+class Classes(ClassesType):  # zajęcia - ogólnie
     def __init__(self,
                  id_: ClassesID,
                  lecturer: Lecturer,
@@ -89,52 +16,101 @@ class Classes:  # zajęcia - ogólnie
                  type_: Union[Lecture, Exercises],
                  groups: List[Group]):
         self.id_ = id_
-        self.type = type_
-        self.lecturer = lecturer
-        self.duration = duration
+        self._type = type_
+        self._lecturer = lecturer
+        self._duration = duration
         self.available_rooms = rooms
-        self.groups = groups
+        self._groups = groups
         # TO ASSIGN
-        self.time: Time = None
-        self.room: Room = None
+        self.time: Time = ...
+        self.room: Room = ...
 
-    def get_lecturer(self):
-        return self.lecturer
-
-    def get_rooms(self):
+    def get_rooms(self) -> Tuple[Room]:
         return self.available_rooms
 
-    def get_duration(self):
-        return self.duration
+    def get_duration(self) -> int:
+        return self._duration
 
     def assign(self, time: Time, room: Room):
         self.time = time
         self.room = room
-        self.lecturer.assign(self)
+        self._lecturer.assign(self)
         self.room.assign(self)
-        for group in self.groups:
+        for group in self._groups:
             group.assign(self)
 
     def revert_assign(self):
         self.time = None
         self.room = None
-        self.lecturer.revert_assign(self)
+        self._lecturer.revert_assign(self)
         self.room.revert_assign(self)
-        for group in self.groups:
+        for group in self._groups:
             group.revert_assign(self)
+
+    def get_best_time(self, times, g_f_vals):
+        all_ = list(zip(times, g_f_vals))
+        while all_:
+            best = min(all_, key=lambda x: x[1])
+            yield best[0]
+            all_.remove(best)
+
+    def get_times(self, duration):
+        times = []
+        nr = 0
+        for day_nr in range(5):
+            s_h_g = self._start_hour_generator()
+            for start_hour in s_h_g:
+                time = Time(day_nr, start_hour, duration)
+                times.append((nr, time))
+                nr += 1
+        return times
+
+    def _start_hour_generator(self):
+        end = ENDOFDAY - self._duration
+        hour = STARTOFDAY
+        while hour <= end:
+            yield hour
+            hour += UTIME
+
+    def _get_available_times(self, times):
+        ok_times = []
+        for time in times:
+            for group in self._groups:
+                if not group.week_schedule.is_time_available(time, UTIME):
+                    break
+            else:
+                ok_times.append(time)
+        return times
+
+    def _get_goal_func_vals(self, times):
+        goal_fun_vals = []
+        for time in times:
+            g_f_val = 0
+            for group in self._groups:
+                self.time = time
+                group.assign(self)
+
+                g_f_val += group.week_schedule.calc_goal_function() * group.students_amount
+
+                group.revert_assign(self)
+                self.time = None
+            goal_fun_vals.append(g_f_val)
+        return goal_fun_vals
+
+    def get_best_time_generator(self):
+        times = self.get_times(self._duration)
+        ok_times = self._get_available_times(times)
+        goal_fun_vals = self._get_goal_func_vals(ok_times)
+        g_b_t_gen = self.get_best_time(times, goal_fun_vals)
+        return g_b_t_gen
+
 
 
 class Lecturer:
     def __init__(self,
                  id_,
-                 subject_id,
-                 amount_of_hours,
-                 groups: List[Group],
                  ):
         self.id_ = id_
-        self.subject_id = subject_id
-        self.amount_of_hours = amount_of_hours
-        self.groups = groups
         self.week_schedule = WeekSchedule()
 
     def is_time_available(self, time) -> bool:
@@ -148,46 +124,41 @@ class Lecturer:
 
 
 class Room:  # sala
-    def __init__(self):
+    def __init__(self,
+                 id_,
+                 predicted_occupation: float,
+                 priority: float,
+                 potential_occupation_probability: Dict[ClassesID, float],
+                 availability: int,
+                 ):
         self.id_ = ...
-        self.capacity = ...
-        self.predicted_occupation: float = 0  # szacunkowy współczynnik ile będzie zajęta
-        self.current_occupation: int = 0  # ile już jest zajęta minuty
-        self.availability: int = ...  # ile ma dostępnego czasu wogóle
-        self.priority = None
-        self.week_schedule: WeekSchedule = None
-        self.potential_occupation_probability: Dict[ClassesID, float] = None
+        self._predicted_occupation = predicted_occupation  # szacunkowy współczynnik ile będzie zajęta
+        self._current_occupation = 0  # ile już jest zajęta minuty
+        self._availability: int = availability  # ile ma dostępnego czasu wogóle
+        self.priority = priority  # na jago podstawie trzeba wybierac, im mniejszy tym lepiej
+        self.week_schedule: WeekSchedule = WeekSchedule()
+        self.potential_occupation_probability = potential_occupation_probability
+        self._const_potential_occupation_probability: Dict[ClassesID, float] = deepcopy(potential_occupation_probability)
 
     def _update(self, classes: Classes):
-        self.potential_occupation_probability[classes.id_] = 0  # todo cofanie
-        self.predicted_occupation = sum(self.potential_occupation_probability.values())
-        self.current_occupation += classes.time.duration
-        self.priority = (self.availability - self.current_occupation) / self.predicted_occupation
+        self._predicted_occupation = sum(self.potential_occupation_probability.values())
+        self._current_occupation += classes.time.duration
+        self.priority = (self._availability - self._current_occupation) / self._predicted_occupation
 
     def assign(self, classes):
-        self._assign(classes)
+        self.potential_occupation_probability[classes.id_] = 0
         self._update(classes)
+        self.week_schedule.assign(classes)
         pass
 
-    def _assign(self, classes: Classes):
+    def revert_assign(self, classes):
+        self.potential_occupation_probability[classes.id_] = self._const_potential_occupation_probability[classes.id_]
+        self._update(classes)
+        self.week_schedule.revert_assign(classes)
         pass
 
-    def is_time_available(self, time) -> bool:
-        return self.week_schedule.is_time_available(time)
-
-
-class Registrar:
-    def __init__(self):
-        self.assignments = ...
-
-    def register_assignment(self, class_: Classes):
-        pass
-
-    def revert_assignments(self, cause):
-        pass
-
-    def get_current_class_number(self) -> int:
-        pass
+    def is_time_available(self, time: Time) -> bool:
+        return self.week_schedule.is_time_available(time, 0)
 
 
 class Group:  # grupa
@@ -195,212 +166,10 @@ class Group:  # grupa
         self.id_ = ...
         self.students_amount = ...
         self.subjects_ids = ...
-        self.week_schedule: WeekSchedule = ...
+        self.week_schedule: WeekSchedule = WeekSchedule()
 
+    def assign(self, classes: Classes):
+        self.week_schedule.assign(classes)
 
-class Subject:  # przedmiot
-    def __init__(self):
-        self.id_ = ...
-        self.week_classes_duration = ...
-        self.week_lecture_duration = ...
-        self.week_classes_division = ...
-        self.lecturers = ...
-        self.groups = ...
-
-    def generate_classes(self) -> List[Classes]:
-        pass
-
-
-class Field:  # kierunek
-    def __init__(self):
-        self.groups_ids = ...
-        self.subjects_ids = ...
-
-
-class WeekSchedule:
-    def __init__(self):
-        self.day_schedules = [DaySchedule()] * 5
-
-    def get_best_time(self, duration, next_=True):
-        pass
-
-    def get_week_classes_time(self):
-        time = 0
-        for day in self.day_schedules:
-            time += day.get_day_classes_time()
-        return time
-
-    def get_amount_of_free_days(self) -> int:
-        free_days = 0
-        for day in self.day_schedules:
-            if day.is_day_free():
-                free_days += 1
-        return free_days
-
-    def is_time_available(self, time) -> bool:
-        """
-        Funkcja sprawdza czy czas jest dostępny uwaga! pozwala na sklejanie zajęć (koniec jednych i początek kolejnych np. równo o 10
-        :param time: przedział czasu, który sprawdzamy czy jest wolny
-        :return: bool czy jest wolny
-        """
-        for classes in self.day_schedules[time.day_nr].classes:
-            if classes.time.start <= time.start < classes.time.end:
-                return False
-            if classes.time.start < time.end <= classes.time.end:
-                return False
-        return True
-
-    def calc_goal_function(self, fun_weights: List[float], weights_FP: Callable[[Time], float],
-                           weights_FD: Iterable[float]) -> float:
-        return fun_weights[0] * self._calc_week_FO() +\
-               fun_weights[1] * self._calc_week_FD(weights_FD) +\
-               fun_weights[2] * self._calc_week_FP(weights_FP, self.get_week_classes_time()) + \
-               fun_weights[3] * self._calc_week_FR(self.get_week_classes_time(), self.get_amount_of_free_days())
-
-    def _calc_week_FO(self) -> float:
-        return sum([day.calc_day_FO() for day in self.day_schedules])
-
-    def _calc_week_FD(self, weights: Iterable[float]) -> float:
-        satisfaction = 0
-        for i in range(5):
-            satisfaction += int(self.day_schedules[i].is_day_free()) * weights[i]
-        return satisfaction
-
-    def _calc_week_FP(self, weights_FP: Callable[[Time], float], week_classes_time: int) -> float:
-        return sum([day.calc_day_FP(weights_FP, week_classes_time) for day in self.day_schedules])
-
-    def _calc_week_FR(self, week_classes_time: int, num_of_free_days: int) -> float:
-        return sum([day.calc_day_FR(week_classes_time, num_of_free_days) for day in self.day_schedules])
-
-
-class DaySchedule:
-    def __init__(self, weights):
-        self.classes: List[Classes] = ...
-        self.weights_FP: Callable[[Time], float] = weights
-
-    def assign(self):
-        pass
-
-    def get_best_time(self):
-        pass
-
-    def get_day_classes_time(self) -> int:
-        time = 0
-        for classes_ in self.classes:
-            time += classes_.time.duration
-        return time
-
-    def is_day_free(self) -> bool:
-        return bool(self.classes)
-
-    def calc_day_FO(self) -> float:
-        self.classes.sort(key=lambda c: c.time.start)
-        break_time = 0
-        for i in range(len(self.classes) - 1):
-            break_time += abs(difference(self.classes[i+1].time.start, self.classes[i].time.end) - UTIME)
-        return break_time / len(self.classes)
-
-    def calc_day_FP(self, weights_FP: Callable[[Time], float], week_classes_time: int) -> float:
-        satisfaction = 0
-        for classes in self.classes:
-            satisfaction += weights_FP(classes.time)
-        return satisfaction / week_classes_time
-
-    def calc_day_FR(self, week_classes_time: int, num_of_free_days: int) -> float:
-        return abs(week_classes_time / (5 - num_of_free_days) - self.get_day_classes_time())
-
-
-class NoRoomAvailable(Exception):
-    def __init__(self):
-        super().__init__()
-
-
-class NoAvailableTime(Exception):
-    def __init__(self):
-        super().__init__()
-
-
-class RoomManager:
-    def __init__(self, rooms: Tuple[Room]):
-        self.rooms = rooms
-
-    def get_best_room(self, ids: Tuple[Room], time: Time) -> Room:
-        """
-        weź dostępne sale
-        sprawdź które mają dostępny ten czas
-        sprawdź które mało tracą (z buforem)
-        wybierz tą która ma największy priorytet
-            ostatnie dwie można zamienić
-        """
-        available_rooms = []
-        # sprawdzanie czasu i dodanie do available_rooms
-        for room in ids:
-            if room.is_time_available(time):
-                available_rooms.append(room)
-
-        # sprawdzam czy jest więcej niż jedna sala dostępna
-        if len(available_rooms) < 1:
-            raise NoRoomAvailable
-        if len(available_rooms) == 1:
-            return available_rooms[0]
-
-        # podział na sekcje względem długości przerw przed i po czasie
-        available_rooms_sections = [[] for _ in range(self._fun_of_gap(0, True))]
-        for room in available_rooms:
-            fgap = self._fun_of_gap(sum(self._availability_around_time(room, time)))
-            available_rooms_sections[fgap] = room
-
-        # Wybór najwyższego priorytetu z uwzględnieniem sekcji
-        for section in available_rooms_sections:
-            if len(section) > 1:
-                max_priority_room = section[0]
-                for room in section[1:]:
-                    if max_priority_room.priority < room.priority:
-                        max_priority_room = room
-                return max_priority_room
-            elif section:
-                return section[0]
-        raise InterruptedError("Popsułem funkcję get_best_room")
-
-    def _availability_around_time(self, room, time):
-        """
-        Funkcja pomocnicza do sprawdzania ile czasu do następnych zajęć i ile czasu od ostatnich zajęć
-        :return: (a, b) - a = czas od ostatnich zajęć , b = czas do następnych zajęć
-        """
-        last_end_before = STARTOFDAY
-        first_start_after = ENDOFDAY
-        for classes in room.week_schedule[time.day_nr].day_schedule.classes:
-            if classes.time.end < time.start:
-                if last_end_before < classes.time.end:
-                    last_end_before = time
-            elif time.end < classes.time.start:
-                if classes.time.start < first_start_after:
-                    first_start_after = time
-        return difference(time, last_end_before), difference(first_start_after, time)
-
-    def _fun_of_gap(self, gap_length: int, num_of_class: bool = False) -> int:
-        """
-        Funkcja zwraca wartość zależną od rozmiaru okienka między zajęciami #TODO zobacz czy ma to sens
-        :param gap_length: długość okienka
-        :param num_of_class ponieważ liczba oceny długości wpisana ręcznie, może być przydatne określenie ile ich może być
-                trzeba niestety zmieniać ręcznie - mało profesjonalne, ale znacznie ułatwia
-                jeśli True zwraca tylko liczbę klas
-        :return: wartość oceny długości zakres [0,5)
-        """
-        if num_of_class:
-            return 5
-
-        if gap_length < 0:
-            raise ValueError("Długość przerwy mniejsza od zera")
-        if gap_length % 90 == (
-                gap_length // 90 + 1) * UTIME:  # okienko wielokrotnością 90 min zajęć + 5 przerwy przed i po
-            return 0
-        if gap_length % 45 == (
-                gap_length // 45 + 1) * UTIME:  # okienko wielokrotnością 45 min zajęć + 5 przerwy przed i po
-            return 1
-        if gap_length % 45 <= (
-                gap_length // 45 + 1) * 4 * UTIME:  # przerwa między miejscami na zajęciami <=20min ale dłuższa niż 5 min
-            return 2
-        if gap_length % 45 == 0:  # braknie przerw między zajęciami
-            return 3
-        return 4  # pozostałe
+    def revert_assign(self, classes: Classes):
+        self.week_schedule.revert_assign(classes)
