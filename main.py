@@ -3,8 +3,8 @@ from typing import Tuple
 from scheduler.abstract_structures import RoomManager, ClassesManager
 from structures import Classes, Group, Lecturer, Room
 from utils import sort_classes, add_occupation
+from parameters import SECTIONS_AMOUNT, GROUPS_FILE, CLASSES_FILE, ROOMS_FILE, LECTURERS_FILE
 
-SECTIONS_AMOUNT = 3
 # todo
 lecturers: Tuple[Lecturer] = ...
 # todo

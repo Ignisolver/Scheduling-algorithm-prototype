@@ -31,13 +31,13 @@ class WeekSchedule:
         self.day_schedules[classes.time.day_nr].revert_assign(classes)
 
     def _get_week_classes_time(self):
-        time = 0
+        time: int = 0
         for day in self.day_schedules:
             time += day.get_day_classes_time()
         return time
 
     def _get_amount_of_free_days(self) -> int:
-        free_days = 0
+        free_days: int = 0
         for day in self.day_schedules:
             if day.is_day_free():
                 free_days += 1
@@ -47,7 +47,7 @@ class WeekSchedule:
         return sum([day.calc_day_FO() for day in self.day_schedules])
 
     def _calc_week_FD(self, weights: Iterable[float]) -> float:
-        satisfaction = 0
+        satisfaction: int = 0
         for i in range(5):
             satisfaction += int(self.day_schedules[i].is_day_free()) * weights[i]
         return satisfaction
@@ -77,17 +77,17 @@ class DaySchedule:
         return time
 
     def is_day_free(self) -> bool:
-        return bool(self.classes)
+        return not bool(self.classes)
 
     def calc_day_FO(self) -> float:
         self.classes.sort(key=lambda c: c.time.start)
-        break_time = 0
+        break_time: int = 0
         for i in range(len(self.classes) - 1):
             break_time += abs(self.classes[i+1].time.start-self.classes[i].time.end - UTIME)
         return break_time / len(self.classes)
 
     def calc_day_FP(self, weights_FP: Callable[[Time], float], week_classes_time: int) -> float:
-        satisfaction = 0
+        satisfaction: int = 0
         for classes in self.classes:
             satisfaction += weights_FP(classes.time)
         return satisfaction / week_classes_time

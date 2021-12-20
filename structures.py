@@ -28,6 +28,9 @@ class Classes:  # zajęcia - ogólnie
     def get_rooms(self) -> Tuple[Room]:
         return self.available_rooms
 
+    def get_groups(self) -> List[Group]:
+        return self._groups
+
     def get_duration(self) -> int:
         return self._duration
 
@@ -104,7 +107,6 @@ class Classes:  # zajęcia - ogólnie
         goal_fun_vals = self._get_goal_func_vals(ok_times)
         g_b_t_gen = self.get_best_time(times, goal_fun_vals)
         return g_b_t_gen
-
 
 
 class Lecturer:
