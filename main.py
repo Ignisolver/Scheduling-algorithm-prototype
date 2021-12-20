@@ -14,7 +14,7 @@ classes = sort_classes(classes, SECTIONS_AMOUNT)
 add_occupation(rooms, classes)
 
 room_manager = RoomManager(rooms)
-classes_manager = ClassesManager()
+classes_manager = ClassesManager(classes)
 
 
 while classes_ := classes_manager.get_next_classes():

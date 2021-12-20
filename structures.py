@@ -79,11 +79,12 @@ class Classes:  # zajęcia - ogólnie
     def _get_available_times(self, times):
         ok_times = []
         for time in times:
-            for group in self._groups:
-                if not group.week_schedule.is_time_available(time, UTIME):
-                    break
-            else:
-                ok_times.append(time)
+            if self._lecturer.is_time_available(time, UTIME):
+                for group in self._groups:
+                    if not group.week_schedule.is_time_available(time, UTIME):
+                        break
+                else:
+                    ok_times.append(time)
         return times
 
     def _get_goal_func_vals(self, times):
@@ -116,8 +117,8 @@ class Lecturer:
         self.id_ = id_
         self.week_schedule = WeekSchedule()
 
-    def is_time_available(self, time) -> bool:
-        return self.week_schedule.is_time_available(time)
+    def is_time_available(self, time, brake_time_) -> bool:
+        return self.week_schedule.is_time_available(time, brake_time_)
 
     def assign(self, classes):
         self.week_schedule.assign(classes)

@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, List
 
 from scheduler.basic_structures import Time, NoRoomAvailable
 from scheduler.constans import STARTOFDAY, ENDOFDAY, UTIME
@@ -8,16 +8,17 @@ from utils import fun_of_gap
 
 # todo
 class ClassesManager:
-    def __init__(self):
-        self.assignments = ...
+    def __init__(self, classes: Tuple[Classes]):
+        self.assignments: List[Classes] = []
+        self.classes2assign: List[Classes] = list(classes)
 
     # todo
     def get_next_classes(self) -> Classes:
-        pass
+        return self.classes2assign.pop(0)
 
     # todo
     def register_assignment(self, class_: Classes):
-        pass
+        self.assignments.append(class_)
 
     # todo
     def can_not_assign(self, classes_):
