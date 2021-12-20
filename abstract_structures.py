@@ -3,7 +3,7 @@ from typing import Tuple
 from scheduler.basic_structures import Time, NoRoomAvailable
 from scheduler.constans import STARTOFDAY, ENDOFDAY, UTIME
 from scheduler.structures import Classes, Room
-from utils import availability_of_room_around_time, fun_of_gap
+from utils import fun_of_gap
 
 
 # todo
@@ -53,7 +53,7 @@ class RoomManager:
         # podział na sekcje względem długości przerw przed i po czasie
         available_rooms_sections = [[] for _ in range(fun_of_gap(0, True))]
         for room in available_rooms:
-            fgap = fun_of_gap(sum(availability_of_room_around_time(room, time)))
+            fgap = fun_of_gap(sum(self.availability_of_room_around_time(room, time)))
             available_rooms_sections[fgap] = room
 
         # Wybór najwyższego priorytetu z uwzględnieniem sekcji
