@@ -108,18 +108,18 @@ def fun_of_gap(gap_length: int, num_of_class: bool = False) -> int:
         return 3
     return 4  # pozostałe
 
-
+# todo
 def generate_groups(file: str) -> Tuple[Group]:
     pass
 
-
+# todo
 def generate_lecturers(file: str) -> Tuple[Lecturer]:
     pass
 
-
+# todo
 def generate_classes(file: str) -> Tuple[Classes]:
     pass
 
-
+# todo
 def generate_rooms(file: str) -> Tuple[Room]:
     pass
