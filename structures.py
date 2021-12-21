@@ -135,7 +135,7 @@ class Room:  # sala
                  potential_occupation_probability: Dict[ClassesID, float],
                  availability: int,
                  ):
-        self.id_ = ...
+        self.id_ = id_
         self._predicted_occupation = predicted_occupation  # szacunkowy współczynnik ile będzie zajęta
         self._current_occupation = 0  # ile już jest zajęta minuty
         self._availability: int = availability  # ile ma dostępnego czasu wogóle
@@ -166,10 +166,9 @@ class Room:  # sala
 
 
 class Group:  # grupa
-    def __init__(self):
-        self.id_ = ...
-        self.students_amount = ...
-        self.subjects_ids = ...
+    def __init__(self, id_, sa):
+        self.id_ = id_
+        self.students_amount = sa
         self.week_schedule: WeekSchedule = WeekSchedule()
 
     def assign(self, classes: Classes):

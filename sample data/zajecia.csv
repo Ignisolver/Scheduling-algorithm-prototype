@@ -1,0 +1,4 @@
+,lecturer,type,duration,rooms,groups
+0,0,Lecture,90,[0],"[0, 1, 2]"
+1,1,Excercises,90,"[1, 2]",[1]
+2,2,Excercises,135,"[1, 2]",[2]

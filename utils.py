@@ -1,8 +1,9 @@
 from typing import Tuple, List, Any, Union
+from csv import reader
 
 from structures import Room, Classes, Group, Lecturer
-from basic_structures import Lecture
-from constans import UTIME, STARTOFDAY, ENDOFDAY
+from basic_structures import Lecture, Exercises
+from constans import UTIME
 
 
 def sort_classes(classes_: Tuple[Classes], n_sections: int) -> Tuple[Classes]:
@@ -112,21 +113,73 @@ def fun_of_gap(gap_length: int, num_of_class: bool = False) -> int:
     return 4  # pozostałe
 
 
-# todo
 def generate_groups(file: str) -> Tuple[Group]:
-    pass
+    """
+    Pobiera dane o grupach: id - indeksy, liczebność grupy
+    :param file:
+    :return:
+    """
+    groups = []
+    with open(file) as f:
+        read = reader(f)
+        for re in read:
+            if re[0] != '':
+                groups.append(Group(int(re[0]), int(re[1])))
+    return tuple(groups)
 
 
-# todo
 def generate_lecturers(file: str) -> Tuple[Lecturer]:
-    pass
+    """
+    Pobiera dane o prowadzących: id - indeksy
+    :param file:
+    :return:
+    """
+    lecturers = []
+    with open(file) as f:
+        read = reader(f)
+        for re in read:
+            if re[0] != '':
+                lecturers.append(Lecturer(int(re[0])))
+    return tuple(lecturers)
 
 
-# todo
-def generate_classes(file: str) -> Tuple[Classes]:
-    pass
+def generate_classes(file: str, lecturers: Tuple[Lecturer], groups: Tuple[Group], rooms: Tuple[Room]) -> Tuple[Classes]:
+    """
+    Pobiera dane o zajęciach: id - indeksy, id prowadzącego, typ, czas trwania, sale, grupy
+    Zakłada się, że rooms, groups, lecturers są posortowane wg. id!
+    :param rooms:
+    :param groups:
+    :param lecturers:
+    :param file:
+    :return:
+    """
+    classes = []
+    with open(file) as f:
+        read = reader(f)
+        for re in read:
+            if re[0] != '':
+                classes_room_id = [int(room) for room in (re[4][1:-1]).split(", ")]
+                classes_group_id = [int(group) for group in (re[5][1:-1]).split(", ")]
+                if re[2] == "Lecture":
+                    class_type = Lecture
+                if re[2] == Exercises:
+                    class_type = Exercises
+
+                classes.append(Classes(int(re[0]),          # id_
+                                       lecturers[re[1]],    # lecturer
+                                       int(re[3]),          # duration
+                                       tuple([rooms[rid] for rid in classes_room_id]),  # rooms
+                                       class_type,          # type
+                                       [groups[rid] for rid in classes_group_id]  # groups
+                                       ))
+    return tuple(classes)
 
 
 # todo
 def generate_rooms(file: str) -> Tuple[Room]:
+    """
+    Pobiera dane o salach: id - indeksy, priorytet
+    :param file:
+    :return:
+    """
     pass
