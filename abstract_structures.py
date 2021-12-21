@@ -152,4 +152,4 @@ class ClassesManager:
                     classes_.assign(time, room)
                     self.register_assignment(classes_)
                     self.classes2assign.append(self.assignments.pop(-1 - idx))
-                    break
+                    return None
