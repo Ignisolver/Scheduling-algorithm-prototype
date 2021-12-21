@@ -1,28 +1,10 @@
 from typing import Tuple, List
+from random import randint
 
-from scheduler.basic_structures import Time, NoRoomAvailable
+from scheduler.basic_structures import Time, NoRoomAvailable, AssignError
 from scheduler.constans import STARTOFDAY, ENDOFDAY, UTIME
 from scheduler.structures import Classes, Room
 from utils import fun_of_gap
-
-
-# todo
-class ClassesManager:
-    def __init__(self, classes: Tuple[Classes]):
-        self.assignments: List[Classes] = []
-        self.classes2assign: List[Classes] = list(classes)
-
-    # todo
-    def get_next_classes(self) -> Classes:
-        return self.classes2assign.pop(0)
-
-    # todo
-    def register_assignment(self, class_: Classes):
-        self.assignments.append(class_)
-
-    # todo
-    def can_not_assign(self, classes_):
-        pass
 
 
 # todo
@@ -84,3 +66,90 @@ class RoomManager:
                 if classes.time.start < first_start_after:
                     first_start_after = time
         return time - last_end_before, first_start_after - time
+
+
+# todo sprawdzić
+class ClassesManager:
+    def __init__(self, classes: Tuple[Classes]):
+        self.assignments: List[Classes] = []
+        self.classes2assign: List[Classes] = list(classes)
+        self.not_assigned: List[Classes] = []
+
+    def get_next_classes(self) -> Classes:
+        return self.classes2assign.pop(-1)
+
+    def register_assignment(self, class_: Classes):
+        self.assignments.append(class_)
+
+    def can_not_assign(self, classes_: Classes, sltn_type: str = "backtracking", step: int = 5, rm: RoomManager = None):
+        if step <= 0:
+            raise ValueError("step must be > 0")
+        if sltn_type == "backtracking":
+            self._backtracking(classes_, step)
+        elif sltn_type == "reconstruction":
+            self._reconstruction(classes_, step)
+        elif sltn_type == "replacing":
+            self._replacing(classes_, rm)
+        else:
+            raise KeyError("can_not_assign don't recognise parameter '{0}'".format(sltn_type))
+
+    def _backtracking(self, classes_: Classes, step: int = 1):
+        """
+        Funkcja cofa przypisania do momentu, gdy znajdzie się miejsce dla danych zajęć
+        :param classes_: nie przypisane zajęcia,
+        :param step: krok o jaki jest prowadzone cofnięcie
+        :return:
+        """
+        if bool(self.assignments):
+            if len(self.assignments) < step:
+                step = len(self.assignments)
+            for _ in range(step):
+                self.assignments[-1].revert_assign()
+                self.classes2assign.append(self.assignments.pop(-1))
+            self.classes2assign.append(classes_)
+        else:
+            raise AssignError  # nie możliwe do przypisania mimo pustych planów zajęć
+
+    def _reconstruction(self, classes_: Classes, step: int = 5):
+        """
+        Funkcja cofa określoną liczbę przypisań i dokonuje drobnej zmiany kolejności przy ponownym konstruowaniu rozwiązania
+        :param classes_: nie przypisane zajęcia
+        :param step: krok cofnięcia
+        :return:
+        """
+        if bool(self.assignments):
+            # cofnięcie o step przypisań
+            self.classes2assign.append(classes_)
+            for _ in range(step):
+                if bool(self.assignments):
+                    self.assignments[-1].revert_assign()
+                    self.classes2assign.append(self.assignments.pop(-1))
+                else:
+                    break
+            # zamiana kolejności losowych zajęć z listy do przypisania
+            if len(self.assignments) > step:
+                a, b = randint(-step, -1), randint(-step, -1)
+            else:
+                a, b = randint(-len(self.assignments), -1), randint(-len(self.assignments), -1)
+            self.classes2assign[a], self.classes2assign[b] = self.classes2assign[b], self.classes2assign[a]
+        else:
+            raise AssignError
+
+    def _replacing(self, classes_: Classes, room_manager: RoomManager):
+        """
+        Funkcja próbuje podmienić zajęcia, których nie udało się przypisać z zajęciami już przypisanymi
+        :param classes_: zajęcia, których nie udało się przypisać
+        :param room_manager: potrzebny do przypisania
+        :return:
+        """
+        for idx, assigned_classes in enumerate(reversed(self.assignments)):
+            assigned_classes.revert_assign()
+            best_time_generator = classes_.get_best_time_generator()
+            for time in best_time_generator:
+                avl_rooms = classes_.get_rooms()
+                room = room_manager.get_best_room(avl_rooms, time)
+                if room is not None:
+                    classes_.assign(time, room)
+                    self.register_assignment(classes_)
+                    self.classes2assign.append(self.assignments.pop(-1 - idx))
+                    break

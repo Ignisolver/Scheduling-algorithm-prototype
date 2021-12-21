@@ -20,8 +20,10 @@ def sort_classes(classes_: Tuple[Classes], n_sections: int) -> Tuple[Classes]:
 
     Później mogę poprawić dzielenie na sekcje (sekcje różnej długości po ilości sal)
 
-    :return  zajęcia posortowane w pierwszej kolejności: wykłady, zajęcia o małej dostępności sal, najdłuższe zajęcia
+    :return  zajęcia posortowane w ostatniej kolejności: wykłady, zajęcia o małej dostępności sal, najdłuższe zajęcia
     """
+    if n_sections > len(classes_):
+        raise ValueError(" n_sections must be lesser or equal length of classes tuple")
     # sortowanie zajęć wg id grupy (id grupy wykładu = -1) i dzielenie
     sorted_by_groups: List[Classes] = list(classes_)
     sorted_by_groups.sort(key=group_sort_id)
@@ -54,6 +56,7 @@ def sort_classes(classes_: Tuple[Classes], n_sections: int) -> Tuple[Classes]:
                 sorted_classes.append(group.pop(0))
                 sorted_groups.remove(group)
 
+    sorted_classes.reverse()
     return tuple(sorted_classes)
 
 
@@ -108,17 +111,21 @@ def fun_of_gap(gap_length: int, num_of_class: bool = False) -> int:
         return 3
     return 4  # pozostałe
 
+
 # todo
 def generate_groups(file: str) -> Tuple[Group]:
     pass
+
 
 # todo
 def generate_lecturers(file: str) -> Tuple[Lecturer]:
     pass
 
+
 # todo
 def generate_classes(file: str) -> Tuple[Classes]:
     pass
+
 
 # todo
 def generate_rooms(file: str) -> Tuple[Room]:

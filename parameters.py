@@ -8,3 +8,5 @@ LECTURERS_FILE = ...
 
 # other parameters
 SECTIONS_AMOUNT = 3
+REASSIGNTYPE = "backtracking"
+STEP = 5
