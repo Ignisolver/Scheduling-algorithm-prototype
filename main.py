@@ -27,7 +27,7 @@ while classes_ := classes_manager.get_next_classes():
             classes_manager.register_assignment(classes_)
             break
     else:
-        classes_manager.can_not_assign(classes_, REASSIGNTYPE, STEP, rm = room_manager)
+        classes_manager.can_not_assign(classes_, REASSIGNTYPE, STEP, rm=room_manager)
 
 
 

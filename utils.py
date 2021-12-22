@@ -175,11 +175,16 @@ def generate_classes(file: str, lecturers: Tuple[Lecturer], groups: Tuple[Group]
     return tuple(classes)
 
 
-# todo
 def generate_rooms(file: str) -> Tuple[Room]:
     """
     Pobiera dane o salach: id - indeksy, priorytet
     :param file:
     :return:
     """
-    pass
+    rooms = []
+    with open(file) as f:
+        read = reader(f)
+        for re in read:
+            if re[0] != '':
+                rooms.append(Room(int(re[0]), int(re[1])))
+    return tuple(rooms)

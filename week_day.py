@@ -61,7 +61,7 @@ class WeekSchedule:
 
 class DaySchedule:
     def __init__(self):
-        self.classes: List[Classes] = ...
+        self.classes: List[Classes] = []
         self.weights_FP: Callable[[Time], float] = ...  # todo wagi z constans.py
 
     def assign(self, classes: Classes):
