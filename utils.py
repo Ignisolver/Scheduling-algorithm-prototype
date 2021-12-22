@@ -120,9 +120,9 @@ def weights_FP(time: Time) -> float:
     Funkcja wyznacza wagę pory rozpoczęcia zajęć, funkcja jest rampą o 0 w
     STARTOFDAY i ENDOFDAY i 1 w [PERFECT_TIME_A, PERFECT_TIME_B] podanych jako parametr PERFECT_TIME
     """
-    if time < PERFECT_TIME_A:
+    if time.start < PERFECT_TIME_A:
         return int(time.start - STARTOFDAY) / int(PERFECT_TIME_A - STARTOFDAY)
-    if time <= PERFECT_TIME_B:
+    if time.start <= PERFECT_TIME_B:
         return 1
     else:
         return int(time.start - ENDOFDAY) / int(PERFECT_TIME_B - ENDOFDAY)
