@@ -51,7 +51,8 @@ class RoomManager:
                 return section[0]
         raise InterruptedError("Popsułem funkcję get_best_room")
 
-    def availability_of_room_around_time(self, room, time):
+    @staticmethod
+    def availability_of_room_around_time(room, time):
         """
         Funkcja pomocnicza do sprawdzania ile czasu do następnych zajęć i ile czasu od ostatnich zajęć
         :return: (a, b) - a = czas od ostatnich zajęć , b = czas do następnych zajęć

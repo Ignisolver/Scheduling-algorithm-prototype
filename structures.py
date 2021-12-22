@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from copy import deepcopy
 from typing import List, Dict, Tuple,  Union
+
+from parameters import LECTURER_WEIGHT
 from scheduler.basic_structures import ClassesID, Lecture, Exercises, Time
 from scheduler.constans import UTIME, ENDOFDAY, STARTOFDAY
 from scheduler.week_day import WeekSchedule
@@ -91,14 +93,19 @@ class Classes:  # zajęcia - ogólnie
         goal_fun_vals = []
         for time in times:
             g_f_val = 0
+            self.time = time
+
             for group in self._groups:
-                self.time = time
                 group.assign(self)
-
                 g_f_val += group.week_schedule.calc_goal_function() * group.students_amount
-
                 group.revert_assign(self)
-                self.time = None
+
+            self._lecturer.assign(self)
+            g_f_val += self._lecturer.week_schedule.calc_goal_function() * LECTURER_WEIGHT
+            self._lecturer.revert_assign(self)
+
+            self.time = None
+
             goal_fun_vals.append(g_f_val)
         return goal_fun_vals
 

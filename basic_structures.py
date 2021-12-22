@@ -50,6 +50,9 @@ class Hour:
         self.hour = hour
         self.minute = minute
 
+    def __int__(self):
+        return self.hour * 60 + self.minute
+
     def __add__(self, other):
         if isinstance(other, int):
             hours2add = int(other / 60)
@@ -123,7 +126,3 @@ class Time:
         if other.start < self.start and self.end < other.end:
             return False
         return True
-
-
-
-

@@ -1,9 +1,9 @@
-from typing import Tuple, List, Any, Union
+from typing import Tuple, List
 from csv import reader
 
 from structures import Room, Classes, Group, Lecturer
-from basic_structures import Lecture, Exercises
-from constans import UTIME
+from basic_structures import Lecture, Exercises, Time
+from constans import UTIME, PERFECT_TIME_A, PERFECT_TIME_B, STARTOFDAY, ENDOFDAY
 
 
 def sort_classes(classes_: Tuple[Classes], n_sections: int) -> Tuple[Classes]:
@@ -113,6 +113,19 @@ def fun_of_gap(gap_length: int, num_of_class: bool = False) -> int:
     if gap_length % 45 == 0:  # braknie przerw między zajęciami
         return 3
     return 4  # pozostałe
+
+
+def weights_FP(time: Time) -> float:
+    """
+    Funkcja wyznacza wagę pory rozpoczęcia zajęć, funkcja jest rampą o 0 w
+    STARTOFDAY i ENDOFDAY i 1 w [PERFECT_TIME_A, PERFECT_TIME_B] podanych jako parametr PERFECT_TIME
+    """
+    if time < PERFECT_TIME_A:
+        return int(time.start - STARTOFDAY) / int(PERFECT_TIME_A - STARTOFDAY)
+    if time <= PERFECT_TIME_B:
+        return 1
+    else:
+        return int(time.start - ENDOFDAY) / int(PERFECT_TIME_B - ENDOFDAY)
 
 
 def generate_groups(file: str) -> Tuple[Group]:
