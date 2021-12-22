@@ -83,6 +83,8 @@ def add_occupation(rooms_: Tuple[Room], classes_: Tuple[Classes]):
         for room in rooms_:
             if room in classes.available_rooms:
                 room.potential_occupation_probability[classes.id_] = classes.time.duration / X
+    for room in rooms_:
+        room.add_const_potential_occupation_probability()
 
 
 def fun_of_gap(gap_length: int, num_of_class: bool = False) -> int:

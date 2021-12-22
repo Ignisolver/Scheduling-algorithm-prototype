@@ -136,16 +136,16 @@ class Room:  # sala
         self._predicted_occupation: float = 0  # szacunkowy współczynnik ile będzie zajęta
         self._current_occupation = 0  # ile już jest zajęta minuty
         self._availability: int = availability  # ile ma dostępnego czasu wogóle
-        self.priority: float = None  # na jago podstawie trzeba wybierac, im mniejszy tym lepiej
+        self.priority: float = float("inf")  # na jago podstawie trzeba wybierac, im mniejszy tym lepiej
         self.week_schedule: WeekSchedule = WeekSchedule()
         self.potential_occupation_probability: Dict[ClassesID, float] = {}
-        self._const_potential_occupation_probability: Dict[ClassesID, float] = None
+        self._const_potential_occupation_probability: Union[None, Dict[ClassesID, float]] = None
 
     def add_const_potential_occupation_probability(self):
         if self._const_potential_occupation_probability is None:
             self._const_potential_occupation_probability = deepcopy(self.potential_occupation_probability)
         else:
-            PermissionError("const_potential_occupation_probability already exist!")
+            AttributeError("const_potential_occupation_probability already exist!")
 
     def _update(self, classes: Classes):
         self._predicted_occupation = sum(self.potential_occupation_probability.values())
