@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from typing import List, Dict, Tuple,  Union
+from typing import List, Dict, Tuple, Union, Optional
 
 from parameters import LECTURER_WEIGHT
-from scheduler.basic_structures import ClassesID, Lecture, Exercises, Time
-from scheduler.constans import UTIME, ENDOFDAY, STARTOFDAY
-from scheduler.week_day import WeekSchedule
+from basic_structures import ClassesID, Lecture, Exercises, Time
+from constans import UTIME, ENDOFDAY, STARTOFDAY
+from week_day import WeekSchedule
 
 
 class Classes:  # zajęcia - ogólnie
@@ -14,7 +14,7 @@ class Classes:  # zajęcia - ogólnie
                  id_: ClassesID,
                  lecturer: Lecturer,
                  duration: int,
-                 rooms: Tuple[Room],
+                 rooms: Tuple[Room, ...],
                  type_: Union[Lecture, Exercises],
                  groups: List[Group]):
         self.id_ = id_
@@ -146,7 +146,7 @@ class Room:  # sala
         self.priority: float = float("inf")  # na jago podstawie trzeba wybierac, im mniejszy tym lepiej
         self.week_schedule: WeekSchedule = WeekSchedule()
         self.potential_occupation_probability: Dict[ClassesID, float] = {}
-        self._const_potential_occupation_probability: Union[None, Dict[ClassesID, float]] = None
+        self._const_potential_occupation_probability: Optional[Dict[ClassesID, float]] = None
 
     def add_const_potential_occupation_probability(self):
         if self._const_potential_occupation_probability is None:

@@ -1,6 +1,6 @@
 from typing import Callable, List, TYPE_CHECKING
 
-from scheduler.basic_structures import Time
+from basic_structures import Time
 from constans import UTIME, MAX_FD, MAX_FO, MAX_FR, MAX_FP
 from parameters import WEIGHTS_FD, FUN_WEIGHTS
 from utils import weights_FP
@@ -12,6 +12,9 @@ if TYPE_CHECKING:
 class WeekSchedule:
     def __init__(self):
         self.day_schedules = [DaySchedule()] * 5
+
+    def __getitem__(self, item):
+        return self.day_schedules[item]
 
     def is_time_available(self, time, brake_time_) -> bool:
         for classes in self.day_schedules[time.day_nr].classes:

@@ -1,13 +1,12 @@
 from typing import Tuple, List
 from random import randint
 
-from scheduler.basic_structures import Time, NoRoomAvailable, AssignError
-from scheduler.constans import STARTOFDAY, ENDOFDAY, UTIME
-from scheduler.structures import Classes, Room
+from basic_structures import Time, NoRoomAvailable, AssignError
+from constans import STARTOFDAY, ENDOFDAY
+from structures import Classes, Room
 from utils import fun_of_gap
 
 
-# todo
 class RoomManager:
     def __init__(self, rooms: Tuple[Room]):
         self.rooms = rooms
@@ -34,10 +33,10 @@ class RoomManager:
             return available_rooms[0]
 
         # podział na sekcje względem długości przerw przed i po czasie
-        available_rooms_sections = [[] for _ in range(fun_of_gap(0, True))]
+        available_rooms_sections = [[] for _ in range(fun_of_gap(0, True) * 2 + 1)]
         for room in available_rooms:
-            fgap = fun_of_gap(sum(self.availability_of_room_around_time(room, time)))
-            available_rooms_sections[fgap] = room
+            fgap = sum(fun_of_gap(self.availability_of_room_around_time(room, time)))
+            available_rooms_sections[fgap].append(room)
 
         # Wybór najwyższego priorytetu z uwzględnieniem sekcji
         for section in available_rooms_sections:
@@ -52,7 +51,7 @@ class RoomManager:
         raise InterruptedError("Popsułem funkcję get_best_room")
 
     @staticmethod
-    def availability_of_room_around_time(room, time):
+    def availability_of_room_around_time(room: Room, time: Time) -> Tuple[int, int]:
         """
         Funkcja pomocnicza do sprawdzania ile czasu do następnych zajęć i ile czasu od ostatnich zajęć
         :return: (a, b) - a = czas od ostatnich zajęć , b = czas do następnych zajęć
@@ -66,7 +65,7 @@ class RoomManager:
             elif time.end < classes.time.start:
                 if classes.time.start < first_start_after:
                     first_start_after = time
-        return time - last_end_before, first_start_after - time
+        return int(time.start - last_end_before), int(first_start_after - time.end)
 
 
 # todo sprawdzić
@@ -113,7 +112,8 @@ class ClassesManager:
 
     def _reconstruction(self, classes_: Classes, step: int = 5):
         """
-        Funkcja cofa określoną liczbę przypisań i dokonuje drobnej zmiany kolejności przy ponownym konstruowaniu rozwiązania
+        Funkcja cofa określoną liczbę przypisań i dokonuje drobnej zmiany kolejności przy ponownym
+         konstruowaniu rozwiązania
         :param classes_: nie przypisane zajęcia
         :param step: krok cofnięcia
         :return:

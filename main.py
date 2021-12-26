@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from scheduler.abstract_structures import RoomManager, ClassesManager
+from abstract_structures import RoomManager, ClassesManager
 from structures import Classes, Group, Lecturer, Room
 from utils import sort_classes, add_occupation, generate_groups, generate_classes, generate_lecturers, generate_rooms
 from parameters import SECTIONS_AMOUNT, GROUPS_FILE, CLASSES_FILE, ROOMS_FILE, LECTURERS_FILE, REASSIGN_TYPE, STEP
@@ -28,14 +28,3 @@ while classes_ := classes_manager.get_next_classes():
             break
     else:
         classes_manager.can_not_assign(classes_, REASSIGN_TYPE, STEP, rm=room_manager)
-
-
-
-
-
-
-
-
-
-
-

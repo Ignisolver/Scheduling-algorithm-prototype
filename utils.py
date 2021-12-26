@@ -1,8 +1,8 @@
-from typing import Tuple, List
+from typing import Tuple, List, Union
 from csv import reader
 
 from structures import Room, Classes, Group, Lecturer
-from basic_structures import Lecture, Exercises, Time
+from basic_structures import Lecture, Exercises, Time, ClassesID
 from constans import UTIME, PERFECT_TIME_A, PERFECT_TIME_B, STARTOFDAY, ENDOFDAY
 
 
@@ -87,7 +87,7 @@ def add_occupation(rooms_: Tuple[Room], classes_: Tuple[Classes]):
         room.add_const_potential_occupation_probability()
 
 
-def fun_of_gap(gap_length: int, num_of_class: bool = False) -> int:
+def fun_of_gap(gap_length: Union[int, Tuple[int, int]], num_of_class: bool = False) -> Union[int, Tuple[int, ...]]:
     """
     Funkcja zwraca wartość zależną od rozmiaru okienka między zajęciami #TODO zobacz czy ma to sens
     :param gap_length: długość okienka
@@ -99,20 +99,34 @@ def fun_of_gap(gap_length: int, num_of_class: bool = False) -> int:
     if num_of_class:
         return 5
 
-    if gap_length < 0:
-        raise ValueError("Długość przerwy mniejsza od zera")
-    if gap_length % 90 == (
-            gap_length // 90 + 1) * UTIME:  # okienko wielokrotnością 90 min zajęć + 5 przerwy przed i po
-        return 0
-    if gap_length % 45 == (
-            gap_length // 45 + 1) * UTIME:  # okienko wielokrotnością 45 min zajęć + 5 przerwy przed i po
-        return 1
-    if gap_length % 45 <= (
-            gap_length // 45 + 1) * 4 * UTIME:  # przerwa między miejscami na zajęciami <=20min ale dłuższa niż 5 min
-        return 2
-    if gap_length % 45 == 0:  # braknie przerw między zajęciami
-        return 3
-    return 4  # pozostałe
+    if gap_length is int:
+        if gap_length < 0:
+            raise ValueError("Długość przerwy mniejsza od zera")
+        if gap_length % 90 == (gap_length // 90 + 1) * UTIME:
+            return 0                                    # okienko wielokrotnością 90 min zajęć + 5 przerwy przed i po
+        if gap_length % 45 == (gap_length // 45 + 1) * UTIME:
+            return 1                                    # okienko wielokrotnością 45 min zajęć + 5 przerwy przed i po
+        if gap_length % 45 <= (gap_length // 45 + 1) * 4 * UTIME:
+            return 2                            # przerwa między miejscami na zajęciami <=20min ale dłuższa niż 5 min
+        if gap_length % 45 == 0:
+            return 3                            # braknie przerw między zajęciami
+        return 4  # pozostałe
+    else:
+        rslt = []
+        for gap in gap_length:
+            if gap < 0:
+                raise ValueError("Długość przerwy mniejsza od zera")
+            elif gap % 90 == (gap // 90 + 1) * UTIME:
+                rslt.append(0)  # okienko wielokrotnością 90 min zajęć + 5 przerwy przed i po
+            elif gap % 45 == (gap // 45 + 1) * UTIME:
+                rslt.append(1)  # okienko wielokrotnością 45 min zajęć + 5 przerwy przed i po
+            elif gap % 45 <= (gap // 45 + 1) * 4 * UTIME:
+                rslt.append(2)  # przerwa między miejscami na zajęciami <=20min ale dłuższa niż 5 min
+            elif gap % 45 == 0:
+                rslt.append(3)  # braknie przerw między zajęciami
+            else:
+                rslt.append(4)  # pozostałe
+        return tuple(rslt)
 
 
 def weights_FP(time: Time) -> float:
@@ -176,11 +190,11 @@ def generate_classes(file: str, lecturers: Tuple[Lecturer], groups: Tuple[Group]
                 classes_room_id = [int(room) for room in (re[4][1:-1]).split(", ")]
                 classes_group_id = [int(group) for group in (re[5][1:-1]).split(", ")]
                 if re[2] == "Lecture":
-                    class_type = Lecture
+                    class_type = Lecture()
                 if re[2] == Exercises:
-                    class_type = Exercises
+                    class_type = Exercises()
 
-                classes.append(Classes(int(re[0]),          # id_
+                classes.append(Classes(ClassesID(re[0]),          # id_
                                        lecturers[re[1]],    # lecturer
                                        int(re[3]),          # duration
                                        tuple([rooms[rid] for rid in classes_room_id]),  # rooms
