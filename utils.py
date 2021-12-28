@@ -1,9 +1,8 @@
-from typing import Tuple, List, Union
+from typing import Tuple, List
 from csv import reader
 
 from structures import Room, Classes, Group, Lecturer
-from basic_structures import Lecture, Exercises, Time, ClassesID
-from constans import UTIME, PERFECT_TIME_A, PERFECT_TIME_B, STARTOFDAY, ENDOFDAY
+from basic_structures import Lecture, Exercises, ClassesID
 
 
 def sort_classes(classes_: Tuple[Classes], n_sections: int) -> Tuple[Classes]:
@@ -85,61 +84,6 @@ def add_occupation(rooms_: Tuple[Room], classes_: Tuple[Classes]):
                 room.potential_occupation_probability[classes.id_] = classes.time.duration / X
     for room in rooms_:
         room.add_const_potential_occupation_probability()
-
-
-def fun_of_gap(gap_length: Union[int, Tuple[int, int]], num_of_class: bool = False) -> Union[int, Tuple[int, ...]]:
-    """
-    Funkcja zwraca wartość zależną od rozmiaru okienka między zajęciami #TODO zobacz czy ma to sens
-    :param gap_length: długość okienka
-    :param num_of_class ponieważ liczba oceny długości wpisana ręcznie, może być przydatne określenie ile ich może być
-            trzeba niestety zmieniać ręcznie - mało profesjonalne, ale znacznie ułatwia
-            jeśli True zwraca tylko liczbę klas
-    :return: wartość oceny długości zakres [0,5)
-    """
-    if num_of_class:
-        return 5
-
-    if gap_length is int:
-        if gap_length < 0:
-            raise ValueError("Długość przerwy mniejsza od zera")
-        if gap_length % 90 == (gap_length // 90 + 1) * UTIME:
-            return 0                                    # okienko wielokrotnością 90 min zajęć + 5 przerwy przed i po
-        if gap_length % 45 == (gap_length // 45 + 1) * UTIME:
-            return 1                                    # okienko wielokrotnością 45 min zajęć + 5 przerwy przed i po
-        if gap_length % 45 <= (gap_length // 45 + 1) * 4 * UTIME:
-            return 2                            # przerwa między miejscami na zajęciami <=20min ale dłuższa niż 5 min
-        if gap_length % 45 == 0:
-            return 3                            # braknie przerw między zajęciami
-        return 4  # pozostałe
-    else:
-        rslt = []
-        for gap in gap_length:
-            if gap < 0:
-                raise ValueError("Długość przerwy mniejsza od zera")
-            elif gap % 90 == (gap // 90 + 1) * UTIME:
-                rslt.append(0)  # okienko wielokrotnością 90 min zajęć + 5 przerwy przed i po
-            elif gap % 45 == (gap // 45 + 1) * UTIME:
-                rslt.append(1)  # okienko wielokrotnością 45 min zajęć + 5 przerwy przed i po
-            elif gap % 45 <= (gap // 45 + 1) * 4 * UTIME:
-                rslt.append(2)  # przerwa między miejscami na zajęciami <=20min ale dłuższa niż 5 min
-            elif gap % 45 == 0:
-                rslt.append(3)  # braknie przerw między zajęciami
-            else:
-                rslt.append(4)  # pozostałe
-        return tuple(rslt)
-
-
-def weights_FP(time: Time) -> float:
-    """
-    Funkcja wyznacza wagę pory rozpoczęcia zajęć, funkcja jest rampą o 0 w
-    STARTOFDAY i ENDOFDAY i 1 w [PERFECT_TIME_A, PERFECT_TIME_B] podanych jako parametr PERFECT_TIME
-    """
-    if time.start < PERFECT_TIME_A:
-        return int(time.start - STARTOFDAY) / int(PERFECT_TIME_A - STARTOFDAY)
-    if time.start <= PERFECT_TIME_B:
-        return 1
-    else:
-        return int(time.start - ENDOFDAY) / int(PERFECT_TIME_B - ENDOFDAY)
 
 
 def generate_groups(file: str) -> Tuple[Group]:

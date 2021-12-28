@@ -1,10 +1,9 @@
-from typing import Tuple, List
+from typing import Tuple, List, Union
 from random import randint
 
 from basic_structures import Time, NoRoomAvailable, AssignError
-from constans import STARTOFDAY, ENDOFDAY
+from constans import STARTOFDAY, ENDOFDAY, UTIME
 from structures import Classes, Room
-from utils import fun_of_gap
 
 
 class RoomManager:
@@ -33,9 +32,9 @@ class RoomManager:
             return available_rooms[0]
 
         # podział na sekcje względem długości przerw przed i po czasie
-        available_rooms_sections = [[] for _ in range(fun_of_gap(0, True) * 2 + 1)]
+        available_rooms_sections = [[] for _ in range(self.fun_of_gap(0, True) * 2 + 1)]
         for room in available_rooms:
-            fgap = sum(fun_of_gap(self.availability_of_room_around_time(room, time)))
+            fgap = sum(self.fun_of_gap(self.availability_of_room_around_time(room, time)))
             available_rooms_sections[fgap].append(room)
 
         # Wybór najwyższego priorytetu z uwzględnieniem sekcji
@@ -48,7 +47,7 @@ class RoomManager:
                 return max_priority_room
             elif section:
                 return section[0]
-        raise InterruptedError("Popsułem funkcję get_best_room")
+        raise InterruptedError("function get_best_room is messed up")
 
     @staticmethod
     def availability_of_room_around_time(room: Room, time: Time) -> Tuple[int, int]:
@@ -66,6 +65,48 @@ class RoomManager:
                 if classes.time.start < first_start_after:
                     first_start_after = time
         return int(time.start - last_end_before), int(first_start_after - time.end)
+
+    @staticmethod
+    def fun_of_gap(gap_length: Union[int, Tuple[int, int]], num_of_class: bool = False) -> Union[int, Tuple[int, ...]]:
+        """
+        Funkcja zwraca wartość zależną od rozmiaru okienka między zajęciami #TODO zobacz czy ma to sens
+        :param gap_length: długość okienka
+        :param num_of_class ponieważ liczba oceny długości wpisana ręcznie, może być przydatne określenie ile ich
+                    może być trzeba niestety zmieniać ręcznie - mało profesjonalne, ale znacznie ułatwia
+                jeśli True zwraca tylko liczbę klas
+        :return: wartość oceny długości zakres [0,5)
+        """
+        if num_of_class:
+            return 5
+
+        if gap_length is int:
+            if gap_length < 0:
+                raise ValueError("Break time must be >= 0")
+            if gap_length % 90 == (gap_length // 90 + 1) * UTIME:
+                return 0  # okienko wielokrotnością 90 min zajęć + 5 przerwy przed i po
+            if gap_length % 45 == (gap_length // 45 + 1) * UTIME:
+                return 1  # okienko wielokrotnością 45 min zajęć + 5 przerwy przed i po
+            if gap_length % 45 <= (gap_length // 45 + 1) * 4 * UTIME:
+                return 2  # przerwa między miejscami na zajęciami <=20min ale dłuższa niż 5 min
+            if gap_length % 45 == 0:
+                return 3  # braknie przerw między zajęciami
+            return 4  # pozostałe
+        else:
+            rslt = []
+            for gap in gap_length:
+                if gap < 0:
+                    raise ValueError("Break time must be >= 0")
+                elif gap % 90 == (gap // 90 + 1) * UTIME:
+                    rslt.append(0)  # okienko wielokrotnością 90 min zajęć + 5 przerwy przed i po
+                elif gap % 45 == (gap // 45 + 1) * UTIME:
+                    rslt.append(1)  # okienko wielokrotnością 45 min zajęć + 5 przerwy przed i po
+                elif gap % 45 <= (gap // 45 + 1) * 4 * UTIME:
+                    rslt.append(2)  # przerwa między miejscami na zajęciami <=20min ale dłuższa niż 5 min
+                elif gap % 45 == 0:
+                    rslt.append(3)  # braknie przerw między zajęciami
+                else:
+                    rslt.append(4)  # pozostałe
+            return tuple(rslt)
 
 
 # todo sprawdzić
@@ -144,6 +185,7 @@ class ClassesManager:
         :return:
         """
         for idx, assigned_classes in enumerate(reversed(self.assignments)):
+            time_assigned, room_assigned = assigned_classes.time, assigned_classes.room
             assigned_classes.revert_assign()
             best_time_generator = classes_.get_best_time_generator()
             for time in best_time_generator:
@@ -154,3 +196,4 @@ class ClassesManager:
                     self.register_assignment(classes_)
                     self.classes2assign.append(self.assignments.pop(-1 - idx))
                     return None
+            assigned_classes.assign(time_assigned, room_assigned)

@@ -1,9 +1,14 @@
-from typing import Tuple
+from typing import Tuple, TYPE_CHECKING
 
-from abstract_structures import RoomManager, ClassesManager
-from structures import Classes, Group, Lecturer, Room
+from parameters import SECTIONS_AMOUNT, GROUPS_FILE, CLASSES_FILE, ROOMS_FILE, LECTURERS_FILE, \
+    REASSIGN_TYPE, STEP, MAX_ITER
 from utils import sort_classes, add_occupation, generate_groups, generate_classes, generate_lecturers, generate_rooms
-from parameters import SECTIONS_AMOUNT, GROUPS_FILE, CLASSES_FILE, ROOMS_FILE, LECTURERS_FILE, REASSIGN_TYPE, STEP
+from abstract_structures import RoomManager, ClassesManager
+
+if TYPE_CHECKING:
+    from structures import Classes, Group, Lecturer, Room
+
+can_not_assign_counter = 0
 
 lecturers: Tuple[Lecturer] = generate_lecturers(LECTURERS_FILE)
 groups: Tuple[Group] = generate_groups(GROUPS_FILE)
@@ -27,4 +32,9 @@ while classes_ := classes_manager.get_next_classes():
             classes_manager.register_assignment(classes_)
             break
     else:
+        if can_not_assign_counter < MAX_ITER:
+            can_not_assign_counter += 1
+        else:
+            print("algorithm couldn't find solution in defined number of iteration")
+            break
         classes_manager.can_not_assign(classes_, REASSIGN_TYPE, STEP, rm=room_manager)

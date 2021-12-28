@@ -1,12 +1,24 @@
 from typing import Callable, List, TYPE_CHECKING
 
 from basic_structures import Time
-from constans import UTIME, MAX_FD, MAX_FO, MAX_FR, MAX_FP
+from constans import UTIME, MAX_FD, MAX_FO, MAX_FR, MAX_FP, PERFECT_TIME_A, PERFECT_TIME_B, STARTOFDAY, ENDOFDAY
 from parameters import WEIGHTS_FD, FUN_WEIGHTS
-from utils import weights_FP
 
 if TYPE_CHECKING:
     from structures import Classes
+
+
+def weights_FP(time: Time) -> float:
+    """
+    Funkcja wyznacza wagę pory rozpoczęcia zajęć, funkcja jest rampą o 0 w
+    STARTOFDAY i ENDOFDAY i 1 w [PERFECT_TIME_A, PERFECT_TIME_B] podanych jako parametr PERFECT_TIME
+    """
+    if time.start < PERFECT_TIME_A:
+        return int(time.start - STARTOFDAY) / int(PERFECT_TIME_A - STARTOFDAY)
+    if time.start <= PERFECT_TIME_B:
+        return 1
+    else:
+        return int(time.start - ENDOFDAY) / int(PERFECT_TIME_B - ENDOFDAY)
 
 
 class WeekSchedule:
@@ -66,7 +78,7 @@ class WeekSchedule:
 class DaySchedule:
     def __init__(self):
         self.classes: List[Classes] = []
-        self.weights_FP: Callable[[Time], float] = ...  # todo wagi z constans.py
+        self.weights_FP: Callable[[Time], float] = weights_FP
 
     def assign(self, classes: Classes):
         self.classes.append(classes)
