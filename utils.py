@@ -150,7 +150,7 @@ def generate_classes(file: str, lecturers: Tuple[Lecturer], groups: Tuple[Group]
 
 def generate_rooms(file: str) -> Tuple[Room]:
     """
-    Pobiera dane o salach: id - indeksy, priorytet
+    Pobiera dane o salach: id - indeksy, availability
     :param file:
     :return:
     """
