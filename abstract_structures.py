@@ -12,13 +12,6 @@ class RoomManager:
         self.rooms = rooms
 
     def get_best_room(self, rooms: Tuple[Room], time: Time) -> Room:
-        """
-        weź dostępne sale
-        sprawdź które mają dostępny ten czas
-        sprawdź które mało tracą (z buforem)
-        wybierz tą która ma największy priorytet
-            ostatnie dwie można zamienić
-        """
         available_rooms = []
         # sprawdzanie czasu i dodanie do available_rooms
         for room in rooms:
@@ -60,7 +53,7 @@ class RoomManager:
         """
         last_end_before = STARTOFDAY
         first_start_after = ENDOFDAY
-        for classes in room.week_schedule[time.day_nr].day_schedule.classes:
+        for classes in room.week_schedule.day_schedules[time.day_nr].classes:
             if classes.time.end < time.start:
                 if last_end_before < classes.time.end:
                     last_end_before = time
