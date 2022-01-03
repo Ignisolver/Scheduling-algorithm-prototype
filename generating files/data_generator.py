@@ -5,24 +5,24 @@ from pandas import DataFrame
 Dane oparte mniej więcej na podstawie wydziału EAIiIB AGH, policzone na "oko"
 """
 
-ROOM_FILE_NAME = "sale1.csv"
+ROOM_FILE_NAME = "sale_baza.csv"
 ROOM_NUMBER = 68
 ROOM_NUMBER_WITH_MAX_AVAILABILITY = 40
 MIN_AVAILABILITY = 2500
 MAX_AVAILABILITY = 3000
 
 
-LECTURER_FILE_NAME = "prowadzacy1.csv"
+LECTURER_FILE_NAME = "prowadzacy_baza.csv"
 LECTURER_NUMBER = 66
 
 
-GROUPS_FILE_NAME = "grupy1.csv"
+GROUPS_FILE_NAME = "grupy_baza.csv"
 GROUP_NUMBER = 92
 MIN_GROUP_SIZE = 20
 MAX_GROUP_SIZE = 30
 
 
-CLASSES_FILE_NAME = "zajecia1.csv"
+CLASSES_FILE_NAME = "zajecia_baza.csv"
 FIELD1_NUMBER = 7
 FIELD2_NUMBER = 15
 

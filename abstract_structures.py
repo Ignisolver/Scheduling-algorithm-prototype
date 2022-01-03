@@ -114,7 +114,9 @@ class ClassesManager:
     def __init__(self, classes: Tuple[Classes]):
         self.assignments: List[Classes] = []
         self.classes2assign: List[Classes] = list(classes)
-        self.not_assigned: List[Classes] = []
+
+    def get_not_assigned_number(self):
+        return len(self.classes2assign)
 
     def get_next_classes(self) -> Classes:
         return self.classes2assign.pop(-1)
