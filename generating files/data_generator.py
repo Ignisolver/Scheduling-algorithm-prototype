@@ -6,7 +6,7 @@ Dane oparte mniej więcej na podstawie wydziału EAIiIB AGH, policzone na "oko"
 """
 
 ROOM_FILE_NAME = "sale1.csv"
-ROOM_NUMBER = 49
+ROOM_NUMBER = 68
 ROOM_NUMBER_WITH_MAX_AVAILABILITY = 40
 MIN_AVAILABILITY = 2500
 MAX_AVAILABILITY = 3000

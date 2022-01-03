@@ -170,9 +170,9 @@ class ClassesManager:
                     break
             # zamiana kolejności losowych zajęć z listy do przypisania
             if len(self.assignments) > step:
-                a, b = randint(-step, -1), randint(-step, -1)
+                a, b = -step, randint(-step, -1)
             else:
-                a, b = randint(-len(self.assignments), -1), randint(-len(self.assignments), -1)
+                a, b = -len(self.assignments), randint(-len(self.assignments), -1)
             self.classes2assign[a], self.classes2assign[b] = self.classes2assign[b], self.classes2assign[a]
         else:
             raise AssignError
