@@ -27,9 +27,13 @@ def sort_classes(classes_: Tuple[Classes], n_sections: int) -> Tuple[Classes]:
     # sortowanie zajęć wg id grupy (id grupy wykładu = -1) i dzielenie
     sorted_by_groups: List[Classes] = list(classes_)
     sorted_by_groups.sort(key=group_sort_id)
-    group_division: List[List[Classes]] = [[]] * (sorted_by_groups[-1].get_groups()[-1].id_ + 2)
+    group_division: List[List[Classes]] = [[] for _ in range(sorted_by_groups[-1].get_groups()[-1].id_ + 2)]
     for classes in sorted_by_groups:
-        group_division[group_sort_id(classes) + 1].append(classes)
+        if len(classes.get_groups()) > 1:
+            group_division[0].append(classes)
+        else:
+            group_division[classes.get_groups()[0] + 1].append(classes)
+
 
     sorted_groups = []
     # sortowanie wewnątrz grup
