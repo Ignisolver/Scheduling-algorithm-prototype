@@ -1,12 +1,24 @@
 from __future__ import annotations
 
+from abc import abstractmethod, ABCMeta
 from copy import deepcopy
+from functools import cache
 from typing import List, Dict, Tuple, Union, Optional
 
 from parameters import LECTURER_WEIGHT
 from basic_structures import ClassesID, Lecture, Exercises, Time
 from constans import UTIME, ENDOFDAY, STARTOFDAY
+from scheduler.constans import COLORS
 from week_day import WeekSchedule
+
+
+def _color_getter():
+    while True:
+        for color in COLORS:
+            yield color
+
+
+get_color = _color_getter()
 
 
 class Classes:  # zajęcia - ogólnie
@@ -14,7 +26,7 @@ class Classes:  # zajęcia - ogólnie
                  id_: ClassesID,
                  lecturer: Lecturer,
                  duration: int,
-                 rooms: Tuple[Room, ...],
+                 rooms: Tuple[Room],
                  type_: Union[Lecture, Exercises],
                  groups: List[Group]):
         self.id_ = id_
@@ -116,11 +128,41 @@ class Classes:  # zajęcia - ogólnie
         g_b_t_gen = self.get_best_time(times, goal_fun_vals)
         return g_b_t_gen
 
+    def _get_groups_ids(self):
+        return ",".join([group.id_ for group in self._groups])
 
-class Lecturer:
-    def __init__(self,
-                 id_,
-                 ):
+    def _get_name_info(self):
+        data_txt = \
+            f"""id-{self.id_}
+            room-{self.room.id_}
+            lecturer-{self._lecturer.id_}
+            group-{self._get_groups_ids()}"""
+        return data_txt
+
+    @cache
+    def print(self, letter):
+        txt = f"""- name: |
+        {self._get_name_info()}
+        days: {letter}
+        time: {self.time}
+        color: "{next(get_color)}"
+        
+        """
+        return txt
+
+
+class WithSchedule(metaclass=ABCMeta):
+    def __init__(self):
+        self.id_ = None
+
+    @abstractmethod
+    def print_schedule(self):
+        pass
+
+
+class Lecturer(WithSchedule):
+    def __init__(self, id_):
+        super().__init__()
         self.id_ = id_
         self.week_schedule = WeekSchedule()
 
@@ -133,12 +175,13 @@ class Lecturer:
     def revert_assign(self, classes):
         self.week_schedule.revert_assign(classes)
 
+    def print_schedule(self):
+        return self.week_schedule.print_schedule()
 
-class Room:  # sala
-    def __init__(self,
-                 id_,
-                 availability: int,
-                 ):
+
+class Room(WithSchedule):  # sala
+    def __init__(self, id_, availability: int):
+        super().__init__()
         self.id_ = id_
         self._predicted_occupation: float = 0  # szacunkowy współczynnik ile będzie zajęta
         self._current_occupation = 0  # ile już jest zajęta minuty
@@ -174,9 +217,13 @@ class Room:  # sala
     def is_time_available(self, time: Time) -> bool:
         return self.week_schedule.is_time_available(time, 0)
 
+    def print_schedule(self):
+        return self.week_schedule.print_schedule()
 
-class Group:  # grupa
+
+class Group(WithSchedule):  # grupa
     def __init__(self, id_, sa):
+        super().__init__()
         self.id_ = id_
         self.students_amount = sa
         self.week_schedule: WeekSchedule = WeekSchedule()
@@ -186,3 +233,6 @@ class Group:  # grupa
 
     def revert_assign(self, classes: Classes):
         self.week_schedule.revert_assign(classes)
+
+    def print_schedule(self):
+        return self.week_schedule.print_schedule()

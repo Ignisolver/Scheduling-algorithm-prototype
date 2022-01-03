@@ -103,6 +103,9 @@ class Hour:
 
             return Hour(hour, minute)
 
+    def __repr__(self):
+        return str(self.hour) + ":" + str(self.minute)
+
 
 class Time:
     def __init__(self, day_nr, start: Hour, duration_mins: int):
@@ -110,6 +113,9 @@ class Time:
         self.start = start
         self.end = start + duration_mins
         self.duration = duration_mins
+
+    def __repr__(self):
+        return str(self.start) + " - " + str(self.end)
 
     def cross(self, other: Time, break_=0):
         """

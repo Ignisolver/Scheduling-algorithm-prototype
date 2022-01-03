@@ -3,6 +3,7 @@ from typing import Callable, List, TYPE_CHECKING
 from basic_structures import Time
 from constans import UTIME, MAX_FD, MAX_FO, MAX_FR, MAX_FP, PERFECT_TIME_A, PERFECT_TIME_B, STARTOFDAY, ENDOFDAY
 from parameters import WEIGHTS_FD, FUN_WEIGHTS
+from scheduler.constans import DAY_LETTER
 
 if TYPE_CHECKING:
     from structures import Classes
@@ -74,6 +75,13 @@ class WeekSchedule:
     def _calc_week_FR(self, week_classes_time: int, num_of_free_days: int) -> float:
         return sum([day.calc_day_FR(week_classes_time, num_of_free_days) for day in self.day_schedules])
 
+    def print_schedule(self):
+        text = ""
+        for day_nr, day_sched in enumerate(self.day_schedules):
+            letter = DAY_LETTER[day_nr]
+            text += day_sched.print_schedule(letter)
+        return text
+
 
 class DaySchedule:
     def __init__(self):
@@ -112,3 +120,10 @@ class DaySchedule:
 
     def calc_day_FR(self, week_classes_time: int, num_of_free_days: int) -> float:
         return abs(week_classes_time / (5 - num_of_free_days) - self.get_day_classes_time()) / MAX_FR
+
+    def print_schedule(self, letter):
+        text = ""
+        for classes in self.classes:
+            text += classes.print(letter)
+        return text
+

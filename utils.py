@@ -161,3 +161,5 @@ def generate_rooms(file: str) -> Tuple[Room]:
             if re[0] != '':
                 rooms.append(Room(int(re[0]), int(re[1])))
     return tuple(rooms)
+
+

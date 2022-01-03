@@ -2,6 +2,7 @@ from typing import Tuple, TYPE_CHECKING
 
 from parameters import SECTIONS_AMOUNT, GROUPS_FILE, CLASSES_FILE, ROOMS_FILE, LECTURERS_FILE, \
     REASSIGN_TYPE, STEP, MAX_ITER
+from scheduler.solution_saver import save_solution
 from utils import sort_classes, add_occupation, generate_groups, generate_classes, generate_lecturers, generate_rooms
 from abstract_structures import RoomManager, ClassesManager
 
@@ -40,3 +41,8 @@ while classes_ := classes_manager.get_next_classes():
             print("algorithm couldn't find solution in defined number of iteration")
             break
         classes_manager.can_not_assign(classes_, REASSIGN_TYPE, STEP, rm=room_manager)
+
+save_solution(lecturers, "lecturers")
+save_solution(groups, "groups")
+save_solution(rooms, "rooms")
+
