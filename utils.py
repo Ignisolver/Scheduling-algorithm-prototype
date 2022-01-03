@@ -74,14 +74,14 @@ def group_sort_id(classes: Classes) -> int:
 
 def add_occupation(rooms_: Tuple[Room], classes_: Tuple[Classes]):
     """
-    X = Policz w ilu salach mogą się odbywać dane zajęcia
-    każdej sali przypisz dla każdych zajęć szansę że akurat w niej się odbędą 1/X*czas_zajeć
+    amount_of_avl_rooms = Policz w ilu salach mogą się odbywać dane zajęcia
+    każdej sali przypisz dla każdych zajęć szansę że akurat w niej się odbędą 1/amount_of_avl_rooms*czas_zajeć
     """
     for classes in classes_:
-        X: int = len(classes.available_rooms)
+        amount_of_avl_rooms: int = len(classes.available_rooms)
         for room in rooms_:
             if room in classes.available_rooms:
-                room.potential_occupation_probability[classes.id_] = classes.duration / X
+                room.potential_occupation_probability[classes.id_] = classes.duration / amount_of_avl_rooms
     for room in rooms_:
         room.add_const_potential_occupation_probability()
 
