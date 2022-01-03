@@ -113,6 +113,7 @@ class Time:
         self.start = start
         self.end = start + duration_mins
         self.duration = duration_mins
+        self.mark = ...
 
     def __repr__(self):
         return str(self.start) + " - " + str(self.end)

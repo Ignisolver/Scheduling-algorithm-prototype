@@ -24,8 +24,6 @@ class RoomManager:
         if len(available_rooms) == 1:
             return available_rooms[0]
 
-
-        # todo - czy ok?
         # podział na sekcje względem długości przerw przed i po czasie
         available_rooms_sections = [[] for _ in range(self.fun_of_gap(0, True) * 2 + 1)]
         for room in available_rooms:
@@ -105,7 +103,6 @@ class RoomManager:
             return tuple(rslt)
 
 
-# todo sprawdzić
 class ClassesManager:
     def __init__(self, classes: Tuple[Classes]):
         self.assignments: List[Classes] = []

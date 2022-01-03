@@ -91,8 +91,8 @@ class DaySchedule:
     def assign(self, classes: "Classes"):
         self.classes.append(classes)
 
-    def revert_assign(self, classess: "Classes"):
-        self.classes.remove(classess)
+    def revert_assign(self, classes: "Classes"):
+        self.classes.remove(classes)
 
     def get_day_classes_time(self) -> int:
         time = 0
