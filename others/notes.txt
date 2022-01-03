@@ -2,3 +2,12 @@ zrobic tylko dla wydziału
 algoryutm poprawy rozwiązania / konstrukcyjny
 
 trzeba uważać na wagi, lub dodać normalizację
+
+BADANIA:
+1. Wpływ metody cofania i krok
+2. Wpływ poszczególnych wag
+3. Przypadki błędne
+4. Ilość sekcji
+5. Czego dużo
+6. Ilość iteracji
+7. Minimalna jedostka czasu

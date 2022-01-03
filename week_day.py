@@ -80,10 +80,10 @@ class DaySchedule:
         self.classes: List[Classes] = []
         self.weights_FP: Callable[[Time], float] = weights_FP
 
-    def assign(self, classes: Classes):
+    def assign(self, classes: "Classes"):
         self.classes.append(classes)
 
-    def revert_assign(self, classess: Classes):
+    def revert_assign(self, classess: "Classes"):
         self.classes.remove(classess)
 
     def get_day_classes_time(self) -> int:

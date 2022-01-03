@@ -10,7 +10,6 @@ class RoomManager:
     def __init__(self, rooms: Tuple[Room]):
         self.rooms = rooms
 
-    # todo - czy ok?
     def get_best_room(self, rooms: Tuple[Room], time: Time) -> Room:
         """
         weź dostępne sale
@@ -31,6 +30,8 @@ class RoomManager:
         if len(available_rooms) == 1:
             return available_rooms[0]
 
+
+        # todo - czy ok?
         # podział na sekcje względem długości przerw przed i po czasie
         available_rooms_sections = [[] for _ in range(self.fun_of_gap(0, True) * 2 + 1)]
         for room in available_rooms:
@@ -45,6 +46,7 @@ class RoomManager:
                     if max_priority_room.priority < room.priority:
                         max_priority_room = room
                 return max_priority_room
+
             elif section:
                 return section[0]
         raise InterruptedError("function get_best_room is messed up")

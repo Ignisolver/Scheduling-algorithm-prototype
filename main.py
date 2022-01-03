@@ -10,10 +10,10 @@ if TYPE_CHECKING:
 
 can_not_assign_counter = 0
 
-lecturers: Tuple[Lecturer] = generate_lecturers(LECTURERS_FILE)
-groups: Tuple[Group] = generate_groups(GROUPS_FILE)
-rooms: Tuple[Room] = generate_rooms(ROOMS_FILE)
-classes: Tuple[Classes] = generate_classes(CLASSES_FILE, lecturers, groups, rooms)
+lecturers: Tuple["Lecturer"] = generate_lecturers(LECTURERS_FILE)
+groups: Tuple["Group"] = generate_groups(GROUPS_FILE)
+rooms: Tuple["Room"] = generate_rooms(ROOMS_FILE)
+classes: Tuple["Classes"] = generate_classes(CLASSES_FILE, lecturers, groups, rooms)
 
 classes = sort_classes(classes, SECTIONS_AMOUNT)
 add_occupation(rooms, classes)
