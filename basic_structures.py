@@ -61,12 +61,12 @@ class Hour:
             hour = self.hour + hours2add
             minute = self.minute + mins2add
 
-            if minute > 60:
-                minute = minute % 60
+            if minute >= 60:
                 over_hours = int(minute / 60)
+                minute = minute % 60
                 hour += over_hours
 
-            if hour > 24:
+            if hour >= 24:
                 raise Exception
 
             return Hour(hour, minute)
@@ -104,7 +104,7 @@ class Hour:
             return Hour(hour, minute)
 
     def __repr__(self):
-        return str(self.hour) + ":" + str(self.minute)
+        return f"{self.hour}:{self.minute:02d}"
 
 
 class Time:

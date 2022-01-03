@@ -74,13 +74,11 @@ class Classes:  # zajęcia - ogólnie
 
     def get_times(self, duration):
         times = []
-        nr = 0
         for day_nr in range(5):
             s_h_g = self._start_hour_generator()
             for start_hour in s_h_g:
                 time = Time(day_nr, start_hour, duration)
-                times.append((nr, time))
-                nr += 1
+                times.append(time)
         return times
 
     def _start_hour_generator(self):
