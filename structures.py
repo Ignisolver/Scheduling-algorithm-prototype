@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from abc import abstractmethod, ABCMeta
 from copy import deepcopy
+from math import inf
 from functools import cache
 from typing import List, Dict, Tuple, Union, Optional
 
@@ -52,6 +53,8 @@ class Classes:  # zajęcia - ogólnie
         self.time = time
         self.room = room
         self._lecturer.assign(self)
+        for room in self.available_rooms:
+            room.update(self)
         self.room.assign(self)
         for group in self._groups:
             group.assign(self)
@@ -195,20 +198,24 @@ class Room(WithSchedule):  # sala
         else:
             AttributeError("const_potential_occupation_probability already exist!")
 
-    def _update(self, classes: Classes):
+    def update(self, classes: Classes, assign=False):
+        self.potential_occupation_probability[classes.id_] = 0  #
         self._predicted_occupation = sum(self.potential_occupation_probability.values())
-        self._current_occupation += classes.time.duration
-        self.priority = (self._availability - self._current_occupation) / self._predicted_occupation
+        if assign:
+            self._current_occupation += classes.time.duration
+        try:
+            self.priority = (self._availability - self._current_occupation) / self._predicted_occupation
+        except ZeroDivisionError:
+            self.priority = inf
 
     def assign(self, classes):
-        self.potential_occupation_probability[classes.id_] = 0
-        self._update(classes)
+        self.update(classes, True)
         self.week_schedule.assign(classes)
         pass
 
     def revert_assign(self, classes):
         self.potential_occupation_probability[classes.id_] = self._const_potential_occupation_probability[classes.id_]
-        self._update(classes)
+        self._assign_update(classes)
         self.week_schedule.revert_assign(classes)
         pass
 
