@@ -14,11 +14,11 @@ def weights_FP(time: Time) -> float:
     STARTOFDAY i ENDOFDAY i 1 w [PERFECT_TIME_A, PERFECT_TIME_B] podanych jako parametr PERFECT_TIME
     """
     if time.start < PERFECT_TIME_A:
-        return int(time.start - STARTOFDAY) / int(PERFECT_TIME_A - STARTOFDAY)
+        return 1 - (int(time.start - STARTOFDAY) / int(PERFECT_TIME_A - STARTOFDAY))
     if time.start <= PERFECT_TIME_B:
-        return 1
+        return 0
     else:
-        return int(time.start - ENDOFDAY) / int(PERFECT_TIME_B - ENDOFDAY)
+        return 1 - (int(time.start - ENDOFDAY) / int(PERFECT_TIME_B - ENDOFDAY))
 
 
 class WeekSchedule:
@@ -65,7 +65,7 @@ class WeekSchedule:
     def _calc_week_FD(self) -> float:
         satisfaction: int = 0
         for i in range(5):
-            satisfaction += int(self.day_schedules[i].is_day_free()) * WEIGHTS_FD[i]
+            satisfaction += int(self.day_schedules[i].is_day_free()) * (-WEIGHTS_FD[i])
         return satisfaction / MAX_FD
 
     def _calc_week_FP(self, week_classes_time: int) -> float:

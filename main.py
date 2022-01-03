@@ -9,6 +9,7 @@ if TYPE_CHECKING:
     from structures import Classes, Group, Lecturer, Room
 
 can_not_assign_counter = 0
+assign_counter = 0
 
 lecturers: Tuple["Lecturer"] = generate_lecturers(LECTURERS_FILE)
 groups: Tuple["Group"] = generate_groups(GROUPS_FILE)
@@ -30,6 +31,7 @@ while classes_ := classes_manager.get_next_classes():
         if room is not None:
             classes_.assign(time, room)
             classes_manager.register_assignment(classes_)
+            assign_counter += 1
             break
     else:
         if can_not_assign_counter < MAX_ITER:

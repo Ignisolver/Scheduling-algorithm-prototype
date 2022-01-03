@@ -116,7 +116,9 @@ class ClassesManager:
     def __init__(self, classes: Tuple[Classes]):
         self.assignments: List[Classes] = []
         self.classes2assign: List[Classes] = list(classes)
-        self.not_assigned: List[Classes] = []
+
+    def get_not_assigned_number(self):
+        return len(self.classes2assign)
 
     def get_next_classes(self) -> Classes:
         return self.classes2assign.pop(-1)
@@ -172,9 +174,9 @@ class ClassesManager:
                     break
             # zamiana kolejności losowych zajęć z listy do przypisania
             if len(self.assignments) > step:
-                a, b = randint(-step, -1), randint(-step, -1)
+                a, b = -step, randint(-step, -1)
             else:
-                a, b = randint(-len(self.assignments), -1), randint(-len(self.assignments), -1)
+                a, b = -len(self.assignments), randint(-len(self.assignments), -1)
             self.classes2assign[a], self.classes2assign[b] = self.classes2assign[b], self.classes2assign[a]
         else:
             raise AssignError
