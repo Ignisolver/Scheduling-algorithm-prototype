@@ -13,5 +13,6 @@ PERFECT_TIME = ((8, 00), (12, 00))  # godziny między którymi FP przyjmuje wart
 # other parameters
 SECTIONS_AMOUNT = 3
 REASSIGN_TYPE = "backtracking"  # backtracking/reconstruction/replacing
-STEP = 5
-MAX_ITER = 1000
+STEP = 15
+MAX_ITER = 10
+UTIME = 10  # jednostka czasu

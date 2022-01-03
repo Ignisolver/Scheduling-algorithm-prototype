@@ -1,7 +1,6 @@
 from basic_structures import Hour
-from parameters import WEIGHTS_FD, PERFECT_TIME
+from parameters import WEIGHTS_FD, PERFECT_TIME, UTIME
 
-UTIME = 10  # jednostka czasu
 STARTOFDAY = Hour(8, 00)  # od której mogą zaczynać się zajęcia
 ENDOFDAY = Hour(18, 00)  # do której najpóźniej mogą być zajęcia
 MIN_CLASS_DURATION = 90

@@ -1,8 +1,8 @@
 from typing import Callable, List, TYPE_CHECKING
 
 from basic_structures import Time
-from constans import UTIME, MAX_FD, MAX_FO, MAX_FR, MAX_FP, PERFECT_TIME_A, PERFECT_TIME_B, STARTOFDAY, ENDOFDAY
-from parameters import WEIGHTS_FD, FUN_WEIGHTS
+from constans import MAX_FD, MAX_FO, MAX_FR, MAX_FP, PERFECT_TIME_A, PERFECT_TIME_B, STARTOFDAY, ENDOFDAY
+from parameters import WEIGHTS_FD, FUN_WEIGHTS, UTIME
 
 if TYPE_CHECKING:
     from structures import Classes
