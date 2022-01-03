@@ -32,8 +32,7 @@ def sort_classes(classes_: Tuple[Classes], n_sections: int) -> Tuple[Classes]:
         if len(classes.get_groups()) > 1:
             group_division[0].append(classes)
         else:
-            group_division[classes.get_groups()[0] + 1].append(classes)
-
+            group_division[classes.get_groups()[0].id_ + 1].append(classes)
 
     sorted_groups = []
     # sortowanie wewnątrz grup
@@ -51,13 +50,16 @@ def sort_classes(classes_: Tuple[Classes], n_sections: int) -> Tuple[Classes]:
         sorted_groups.append(sorted_group)
 
     # biorę po jednej z każdej grupy na zmianę
-    sorted_classes: List[Classes] = sorted_groups[0][:]
+    sorted_classes: List[Classes] = sorted_groups.pop(0)
+
     while len(sorted_groups) > 0:
         for group in sorted_groups:
             if len(group) > 1:
                 sorted_classes.append(group.pop(0))
-            else:
+            elif group:
                 sorted_classes.append(group.pop(0))
+                sorted_groups.remove(group)
+            else:
                 sorted_groups.remove(group)
 
     sorted_classes.reverse()
