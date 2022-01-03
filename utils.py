@@ -81,7 +81,7 @@ def add_occupation(rooms_: Tuple[Room], classes_: Tuple[Classes]):
         X: int = len(classes.available_rooms)
         for room in rooms_:
             if room in classes.available_rooms:
-                room.potential_occupation_probability[classes.id_] = classes.time.duration / X
+                room.potential_occupation_probability[classes.id_] = classes.duration / X
     for room in rooms_:
         room.add_const_potential_occupation_probability()
 
@@ -139,7 +139,7 @@ def generate_classes(file: str, lecturers: Tuple[Lecturer], groups: Tuple[Group]
                     class_type = Exercises()
 
                 classes.append(Classes(ClassesID(re[0]),          # id_
-                                       lecturers[re[1]],    # lecturer
+                                       lecturers[int(re[1])],    # lecturer
                                        int(re[3]),          # duration
                                        tuple([rooms[rid] for rid in classes_room_id]),  # rooms
                                        class_type,          # type

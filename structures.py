@@ -5,10 +5,10 @@ from copy import deepcopy
 from functools import cache
 from typing import List, Dict, Tuple, Union, Optional
 
-from parameters import LECTURER_WEIGHT
+from parameters import LECTURER_WEIGHT, UTIME
 from basic_structures import ClassesID, Lecture, Exercises, Time
-from constans import UTIME, ENDOFDAY, STARTOFDAY
 from scheduler.constans import COLORS
+from constans import ENDOFDAY, STARTOFDAY
 from week_day import WeekSchedule
 
 
@@ -32,7 +32,7 @@ class Classes:  # zajęcia - ogólnie
         self.id_ = id_
         self._type = type_
         self._lecturer = lecturer
-        self._duration = duration
+        self.duration = duration
         self.available_rooms = rooms
         self._groups = groups
         # TO ASSIGN
@@ -46,7 +46,7 @@ class Classes:  # zajęcia - ogólnie
         return self._groups
 
     def get_duration(self) -> int:
-        return self._duration
+        return self.duration
 
     def assign(self, time: Time, room: Room):
         self.time = time
@@ -84,7 +84,7 @@ class Classes:  # zajęcia - ogólnie
         return times
 
     def _start_hour_generator(self):
-        end = ENDOFDAY - self._duration
+        end = ENDOFDAY - self.duration
         hour = STARTOFDAY
         while hour <= end:
             yield hour
@@ -122,7 +122,7 @@ class Classes:  # zajęcia - ogólnie
         return goal_fun_vals
 
     def get_best_time_generator(self):
-        times = self.get_times(self._duration)
+        times = self.get_times(self.duration)
         ok_times = self._get_available_times(times)
         goal_fun_vals = self._get_goal_func_vals(ok_times)
         g_b_t_gen = self.get_best_time(times, goal_fun_vals)

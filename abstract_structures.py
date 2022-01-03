@@ -2,7 +2,8 @@ from typing import Tuple, List, Union
 from random import randint
 
 from basic_structures import Time, NoRoomAvailable, AssignError
-from constans import STARTOFDAY, ENDOFDAY, UTIME
+from constans import STARTOFDAY, ENDOFDAY
+from parameters import UTIME
 from structures import Classes, Room
 
 
@@ -117,7 +118,7 @@ class ClassesManager:
         self.assignments: List[Classes] = []
         self.classes2assign: List[Classes] = list(classes)
 
-    def get_not_assigned_number(self):
+    def get_not_assigned_number(self) -> int:
         return len(self.classes2assign)
 
     def get_next_classes(self) -> Classes:
