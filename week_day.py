@@ -105,10 +105,10 @@ class DaySchedule:
     def calc_day_FO(self) -> float:
         if len(self.classes) < 2:
             return 0
-        self.classes.sort(key=lambda c: c._time.start)
+        self.classes.sort(key=lambda c: c.time.start)
         break_time: int = 0
         for i in range(len(self.classes) - 1):
-            break_time += abs(self.classes[i+1].time.start-self.classes[i].time.end - UTIME)
+            break_time += abs(self.classes[i + 1].time.start - self.classes[i].time.end - UTIME)
         return break_time / len(self.classes) / MAX_FO
 
     def calc_day_FP(self, week_classes_time: int) -> float:

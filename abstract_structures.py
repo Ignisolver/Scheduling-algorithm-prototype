@@ -52,11 +52,11 @@ class RoomManager:
         last_end_before = STARTOFDAY
         first_start_after = ENDOFDAY
         for classes in room.week_schedule.day_schedules[time.day_nr].classes:
-            if classes._time.end < time.start:
-                if last_end_before < classes._time.end:
+            if classes.time.end < time.start:
+                if last_end_before < classes.time.end:
                     last_end_before = time
-            elif time.end < classes._time.start:
-                if classes._time.start < first_start_after:
+            elif time.end < classes.time.start:
+                if classes.time.start < first_start_after:
                     first_start_after = time
         return int(time.start - last_end_before), int(first_start_after - time.end)
 
