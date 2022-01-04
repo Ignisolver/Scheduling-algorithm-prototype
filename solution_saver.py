@@ -21,7 +21,7 @@ def save_yaml(path: Path, text):
 def save_pdf(path: Path):
     yaml_path = path.with_suffix(".yaml")
     pdf_path = path.with_suffix(".pdf")
-    system(f'py -3.9 -m pdfschedule --no-weekends "{yaml_path}" "{pdf_path}"')
+    system(f'py -3.9 -m pdfschedule --no-weekends"{yaml_path}" "{pdf_path}"')
 
 
 def save_solution(planned_group: Tuple[WithSchedule], dir_name):

@@ -135,6 +135,8 @@ class Time:
         False jak nie koliduje
         :return:
         """
+        if self.day_nr != other.day_nr:
+            return False
         if self.start-brake < other.start < self.end + brake:
             return True
         if self.start-brake < other.end < self.end + brake:

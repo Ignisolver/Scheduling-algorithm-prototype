@@ -278,8 +278,6 @@ class Room(WithSchedule):  # sala
         """
         przy przypisaniu
         """
-        if not self.is_time_available(classes.time):
-            raise RuntimeError("Trying to assign to unavailable time")
         self._assign(classes, True)
 
     def revert_assign(self, classes: Classes):
