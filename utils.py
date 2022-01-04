@@ -147,7 +147,7 @@ def generate_classes(file: str, lecturers: Tuple[Lecturer], groups: Tuple[Group]
                 classes.append(Classes(ClassesID(re[0]),          # id_
                                        lecturers[int(re[1])],    # lecturer
                                        int(re[3]),          # duration
-                                       tuple([rooms[rid] for rid in classes_room_id]),  # rooms
+                                       list([rooms[rid] for rid in classes_room_id]),  # rooms
                                        class_type,          # type
                                        [groups[rid] for rid in classes_group_id]  # groups
                                        ))
@@ -167,5 +167,3 @@ def generate_rooms(file: str) -> Tuple[Room]:
             if re[0] != '':
                 rooms.append(Room(int(re[0]), int(re[1])))
     return tuple(rooms)
-
-

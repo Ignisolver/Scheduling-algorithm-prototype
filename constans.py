@@ -17,9 +17,7 @@ MAX_FR = 2 * (int(ENDOFDAY - STARTOFDAY) - czt) + 3 * (MIN_CLASS_DURATION - czt)
 DAY_LETTER = dict(zip(range(5), "MTWRF"))
 
 COLORS = ['edc9cd', '1d6c2b', '1f08b0', 'a3c1ad', 'e35259', '22b4b7', '4d5d53', 'bcbbff', '4d5d53', '96c8a2',
-           'efdfbb', '8fbc8f', 'bdb76b', 'fffdd0', 'eee8cd', '8c92ac', 'f7e7ce', 'ace1af', '78866b', 'a3c1ad',
-           '669999', 'eeeed1', 'd8d1b0', '090088', 'c6c1b9', '003da6', '362d17', '01e1ec', '5e8d63', '002060',
-           'ffc000', '54d157', 'ff9400', 'c22c4e', '5faca1', 'b1044f', '541d8b', 'e82cb5', '14b437', '7a0c72',
-           '79eb00', '412c39']
-
-
+          'efdfbb', '8fbc8f', 'bdb76b', 'fffdd0', 'eee8cd', '8c92ac', 'f7e7ce', 'ace1af', '78866b', 'a3c1ad',
+          '669999', 'eeeed1', 'd8d1b0', '090088', 'c6c1b9', '003da6', '362d17', '01e1ec', '5e8d63', '002060',
+          'ffc000', '54d157', 'ff9400', 'c22c4e', '5faca1', 'b1044f', '541d8b', 'e82cb5', '14b437', '7a0c72',
+          '79eb00', '412c39']
