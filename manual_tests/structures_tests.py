@@ -1,8 +1,8 @@
-from basic_structures import Lecture, Exercises, ClassesID, Time, Hour
-from scheduler.structures import Classes, Lecturer, Group, Room
+from basic_structures import Exercises, ClassesID, Time, Hour
+from structures import Classes, Lecturer, Group, Room
 
 cid = ClassesID(0)
-l0 =Lecturer(0)
+l0 = Lecturer(0)
 r0 = Room(0,
           availability=1000)
 r1 = Room(1,

@@ -118,7 +118,7 @@ class Hour:
 
 class Time:
     def __init__(self, day_nr, start: Hour, duration_mins: int):
-        if day_nr not in (0,1,2,3,4):
+        if day_nr not in (0, 1, 2, 3, 4):
             raise ValueError("Invalid day nr")
         self.day_nr = day_nr
         self.start = start

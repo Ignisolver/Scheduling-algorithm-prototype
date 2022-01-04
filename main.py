@@ -1,10 +1,10 @@
 from typing import Tuple, TYPE_CHECKING
-from logging import getLogger
 
 from parameters import SECTIONS_AMOUNT, GROUPS_FILE, CLASSES_FILE, ROOMS_FILE, LECTURERS_FILE, \
     REASSIGN_TYPE, STEP, MAX_ITER
 from solution_saver import save_solution, clean_up_results
-from utils import sort_classes, add_occupation, generate_groups, generate_classes, generate_lecturers, generate_rooms
+from utils import sort_classes, add_occupation, generate_groups, generate_classes, generate_lecturers,\
+    generate_rooms, save_report
 from abstract_structures import RoomManager, ClassesManager
 
 if TYPE_CHECKING:
@@ -63,6 +63,9 @@ def main():
     save_solution(lecturers, "lecturers")
     save_solution(groups, "groups")
     save_solution(rooms, "rooms")
+    print("creating report...")
+    save_report(rooms, lecturers, groups, classes, assign_counter,
+                can_not_assign_counter, classes_manager.get_not_assigned_number())
     print("ALL DONE!")
 
 
