@@ -1,8 +1,7 @@
 from typing import Callable, List, TYPE_CHECKING
 
 from basic_structures import Time
-from scheduler.constans import DAY_LETTER
-from constans import MAX_FD, MAX_FO, MAX_FR, MAX_FP, PERFECT_TIME_A, PERFECT_TIME_B, STARTOFDAY, ENDOFDAY
+from constans import MAX_FD, MAX_FO, MAX_FR, MAX_FP, PERFECT_TIME_A, PERFECT_TIME_B, STARTOFDAY, ENDOFDAY, DAY_LETTER
 from parameters import WEIGHTS_FD, FUN_WEIGHTS, UTIME
 
 if TYPE_CHECKING:
@@ -126,4 +125,3 @@ class DaySchedule:
         for classes in self.classes:
             text += classes.print(letter)
         return text
-

@@ -2,7 +2,7 @@ from typing import Tuple, TYPE_CHECKING
 
 from parameters import SECTIONS_AMOUNT, GROUPS_FILE, CLASSES_FILE, ROOMS_FILE, LECTURERS_FILE, \
     REASSIGN_TYPE, STEP, MAX_ITER
-from scheduler.solution_saver import save_solution
+from solution_saver import save_solution
 from utils import sort_classes, add_occupation, generate_groups, generate_classes, generate_lecturers, generate_rooms
 from abstract_structures import RoomManager, ClassesManager
 
@@ -50,6 +50,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
