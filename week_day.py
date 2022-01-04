@@ -115,6 +115,8 @@ class DaySchedule:
         return break_time / len(self.classes) / MAX_FO
 
     def calc_day_FP(self, week_classes_time: int) -> float:
+        if week_classes_time <= 0:
+            return 0
         satisfaction: int = 0
         for classes in self.classes:
             satisfaction += weights_FP(classes.time)
