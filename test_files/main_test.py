@@ -1,4 +1,4 @@
-from main import main # TODO sprawdzić czy nie trzeba importować osobno w każdym teście
+from main import main  # TODO sprawdzić czy nie trzeba importować osobno w każdym teście
 from test_files.set_parameters import change_param
 
 
