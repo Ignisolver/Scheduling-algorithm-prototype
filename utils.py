@@ -141,7 +141,7 @@ def generate_classes(file: str, lecturers: Tuple[Lecturer], groups: Tuple[Group]
                 classes_group_id = [int(group) for group in (re[5][1:-1]).split(", ")]
                 if re[2] == "Lecture":
                     class_type = Lecture()
-                if re[2] == Exercises:
+                if re[2] == "Exercises":
                     class_type = Exercises()
 
                 classes.append(Classes(ClassesID(re[0]),          # id_
@@ -200,6 +200,6 @@ def save_report(rooms, lecturers, groups, classes, assign_counter, can_not_assig
                  "final value of goal function: {3}\n".format(assign_counter, not_assigned_number,
                                                               can_not_assign_counter, fval)
 
-    with open('report.txt', 'w') as f:
+    with open('results/reports/report.txt', 'w') as f:
         f.write(file_text)
     return 1

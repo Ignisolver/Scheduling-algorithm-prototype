@@ -36,7 +36,7 @@ SEM2_NUMBER = 1
 
 MEAN_SUBJECT_NUM = 7
 
-EXCERCISES_IN_SUBJECT = [1, 2]
+EXERCISES_IN_SUBJECT = [1, 2]
 EIS_DISTR = [0.7, 1]
 SUBJECTS_WITH_LECTURES_RATIO = 0.8
 
@@ -69,12 +69,12 @@ def generate_classes_file():
     # wyznaczam liczbę zajęć
     n_semesters = (SEM1_NUMBER * FIELD1_NUMBER) + (SEM2_NUMBER * FIELD2_NUMBER)  # liczba semestrów w sumie
     n_subjects = MEAN_SUBJECT_NUM * n_semesters  # liczba przedmiotów prowadzonych do przeprowadzenia
-    n_excercises = 0
+    n_exercises = 0
     for _ in range(n_subjects):
-        for i, n in enumerate(EXCERCISES_IN_SUBJECT):
+        for i, n in enumerate(EXERCISES_IN_SUBJECT):
             if random.random() <= EIS_DISTR[i]:
-                n_excercises += n
-    n_classes = int(n_subjects * SUBJECTS_WITH_LECTURES_RATIO) + n_excercises
+                n_exercises += n
+    n_classes = int(n_subjects * SUBJECTS_WITH_LECTURES_RATIO) + n_exercises
 
     # przygotowuję miejsce do wpisania danych
     lecturer = [-1] * n_classes
@@ -95,9 +95,9 @@ def generate_classes_file():
     idxs = random.choices(range(n_classes), k=int(n_subjects * SUBJECTS_WITH_LECTURES_RATIO))
     for i in range(len(classes_type)):
         if i in idxs:
-            classes_type[i] = "Lectures"
+            classes_type[i] = "Lecture"
         else:
-            classes_type[i] = "Excercises"
+            classes_type[i] = "Exercises"
 
     # przypisanie długości
     for i in range(len(duration)):
@@ -112,7 +112,7 @@ def generate_classes_file():
     # przypisanie grup
     gid = 0
     for i in range(n_classes):
-        if classes_type[i] == "Lectures":
+        if classes_type[i] == "Lecture":
             groups[i] = random.choices(range(GROUP_NUMBER), k=random.randint(1, MAX_GROUPS_IN_YEAR))
         else:
             if gid == GROUP_NUMBER:
