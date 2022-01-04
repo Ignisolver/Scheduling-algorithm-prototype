@@ -1,7 +1,7 @@
 from typing import Tuple, List, Union, Optional
 from random import randint
 
-from basic_structures import Time, NoRoomAvailable, AssignError
+from basic_structures import Time, AssignError
 from constans import STARTOFDAY, ENDOFDAY
 from parameters import UTIME
 from structures import Classes, Room
@@ -11,7 +11,7 @@ class RoomManager:
     def __init__(self, rooms: Tuple[Room]):
         self.rooms = rooms
 
-    def get_best_room(self, rooms: List[Room], time: Time) -> Room:
+    def get_best_room(self, rooms: List[Room], time: Time) -> Optional[Room]:
         available_rooms = []
         # sprawdzanie czasu i dodanie do available_rooms
         for room in rooms:
@@ -20,7 +20,7 @@ class RoomManager:
 
         # sprawdzam czy jest więcej niż jedna sala dostępna
         if len(available_rooms) < 1:
-            raise NoRoomAvailable
+            return None
         if len(available_rooms) == 1:
             return available_rooms[0]
 

@@ -47,7 +47,7 @@ MAX_AVLBL_ROOMS = 4
 
 def generate_rooms_file():
     availability = [-1] * ROOM_NUMBER
-    for i in random.choices(range(ROOM_NUMBER), k=ROOM_NUMBER_WITH_MAX_AVAILABILITY):
+    for i in random.sample(range(ROOM_NUMBER), ROOM_NUMBER_WITH_MAX_AVAILABILITY):
         availability[i] = MAX_AVAILABILITY
     for i, aroom in enumerate(availability):
         if aroom < 0:
@@ -84,7 +84,7 @@ def generate_classes_file():
     groups = [[]] * n_classes
 
     # przypisanie prowadzących każdy co najmniej jedne, reszta losowo
-    idxs = random.choices(range(n_classes), k=LECTURER_NUMBER)
+    idxs = random.sample(range(n_classes), LECTURER_NUMBER)
     for id_ in range(LECTURER_NUMBER):
         lecturer[idxs[id_]] = id_
     for i, id_ in enumerate(lecturer):
@@ -92,7 +92,7 @@ def generate_classes_file():
             lecturer[i] = random.randint(0, LECTURER_NUMBER - 1)
 
     # przypisanie typu zajęć
-    idxs = random.choices(range(n_classes), k=int(n_subjects * SUBJECTS_WITH_LECTURES_RATIO))
+    idxs = random.sample(range(n_classes), int(n_subjects * SUBJECTS_WITH_LECTURES_RATIO))
     for i in range(len(classes_type)):
         if i in idxs:
             classes_type[i] = "Lecture"
@@ -107,13 +107,13 @@ def generate_classes_file():
 
     # przypisanie sal
     for i in range(n_classes):
-        rooms[i] = random.choices(range(ROOM_NUMBER), k=random.randint(1, MAX_AVLBL_ROOMS))
+        rooms[i] = random.sample(range(ROOM_NUMBER), random.randint(1, MAX_AVLBL_ROOMS))
 
     # przypisanie grup
     gid = 0
     for i in range(n_classes):
         if classes_type[i] == "Lecture":
-            groups[i] = random.choices(range(GROUP_NUMBER), k=random.randint(1, MAX_GROUPS_IN_YEAR))
+            groups[i] = random.sample(range(GROUP_NUMBER), random.randint(1, MAX_GROUPS_IN_YEAR))
         else:
             if gid == GROUP_NUMBER:
                 gid = 0
