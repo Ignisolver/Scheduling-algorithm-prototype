@@ -2,7 +2,7 @@ from os import system
 from pathlib import Path
 from typing import Tuple
 
-from scheduler.structures import WithSchedule
+from structures import WithSchedule
 
 
 def get_path(dir_name, file_name, rel_path):

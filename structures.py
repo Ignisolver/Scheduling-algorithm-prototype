@@ -4,11 +4,11 @@ from abc import abstractmethod, ABCMeta
 from copy import deepcopy
 from math import inf
 from functools import cache
-from typing import List, Dict, Tuple, Union, Optional
+from typing import List, Dict, Union, Optional
 
 from parameters import LECTURER_WEIGHT, UTIME
 from basic_structures import ClassesID, Lecture, Exercises, Time
-from scheduler.constans import COLORS
+from constans import COLORS
 from constans import ENDOFDAY, STARTOFDAY
 from week_day import WeekSchedule
 

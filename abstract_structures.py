@@ -1,4 +1,4 @@
-from typing import Tuple, List, Union
+from typing import Tuple, List, Union, Optional
 from random import randint
 
 from basic_structures import Time, NoRoomAvailable, AssignError
@@ -11,7 +11,7 @@ class RoomManager:
     def __init__(self, rooms: Tuple[Room]):
         self.rooms = rooms
 
-    def get_best_room(self, rooms: Tuple[Room], time: Time) -> Room:
+    def get_best_room(self, rooms: List[Room], time: Time) -> Room:
         available_rooms = []
         # sprawdzanie czasu i dodanie do available_rooms
         for room in rooms:
@@ -111,8 +111,11 @@ class ClassesManager:
     def get_not_assigned_number(self) -> int:
         return len(self.classes2assign)
 
-    def get_next_classes(self) -> Classes:
-        return self.classes2assign.pop(-1)
+    def get_next_classes(self) -> Optional[Classes]:
+        if bool(self.classes2assign):
+            return self.classes2assign.pop(-1)
+        else:
+            return None
 
     def register_assignment(self, class_: Classes):
         self.assignments.append(class_)
