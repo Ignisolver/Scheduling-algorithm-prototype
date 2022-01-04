@@ -142,7 +142,7 @@ class Classes:  # zajęcia - ogólnie
         for time in times:
             if self._lecturer.is_time_available(time, UTIME):
                 for group in self._groups:
-                    if not group.week_schedule.is_time_available(time, UTIME):
+                    if not group.is_time_available(time, UTIME):
                         break
                 else:
                     ok_times.append(time)
@@ -314,6 +314,9 @@ class Group(WithSchedule):  # grupa
 
     def revert_assign(self, classes: Classes):
         self.week_schedule.revert_assign(classes)
+
+    def is_time_available(self, time, brake_time_) -> bool:
+        return self.week_schedule.is_time_available(time, brake_time_)
 
     def print_schedule(self):
         return self.week_schedule.print_schedule()

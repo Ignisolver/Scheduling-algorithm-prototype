@@ -35,7 +35,7 @@ class WeekSchedule:
                FUN_WEIGHTS[3] * self._calc_week_FR(self._get_week_classes_time(), self._get_amount_of_free_days())
 
     def assign(self, classes):
-        if self.is_time_available(classes.time, 0):
+        if self.is_time_available(classes.time, UTIME):
             self.day_schedules[classes.time.day_nr].assign(classes)
         else:
             raise RuntimeError("Trying to assign to unavailable time")
