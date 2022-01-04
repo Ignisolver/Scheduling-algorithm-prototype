@@ -27,20 +27,21 @@ class Classes:  # zajęcia - ogólnie
                  id_: ClassesID,
                  lecturer: Lecturer,
                  duration: int,
-                 rooms: Tuple[Room],
+                 rooms: List[Room],
                  type_: Union[Lecture, Exercises],
                  groups: List[Group]):
         self.id_ = id_
-        self._type = type_
+        self._type = type_  # todo needed?
         self._lecturer = lecturer
         self.duration = duration
         self.available_rooms = rooms
         self._groups = groups
+        self._assigned = False
         # TO ASSIGN
         self.time: Time = ...
         self.room: Room = ...
 
-    def get_rooms(self) -> Tuple[Room]:
+    def get_rooms(self) -> List[Room]:
         return self.available_rooms
 
     def get_groups(self) -> List[Group]:
@@ -49,8 +50,11 @@ class Classes:  # zajęcia - ogólnie
     def get_duration(self) -> int:
         return self.duration
 
-    #todo assign do tej, assign do innej, revert_assign
     def assign(self, time: Time, room: Room):
+        if self._assigned:
+            raise RuntimeError("Assign again")
+        else:
+            self._assigned = True
         self.time = time
         self.room = room
         self._lecturer.assign(self)
@@ -61,6 +65,7 @@ class Classes:  # zajęcia - ogólnie
             group.assign(self)
 
     def revert_assign(self):
+        self._assigned = False
         self.time = None
         self._lecturer.revert_assign(self)
         self.room.revert_assign(self)

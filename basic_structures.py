@@ -47,11 +47,20 @@ class CrossException(Exception):
 
 class Hour:
     def __init__(self, hour, minute):
+        if hour > 23 or minute > 59:
+            raise ValueError("Invalid hour format")
         self.hour = hour
         self.minute = minute
 
     def __int__(self):
         return self.hour * 60 + self.minute
+
+    def __eq__(self, other):
+        if isinstance(self, type(other)):
+            if self.hour == other.hour:
+                if self.minute == other.minute:
+                    return True
+        return False
 
     def __add__(self, other):
         if isinstance(other, int):
@@ -118,18 +127,18 @@ class Time:
     def __repr__(self):
         return str(self.start) + " - " + str(self.end)
 
-    def cross(self, other: Time, break_=0):
+    def cross(self, other: Time, brake=0):
         """
         True jak koliduje ( z przerwami włącznie )
         False jak nie koliduje
         :return:
         """
-        if self.start-break_ < other.start < self.end + break_:
-            return False
-        if self.start-break_ < other.end < self.end + break_:
-            return False
-        if self.start < other.start and other.end < self.end:
-            return False
-        if other.start < self.start and self.end < other.end:
-            return False
-        return True
+        if self.start-brake < other.start < self.end + brake:
+            return True
+        if self.start-brake < other.end < self.end + brake:
+            return True
+        if self.start <= other.start and other.end <= self.end:
+            return True
+        if other.start <= self.start and self.end <= other.end:
+            return True
+        return False
