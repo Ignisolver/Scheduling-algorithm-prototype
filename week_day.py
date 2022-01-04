@@ -66,7 +66,7 @@ class WeekSchedule:
                                  (1 +
                                   free_days[day + 1] * (1 + free_days[day + 2]) +
                                   free_days[day - 1] * (1 + free_days[day - 2]))])
-        return satisfaction / MAX_FD
+        return -satisfaction / MAX_FD
 
     def _calc_week_FP(self, week_classes_time: int) -> float:
         return sum([day.calc_day_FP(week_classes_time) for day in self.day_schedules])
