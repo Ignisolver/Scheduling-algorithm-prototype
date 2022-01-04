@@ -26,6 +26,7 @@ def main():
     classes_manager = ClassesManager(classes)
 
     while classes_ := classes_manager.get_next_classes():
+        print(id(classes_))
         best_time_generator = classes_.get_best_time_generator()
         for time in best_time_generator:
             avl_rooms = classes_.get_rooms()
