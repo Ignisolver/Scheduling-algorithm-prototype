@@ -99,15 +99,17 @@ class Classes:  # zajęcia - ogólnie
         self.room = None
 
     @staticmethod
-    def _get_best_time(times: List[Time], g_f_vals) -> Time:
+    def _get_best_time(available_times: List[Time], g_f_vals) -> Time:
         """6"""
-        all_ = list(zip(times, g_f_vals))
+        if len(available_times) != len(g_f_vals):
+            raise RuntimeError("different amount of avl times and its goal function vals")
+        all_ = list(zip(available_times, g_f_vals))
         while all_:
             best = min(all_, key=lambda x: x[1])
             yield best[0]
             all_.remove(best)
 
-    def get_times(self, duration):
+    def get_all_times(self, duration):
         """
         2
         zwraca wszytskie możliwe czasy
@@ -175,10 +177,10 @@ class Classes:  # zajęcia - ogólnie
         1
         generuje najlepsze czasy
         """
-        times = self.get_times(self.duration)
-        ok_times = self._get_available_times(times)
-        goal_fun_vals = self._get_goal_func_vals(ok_times)
-        g_b_t_gen = self._get_best_time(times, goal_fun_vals)
+        times = self.get_all_times(self.duration)
+        available_times = self._get_available_times(times)
+        goal_fun_vals = self._get_goal_func_vals(available_times)
+        g_b_t_gen = self._get_best_time(available_times, goal_fun_vals)
         return g_b_t_gen
 
     def _get_groups_ids(self):
