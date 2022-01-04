@@ -10,7 +10,7 @@ MAX_FO = 5 * (int(ENDOFDAY - STARTOFDAY) - (2 * MIN_CLASS_DURATION) - (2 * UTIME
 MAX_FD = 25
 MAX_FP = 5 / MIN_CLASS_DURATION  # max funkcji pory / najkrótszy czas zajęć
 czt = 2 * int(ENDOFDAY - STARTOFDAY) + 3 * MIN_CLASS_DURATION  # dwa dni od rana do wieczora
-MAX_FR = 2 * (int(ENDOFDAY - STARTOFDAY) - czt) + 3 * (MIN_CLASS_DURATION - czt)  # i trzy dni po jednych zajęciach
+MAX_FR = abs(2 * (int(ENDOFDAY - STARTOFDAY) - czt) + 3 * (MIN_CLASS_DURATION - czt))  # i trzy dni po jednych zajęciach
 
 DAY_LETTER = dict(zip(range(5), "MTWRF"))
 
