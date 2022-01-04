@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Tuple, List
 from csv import reader
 
@@ -200,6 +201,8 @@ def save_report(rooms, lecturers, groups, classes, assign_counter, can_not_assig
                  "final value of goal function: {3}\n".format(assign_counter, not_assigned_number,
                                                               can_not_assign_counter, fval)
 
-    with open('results/reports/report.txt', 'w') as f:
+    scheduler_path = Path(__file__).parent.resolve()
+    path = scheduler_path.joinpath("results/reports/report.txt")
+    with open(path, 'w') as f:
         f.write(file_text)
     return 1
