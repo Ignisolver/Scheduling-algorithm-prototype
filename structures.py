@@ -38,8 +38,30 @@ class Classes:  # zajęcia - ogólnie
         self._groups = groups
         self._assigned = False
         # TO ASSIGN
-        self.time: Time = ...
-        self.room: Room = ...
+        self._time: Time = ...
+        self._room: Room = ...
+
+    @property
+    def time(self):
+        return self._time
+
+    @time.setter
+    def time(self, tim):
+        if self._assigned:
+            raise RuntimeError("Trying to change _time for already assigned classes")
+        else:
+            self._time = tim
+
+    @property
+    def room(self):
+        return self._room
+
+    @room.setter
+    def room(self, room):
+        if self._assigned:
+            raise RuntimeError("Trying to change _room for already assigned classes")
+        else:
+            self._room = room
 
     def get_rooms(self) -> List[Room]:
         return self.available_rooms
@@ -53,30 +75,31 @@ class Classes:  # zajęcia - ogólnie
     def assign(self, time: Time, room: Room):
         if self._assigned:
             raise RuntimeError("Assign again")
-        else:
-            self._assigned = True
-        self.time = time
-        self.room = room
+        if time.duration != self.duration:
+            raise ValueError("different classes and assigned _time duration")
+        self._time = time
+        self._room = room
         self._lecturer.assign(self)
         for room in self.available_rooms:
             room.update(self, assign=True)
         self.room.assign(self)
         for group in self._groups:
             group.assign(self)
+        self._assigned = True
 
     def revert_assign(self):
-        self._assigned = False
-        self.time = None
         self._lecturer.revert_assign(self)
         self.room.revert_assign(self)
-        self.room = None
         for room in self.available_rooms:
             room.update(self, assign=False)
         for group in self._groups:
             group.revert_assign(self)
+        self._assigned = False
+        self.time = None
+        self.room = None
 
     @staticmethod
-    def get_best_time(times, g_f_vals):
+    def _get_best_time(times: List[Time], g_f_vals) -> Time:
         """6"""
         all_ = list(zip(times, g_f_vals))
         while all_:
@@ -155,29 +178,27 @@ class Classes:  # zajęcia - ogólnie
         times = self.get_times(self.duration)
         ok_times = self._get_available_times(times)
         goal_fun_vals = self._get_goal_func_vals(ok_times)
-        g_b_t_gen = self.get_best_time(times, goal_fun_vals)
+        g_b_t_gen = self._get_best_time(times, goal_fun_vals)
         return g_b_t_gen
 
     def _get_groups_ids(self):
-        return ",".join([group.id_ for group in self._groups])
+        return ", ".join([str(group.id_) for group in self._groups])
 
     def _get_name_info(self):
-        data_txt = \
-            f"""id-{self.id_}
-            room-{self.room.id_}
-            lecturer-{self._lecturer.id_}
-            group-{self._get_groups_ids()}"""
+        data_txt ="\n    ".join([
+            f"  id : {self.id_}",
+            f"room : {self.room.id_}",
+            f"lecturer : {self._lecturer.id_}",
+            f"groups : [{self._get_groups_ids()}]"])
         return data_txt
 
     @cache
-    def print(self, letter):
-        txt = f"""- name: |
-        {self._get_name_info()}
-        days: {letter}
-        time: {self.time}
-        color: "{next(get_color)}"
-        
-        """
+    def print(self, letter):  # todo remove letter, use from _time
+        txt = '\n  '.join([f"- name: |",
+        f"{self._get_name_info()}",
+        f"days: {letter}",
+        f"time: {self.time}",
+        f'color: "{next(get_color)}"'])
         return txt
 
 

@@ -24,7 +24,7 @@ def weights_FP(time: Time) -> float:
 
 class WeekSchedule:
     def __init__(self):
-        self.day_schedules = [DaySchedule()] * 5
+        self.day_schedules = [DaySchedule() for _ in range(5)]
 
     def __getitem__(self, item):
         return self.day_schedules[item]
@@ -106,7 +106,7 @@ class DaySchedule:
     def calc_day_FO(self) -> float:
         if len(self.classes) < 2:
             return 0
-        self.classes.sort(key=lambda c: c.time.start)
+        self.classes.sort(key=lambda c: c._time.start)
         break_time: int = 0
         for i in range(len(self.classes) - 1):
             break_time += abs(self.classes[i+1].time.start-self.classes[i].time.end - UTIME)
@@ -124,6 +124,6 @@ class DaySchedule:
     def print_schedule(self, letter):
         text = ""
         for classes in self.classes:
-            text += classes.print(letter)
+            text += classes.print(letter) + "\n\n"
         return text
 

@@ -52,11 +52,11 @@ class RoomManager:
         last_end_before = STARTOFDAY
         first_start_after = ENDOFDAY
         for classes in room.week_schedule.day_schedules[time.day_nr].classes:
-            if classes.time.end < time.start:
-                if last_end_before < classes.time.end:
+            if classes._time.end < time.start:
+                if last_end_before < classes._time.end:
                     last_end_before = time
-            elif time.end < classes.time.start:
-                if classes.time.start < first_start_after:
+            elif time.end < classes._time.start:
+                if classes._time.start < first_start_after:
                     first_start_after = time
         return int(time.start - last_end_before), int(first_start_after - time.end)
 
@@ -75,7 +75,7 @@ class RoomManager:
 
         if gap_length is int:
             if gap_length < 0:
-                raise ValueError("Break time must be >= 0")
+                raise ValueError("Break _time must be >= 0")
             if gap_length % 90 == (gap_length // 90 + 1) * UTIME:
                 return 0  # okienko wielokrotnością 90 min zajęć + 5 przerwy przed i po
             if gap_length % 45 == (gap_length // 45 + 1) * UTIME:
@@ -89,7 +89,7 @@ class RoomManager:
             rslt = []
             for gap in gap_length:
                 if gap < 0:
-                    raise ValueError("Break time must be >= 0")
+                    raise ValueError("Break _time must be >= 0")
                 elif gap % 90 == (gap // 90 + 1) * UTIME:
                     rslt.append(0)  # okienko wielokrotnością 90 min zajęć + 5 przerwy przed i po
                 elif gap % 45 == (gap // 45 + 1) * UTIME:
