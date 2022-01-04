@@ -24,8 +24,6 @@ def change_param(groups="sample data/grupy.csv",
         f.write("LECTURER_WEIGHT = {0} ".format(lweight) +
                 " # waga istotnosci funkcji celu prowadzacego wzgledem studenta (waga studenta = 1)\n")
         f.write("FUN_WEIGHTS = {0}  # wagi skladowych funkcji celu\n".format(fun_weight))
-        f.write("WEIGHTS_FD = {0}\n".format(FD))
-        f.write("PERFECT_TIME = {0}  # godziny miedzy ktorymi FP przyjmuje wartosc 0\n".format(p_time))
         f.write("\n")
         f.write("# other parameters\n")
         f.write("SECTIONS_AMOUNT = {0}\n".format(sections))

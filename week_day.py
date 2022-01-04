@@ -1,8 +1,8 @@
 from typing import Callable, List, TYPE_CHECKING
 
 from basic_structures import Time
-from constans import MAX_FD, MAX_FO, MAX_FR, MAX_FP, PERFECT_TIME_A, PERFECT_TIME_B, STARTOFDAY, ENDOFDAY, DAY_LETTER
-from parameters import WEIGHTS_FD, FUN_WEIGHTS, UTIME
+from constans import MAX_FD, MAX_FO, MAX_FR, MAX_FP, STARTOFDAY, ENDOFDAY, DAY_LETTER
+from parameters import FUN_WEIGHTS, UTIME
 
 if TYPE_CHECKING:
     from structures import Classes
@@ -10,15 +10,9 @@ if TYPE_CHECKING:
 
 def weights_FP(time: Time) -> float:
     """
-    Funkcja wyznacza wagę pory rozpoczęcia zajęć, funkcja jest rampą o 0 w
-    STARTOFDAY i ENDOFDAY i 1 w [PERFECT_TIME_A, PERFECT_TIME_B] podanych jako parametr PERFECT_TIME
+    Funkcja wyznacza wagę pory rozpoczęcia zajęć, funkcja rośnie od 0 do 1 w okresie między STARTOFDAY, ENDOFDAY
     """
-    if time.start < PERFECT_TIME_A:
-        return 1 - (int(time.start - STARTOFDAY) / int(PERFECT_TIME_A - STARTOFDAY))
-    if time.start <= PERFECT_TIME_B:
-        return 0
-    else:
-        return 1 - (int(time.start - ENDOFDAY) / int(PERFECT_TIME_B - ENDOFDAY))
+    return (time.start - STARTOFDAY) / (ENDOFDAY - STARTOFDAY)
 
 
 class WeekSchedule:
@@ -63,9 +57,15 @@ class WeekSchedule:
         return sum([day.calc_day_FO() for day in self.day_schedules])
 
     def _calc_week_FD(self) -> float:
-        satisfaction: int = 0
-        for i in range(5):
-            satisfaction += int(self.day_schedules[i].is_day_free()) * (-WEIGHTS_FD[i])
+        free_days = [1] * 4
+        satisfaction = 0
+        for i in reversed(range(5)):
+            free_days.insert(2, int(self.day_schedules[i].is_day_free()))
+        for day in range(2, 7):
+            satisfaction += sum([free_days[day] *
+                                 (1 +
+                                  free_days[day + 1] * (1 + free_days[day + 2]) +
+                                  free_days[day - 1] * (1 + free_days[day - 2]))])
         return satisfaction / MAX_FD
 
     def _calc_week_FP(self, week_classes_time: int) -> float:

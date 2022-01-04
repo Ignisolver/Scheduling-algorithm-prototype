@@ -7,8 +7,6 @@ LECTURERS_FILE = 'sample data/prowadzacy.csv'
 # weights
 LECTURER_WEIGHT = 20  # waga istotnosci funkcji celu prowadzacego wzgledem studenta (waga studenta = 1)
 FUN_WEIGHTS = (1, 1, 1, 1)  # wagi skladowych funkcji celu
-WEIGHTS_FD = (3, 2, 1, 2, 3)
-PERFECT_TIME = ((8, 0), (12, 0))  # godziny miedzy ktorymi FP przyjmuje wartosc 0
 
 # other parameters
 SECTIONS_AMOUNT = 3
