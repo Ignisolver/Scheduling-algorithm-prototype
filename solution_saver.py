@@ -1,3 +1,4 @@
+import os
 from os import system
 from pathlib import Path
 from typing import Tuple
@@ -31,3 +32,11 @@ def save_solution(planned_group: Tuple[WithSchedule], dir_name):
         save_yaml(path, text)
         save_pdf(path)
 
+
+def clean_up_results():
+    scheduler_path = Path(__file__).parent.resolve()
+    scheduler_path = scheduler_path.joinpath("results")
+    for folder in scheduler_path.iterdir():
+        for file in folder.iterdir():
+            if file.match("*.pdf") or file.match("*.yaml"):
+                os.remove(file)
