@@ -80,8 +80,7 @@ class WeekSchedule:
     def print_schedule(self):
         text = ""
         for day_nr, day_sched in enumerate(self.day_schedules):
-            letter = DAY_LETTER[day_nr]
-            text += day_sched.print_schedule(letter)
+            text += day_sched.print_schedule()
         return text
 
 
@@ -125,8 +124,8 @@ class DaySchedule:
     def calc_day_FR(self, week_classes_time: int, num_of_free_days: int) -> float:
         return abs(week_classes_time / (5 - num_of_free_days) - self.get_day_classes_time()) / MAX_FR
 
-    def print_schedule(self, letter):
+    def print_schedule(self):
         text = ""
         for classes in self.classes:
-            text += classes.print(letter) + "\n\n"
+            text += classes.print() + "\n\n"
         return text

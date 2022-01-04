@@ -124,10 +124,12 @@ class Time:
         self.start = start
         self.end = start + duration_mins
         self.duration = duration_mins
-        self.mark = ...
+
+    def print(self):
+        return str(self.start) + " - " + str(self.end)
 
     def __repr__(self):
-        return str(self.start) + " - " + str(self.end)
+        return f"Time(day={self.day_nr}, " + str(self.start) + "-" + str(self.end) + ")"
 
     def cross(self, other: Time, brake=0):
         """

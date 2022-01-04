@@ -61,7 +61,7 @@ assert [0, 1] != c0._get_groups_ids()
 print("PRINTING NAME:")
 print(c0._get_name_info())
 print("\nPRINTING CLASSES:")
-print(c0.print("M"))
+print(c0.print())
 print("\nPRINTING SCHEDULE:")
 print(g1.print_schedule())
 c1 = Classes(cid,

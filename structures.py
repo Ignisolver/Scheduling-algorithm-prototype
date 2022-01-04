@@ -8,7 +8,7 @@ from typing import List, Dict, Union, Optional
 
 from parameters import LECTURER_WEIGHT, UTIME
 from basic_structures import ClassesID, Lecture, Exercises, Time
-from constans import COLORS
+from constans import COLORS, DAY_LETTER
 from constans import ENDOFDAY, STARTOFDAY
 from week_day import WeekSchedule
 
@@ -42,7 +42,7 @@ class Classes:  # zajęcia - ogólnie
         self._room: Room = ...
 
     @property
-    def time(self):
+    def time(self) -> Time:
         return self._time
 
     @time.setter
@@ -187,7 +187,7 @@ class Classes:  # zajęcia - ogólnie
         return ", ".join([str(group.id_) for group in self._groups])
 
     def _get_name_info(self):
-        data_txt ="\n    ".join([
+        data_txt = "\n    ".join([
             f"  id : {self.id_}",
             f"room : {self.room.id_}",
             f"lecturer : {self._lecturer.id_}",
@@ -195,11 +195,11 @@ class Classes:  # zajęcia - ogólnie
         return data_txt
 
     @cache
-    def print(self, letter):  # todo remove letter, use from _time
+    def print(self):
         txt = '\n  '.join([f"- name: |",
         f"{self._get_name_info()}",
-        f"days: {letter}",
-        f"time: {self.time}",
+        f"days: {DAY_LETTER[self.time.day_nr]}",
+        f"time: {self.time.print()}",
         f'color: "{next(get_color)}"'])
         return txt
 
