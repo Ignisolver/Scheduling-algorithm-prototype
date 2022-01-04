@@ -68,4 +68,11 @@ for hour, durs in hours:
             print(t1, t2)
             assert False
 
+# cross different days
+for hour, durs in hours:
+    for dur in durs["cross"]:
+        t2 = Time(2, hour, dur)
+        if t1.cross(t2, brake=brake):
+            print(t1, t2)
+            assert False
 
