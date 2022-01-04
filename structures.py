@@ -223,7 +223,7 @@ class Lecturer(WithSchedule):
         return self.week_schedule.is_time_available(time, brake_time_)
 
     def assign(self, classes):
-        self.week_schedule.assign(classes)
+        self.week_schedule.assign(classes, UTIME)
 
     def revert_assign(self, classes):
         self.week_schedule.revert_assign(classes)
@@ -264,10 +264,10 @@ class Room(WithSchedule):  # sala
         self.potential_occupation_probability[classes.id_] = self._get_potential_occupation(classes, assign)
         if assign:
             self._current_occupation += classes.time.duration
-            self.week_schedule.assign(classes)
+            self.week_schedule.assign(classes, 0)
         else:
             self._current_occupation -= classes.time.duration
-            self.week_schedule.revert_assign(classes)
+            self.week_schedule.revert_assign(classes, 0)
         self._update()
 
     def _get_potential_occupation(self, classes: Classes, assign: bool):
@@ -310,7 +310,7 @@ class Group(WithSchedule):  # grupa
         self.week_schedule: WeekSchedule = WeekSchedule()
 
     def assign(self, classes: Classes):
-        self.week_schedule.assign(classes)
+        self.week_schedule.assign(classes, UTIME)
 
     def revert_assign(self, classes: Classes):
         self.week_schedule.revert_assign(classes)
