@@ -267,7 +267,7 @@ class Room(WithSchedule):  # sala
             self.week_schedule.assign(classes, 0)
         else:
             self._current_occupation -= classes.time.duration
-            self.week_schedule.revert_assign(classes, 0)
+            self.week_schedule.revert_assign(classes)
         self._update()
 
     def _get_potential_occupation(self, classes: Classes, assign: bool):
