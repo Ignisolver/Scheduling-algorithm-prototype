@@ -198,8 +198,8 @@ def save_report(rooms, lecturers, groups, classes, assign_counter, can_not_assig
                  "assign counter: {0}\n" \
                  "unassign counter: {1}\n" \
                  "final number of unassigned classes: {2}\n" \
-                 "final value of goal function: {3}\n".format(assign_counter, not_assigned_number,
-                                                              can_not_assign_counter, fval)
+                 "final value of goal function: {3}\n".format(assign_counter, can_not_assign_counter,
+                                                              not_assigned_number, fval)
 
     scheduler_path = Path(__file__).parent.resolve()
     path = scheduler_path.joinpath("results/reports/report.txt")
