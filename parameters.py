@@ -7,7 +7,7 @@ RESULT_FOLDER_NAME = 'BASE'
 
 # weights
 LECTURER_WEIGHT = 20  # waga istotnosci funkcji celu prowadzacego wzgledem studenta (waga studenta = 1)
-FUN_WEIGHTS = (1, 1, 1, 1)  # wagi skladowych funkcji celu (FO, FD, FP, FR) 
+FUN_WEIGHTS = (1, 1, 1, 1)  # wagi skladowych funkcji celu (FO, FD, FP, FR)
 
 # other parameters
 SECTIONS_AMOUNT = 3

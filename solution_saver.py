@@ -23,7 +23,7 @@ def save_pdf(path: Path):
     pdf_path = path.with_suffix(".pdf")
     ret = system(f'py -3.9 -m pdfschedule --no-weekends "{yaml_path}" "{pdf_path}"')
     if ret != 0:
-        print(path)
+        print("EMPTY:", path)
 
 
 def create_new_folder_for_result(folder_name):
