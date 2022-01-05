@@ -11,3 +11,8 @@ BADANIA:
 5. Czego dużo
 6. Ilość iteracji
 7. Minimalna jedostka czasu
+
+Dodatkowo można dodać właściwości rozwiązania typu:
+-średni czas rozpoczęcia zajęć
+-wartości składowych funkcji celu
+-pomijanie niemożliwych do przypisania zajęć
