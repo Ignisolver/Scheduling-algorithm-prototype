@@ -5,9 +5,9 @@ from pandas import DataFrame
 Dane oparte mniej więcej na podstawie wydziału EAIiIB AGH, policzone na "oko"
 """
 
-ROOM_FILE_NAME = "sale_1.csv"
-ROOM_NUMBER = 82  # 68
-ROOM_NUMBER_WITH_MAX_AVAILABILITY = 70  # 40
+ROOM_FILE_NAME = "sale_baza.csv"
+ROOM_NUMBER = 68  # 68
+ROOM_NUMBER_WITH_MAX_AVAILABILITY = 40  # 40
 MIN_AVAILABILITY = 2500
 MAX_AVAILABILITY = 3000  # 3000
 
@@ -19,8 +19,8 @@ GROUP_NUMBER = 92  # 92
 MIN_GROUP_SIZE = 20
 MAX_GROUP_SIZE = 30
 
-CLASSES_FILE_NAME = "zajecia_baza.csv"
-FIELD1_NUMBER = 7   # 7
+CLASSES_FILE_NAME = "zajecia_2.csv"
+FIELD1_NUMBER = 7  # 7
 FIELD2_NUMBER = 15  # 15
 
 MIN_NUM_GROUPS = 4  # 4
@@ -122,5 +122,5 @@ def generate_classes_file():
 
 #generate_groups_file()
 #generate_lecturers_file()
-generate_rooms_file()
+#generate_rooms_file()
 #generate_classes_file()

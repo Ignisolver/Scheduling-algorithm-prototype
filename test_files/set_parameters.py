@@ -1,9 +1,9 @@
 
 
-def change_param(groups="sample data/grupy.csv",
-                 classes="sample data/zajecia.csv",
-                 rooms="sample data/sale.csv",
-                 lecturers="sample data/prowadzacy.csv",
+def change_param(groups="sample data/grupy_baza.csv",
+                 classes="sample data/zajecia_baza.csv",
+                 rooms="sample data/sale_baza.csv",
+                 lecturers="sample data/prowadzacy_baza.csv",
                  lweight=20,
                  fun_weight=(1, 1, 1, 1),
                  sections=3,

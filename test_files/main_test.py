@@ -116,23 +116,28 @@ def utime2():
 
 
 def input_data1():
-    pass
+    change_param(rooms="sample data/sale_1.csv")
+    main()
 
 
 def input_data2():
-    pass
+    change_param(lecturers="sample data/prowadzacy_1.csv")
+    main()
 
 
 def input_data3():
-    pass
+    change_param(groups="sample data/grupy_1.csv")
+    main()
 
 
 def input_data4():
-    pass
+    change_param(classes="sample data/zajecia_1.csv")
+    main()
 
 
 def input_data5():
-    pass
+    change_param(classes="sample data/zajecia_2.csv")
+    main()
 
 
 if __name__ == "__main__":
