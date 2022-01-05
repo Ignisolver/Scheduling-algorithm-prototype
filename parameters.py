@@ -3,6 +3,7 @@ GROUPS_FILE = 'sample data/grupy_baza.csv'
 CLASSES_FILE = 'sample data/zajecia_baza.csv'
 ROOMS_FILE = 'sample data/sale_baza.csv'
 LECTURERS_FILE = 'sample data/prowadzacy_baza.csv'
+RESULT_FOLDER_NAME = 'DEFAULT'
 
 # weights
 LECTURER_WEIGHT = 20  # waga istotnosci funkcji celu prowadzacego wzgledem studenta (waga studenta = 1)
