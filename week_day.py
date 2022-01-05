@@ -122,6 +122,8 @@ class DaySchedule:
         return satisfaction / week_classes_time / MAX_FP
 
     def calc_day_FR(self, week_classes_time: int, num_of_free_days: int) -> float:
+        if num_of_free_days == 5:
+            return 0
         return abs(week_classes_time / (5 - num_of_free_days) - self.get_day_classes_time()) / MAX_FR
 
     def print_schedule(self):

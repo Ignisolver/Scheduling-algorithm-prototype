@@ -6,12 +6,10 @@ def change_param(groups="sample data/grupy.csv",
                  lecturers="sample data/prowadzacy.csv",
                  lweight=20,
                  fun_weight=(1, 1, 1, 1),
-                 FD=(3, 2, 1, 2, 3),
-                 p_time=((8, 00), (12, 00)),
                  sections=3,
                  reassign="backtracking",
                  step=15,
-                 max_iter=10,
+                 max_iter=1000,
                  utime=10):
     with open('./parameters.py', 'w') as f:
         f.write("# Structures files .csv\n")

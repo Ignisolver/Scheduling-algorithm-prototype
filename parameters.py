@@ -12,5 +12,5 @@ FUN_WEIGHTS = (1, 1, 1, 1)  # wagi skladowych funkcji celu
 SECTIONS_AMOUNT = 3
 REASSIGN_TYPE = 'backtracking'  # backtracking/reconstruction/replacing
 STEP = 15
-MAX_ITER = 10
+MAX_ITER = 1000
 UTIME = 10  # jednostka czasu
