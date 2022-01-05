@@ -30,7 +30,7 @@ class WeekSchedule:
 
     def calc_goal_function(self) -> float:
         return FUN_WEIGHTS[0] * self._calc_week_FO() + \
-               1 - FUN_WEIGHTS[1] * self._calc_week_FD() + \
+               FUN_WEIGHTS[1] * (1 - self._calc_week_FD()) + \
                FUN_WEIGHTS[2] * self._calc_week_FP(self._get_week_classes_time()) + \
                FUN_WEIGHTS[3] * self._calc_week_FR(self._get_week_classes_time(), self._get_amount_of_free_days())
 

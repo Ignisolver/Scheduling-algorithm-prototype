@@ -3,11 +3,11 @@ GROUPS_FILE = 'sample data/grupy_baza.csv'
 CLASSES_FILE = 'sample data/zajecia_baza.csv'
 ROOMS_FILE = 'sample data/sale_baza.csv'
 LECTURERS_FILE = 'sample data/prowadzacy_baza.csv'
-RESULT_FOLDER_NAME = 'DEFAULT'
+RESULT_FOLDER_NAME = 'BASE'
 
 # weights
 LECTURER_WEIGHT = 20  # waga istotnosci funkcji celu prowadzacego wzgledem studenta (waga studenta = 1)
-FUN_WEIGHTS = (1, 1, 1, 1)  # wagi skladowych funkcji celu
+FUN_WEIGHTS = (1, 1, 1, 1)  # wagi skladowych funkcji celu (FO, FD, FP, FR) 
 
 # other parameters
 SECTIONS_AMOUNT = 3
