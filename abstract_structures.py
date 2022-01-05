@@ -54,10 +54,10 @@ class RoomManager:
         for classes in room.week_schedule.day_schedules[time.day_nr].classes:
             if classes.time.end < time.start:
                 if last_end_before < classes.time.end:
-                    last_end_before = time
+                    last_end_before = time.end
             elif time.end < classes.time.start:
                 if classes.time.start < first_start_after:
-                    first_start_after = time
+                    first_start_after = time.start
         return int(time.start - last_end_before), int(first_start_after - time.end)
 
     @staticmethod
