@@ -40,8 +40,8 @@ def get_scheduler_path():
     return Path(__file__).parent.resolve()
 
 
-def _save_report(rooms, lecturers, groups, classes, assign_counter, can_not_assign_counter, not_assigned_number,
-                 folder_path):
+def _save_report(rooms, lecturers, groups, classes, assign_counter, can_not_assign_counter, assigned_number,
+                 not_assigned_number, folder_path):
     fval = 0
     for ro in rooms:
         fval += ro.week_schedule.calc_goal_function()
@@ -51,25 +51,24 @@ def _save_report(rooms, lecturers, groups, classes, assign_counter, can_not_assi
         fval += gr.week_schedule.calc_goal_function()
     file_text = "Scheduler report \n" \
                 "=============================== \n\n"
-    file_text += "Input data info: \n" \
-                 "Room number: {0} \n" \
-                 "Lecturers number: {1} \n" \
-                 "Groups number: {2} \n" \
-                 "Classes number: {3} \n\n".format(len(rooms), len(lecturers), len(groups), len(classes))
 
-    file_text += "----------------------------- \n\n" \
-                 "Parameters:\n"
     with open('parameters.py') as f:
         lines = f.readlines()
         for line in lines:
             file_text += line
 
-    file_text += "\n-------------------------------\n" \
-                 "Solving properties\n" \
+    file_text += "\n# --------------------INPUT DATA-----------------------\n"
+    file_text += "Room number: {0} \n" \
+                 "Lecturers number: {1} \n" \
+                 "Groups number: {2} \n" \
+                 "Classes number: {3} \n\n".format(len(rooms), len(lecturers), len(groups), len(classes))
+
+    file_text += "\n# --------------------RESULTS-----------------------\n" \
                  "assign counter: {0}\n" \
                  "unassign counter: {1}\n" \
-                 "final number of unassigned classes: {2}\n" \
-                 "final value of goal function: {3}\n".format(assign_counter, can_not_assign_counter,
+                 "final number of assigned classes: {2}\n" \
+                 "final number of unassigned classes: {3}\n" \
+                 "final value of goal function: {4}\n".format(assign_counter, can_not_assign_counter, assigned_number,
                                                               not_assigned_number, fval)
 
     file_path = folder_path.joinpath("report.txt")
@@ -78,12 +77,12 @@ def _save_report(rooms, lecturers, groups, classes, assign_counter, can_not_assi
     return 1
 
 
-def save_solution(rooms, lecturers, groups, classes, assign_counter, can_not_assign_counter, not_assigned_number,
-                  dir_name):
+def save_solution(rooms, lecturers, groups, classes, assign_counter, can_not_assign_counter, assign_number,
+                  not_assigned_number, dir_name):
     print("creating report...")
     solution_dir_path = create_new_folder_for_result(dir_name)
-    _save_report(rooms, lecturers, groups, classes, assign_counter, can_not_assign_counter, not_assigned_number,
-                 solution_dir_path)
+    _save_report(rooms, lecturers, groups, classes, assign_counter, can_not_assign_counter, assign_number,
+                 not_assigned_number, solution_dir_path)
     _save_solution(lecturers, solution_dir_path, "lecturers")
     _save_solution(groups, solution_dir_path, "groups")
     _save_solution(rooms, solution_dir_path, "rooms")

@@ -110,6 +110,9 @@ class ClassesManager:
     def get_not_assigned_number(self) -> int:
         return len(self.classes2assign) + len(self.not_assigned)
 
+    def get_assigned_number(self) -> int:
+        return len(self.assignments)
+
     def get_next_classes(self) -> Optional[Classes]:
         if bool(self.classes2assign):
             return self.classes2assign.pop(-1)

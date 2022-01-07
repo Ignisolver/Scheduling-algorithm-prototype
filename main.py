@@ -47,19 +47,21 @@ def main():
                 classes_manager.register_assignment(classes_)
                 #print("Assignment registered.")
                 assign_counter += 1
+                #print(assign_counter)
                 break
         else:
             #print("Available room NOT found :(")
             if can_not_assign_counter < MAX_ITER:
                 #print("Trying again...")
                 can_not_assign_counter += 1
+                #print(can_not_assign_counter)
             else:
                 #print("algorithm couldn't find solution in defined number of iteration")
                 break
             classes_manager.can_not_assign(classes_, REASSIGN_TYPE, STEP, rm=room_manager)
     #print("clean up previous solution")
-    save_solution(rooms, lecturers, groups, classes, assign_counter,
-                  can_not_assign_counter, classes_manager.get_not_assigned_number(), RESULT_FOLDER_NAME)
+    save_solution(rooms, lecturers, groups, classes, assign_counter, can_not_assign_counter,
+                  classes_manager.get_assigned_number(), classes_manager.get_not_assigned_number(), RESULT_FOLDER_NAME)
     #print("ALL DONE!")
 
 

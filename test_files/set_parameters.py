@@ -8,13 +8,13 @@ def change_param(groups="sample data/grupy_baza.csv",
                  lweight=20,
                  fun_weight=(1, 1, 1, 1),
                  sections=3,
-                 reassign="backtracking",
+                 reassign="ignore",
                  step=15,
                  max_iter=1000,
                  utime=10,
                  description=""):
     if description != "":
-        description = '"""\n{0}\n"""\n\n'.format(description)
+        description = '"""\n{0}\n"""\n\n# --------------------PARAMETERS-----------------------\n\n'.format(description)
     with open('./parameters.py', 'w') as f:
         f.write(description)
         f.write("# Structures files .csv\n")
@@ -31,7 +31,7 @@ def change_param(groups="sample data/grupy_baza.csv",
         f.write("\n")
         f.write("# other parameters\n")
         f.write("SECTIONS_AMOUNT = {0}\n".format(sections))
-        f.write("REASSIGN_TYPE = '{0}'  # backtracking/reconstruction/replacing\n".format(reassign))
+        f.write("REASSIGN_TYPE = '{0}'  # backtracking/reconstruction/replacing/ignore\n".format(reassign))
         f.write("STEP = {0}\n".format(step))
         f.write("MAX_ITER = {0}\n".format(max_iter))
         f.write("UTIME = {0}  # jednostka czasu\n".format(utime))

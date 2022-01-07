@@ -1,3 +1,9 @@
+"""
+jakis opis
+"""
+
+# --------------------PARAMETERS-----------------------
+
 # Structures files .csv
 GROUPS_FILE = 'sample data/grupy_baza.csv'
 CLASSES_FILE = 'sample data/zajecia_baza.csv'
@@ -11,7 +17,7 @@ FUN_WEIGHTS = (1, 1, 1, 1)  # wagi skladowych funkcji celu (FO, FD, FP, FR)
 
 # other parameters
 SECTIONS_AMOUNT = 3
-REASSIGN_TYPE = 'backtracking'  # backtracking/reconstruction/replacing
+REASSIGN_TYPE = 'ignore'  # backtracking/reconstruction/replacing/ignore
 STEP = 15
 MAX_ITER = 1000
 UTIME = 10  # jednostka czasu
