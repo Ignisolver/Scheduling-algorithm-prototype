@@ -187,6 +187,7 @@ class ClassesManager:
         :return:
         """
         for idx, assigned_classes in enumerate(reversed(self.assignments)):
+            print(classes_.id_, assigned_classes.id_, self.assignments[-1-idx].id_)
             time_assigned, room_assigned = assigned_classes.time, assigned_classes.room
             assigned_classes.revert_assign()
             best_time_generator, _ = classes_.get_best_time_generator()
@@ -198,7 +199,8 @@ class ClassesManager:
                     self.register_assignment(classes_)
                     self.classes2assign.append(self.assignments.pop(-1 - idx))
                     return None
-            assigned_classes.assign(time_assigned, room_assigned)
+            else:
+                assigned_classes.assign(time_assigned, room_assigned)
 
     def _ignore(self, classes_: Classes):
         """

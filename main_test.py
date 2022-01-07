@@ -25,6 +25,7 @@ def base_test():
 # grupy testów
 def reassign_test():
     reconstruction_test()
+    backtracking_test()
     replacing_test()
 
 
@@ -34,8 +35,16 @@ def sections_test():
 
 
 def iterations_test():
-    iterations1()
-    iterations2()
+    iterations_back()
+    iterations_recon()
+    iterations_repl()
+
+
+def step_test():
+    step1_back()
+    step2_back()
+    step1_rec()
+    step2_rec()
 
 
 def fun_weights_test():
@@ -68,7 +77,15 @@ def replacing_test():
 
 
 def reconstruction_test():
-    change_param(reassign="reconstruction", folder="reconst", description="Test of reconstruction"                                                                        " method of reassignment")
+    change_param(reassign="reconstruction", folder="reconst", description="Test of reconstruction method of reassignment")
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
+
+
+def backtracking_test():
+    change_param(reassign="backtracking", folder="backtr", description="Test of backtracking method of reassignment")
     global main_module
     main_module = reload(main_module)
     main_func = main_module.main
@@ -84,23 +101,31 @@ def sections1():
 
 
 def sections2():
-    change_param(sections=200, folder="section1", description="Test of section parameter (increased)")
+    change_param(sections=200, folder="section2", description="Test of section parameter (increased)")
     global main_module
     main_module = reload(main_module)
     main_func = main_module.main
     main_func()
 
 
-def iterations1():
-    change_param(max_iter=10, folder="iter1", description="Test of maximum iterations parameter (reduced)")
+def iterations_back():
+    change_param(max_iter=100, folder="iterback", description="Test of reduced iteration in backtracking")
     global main_module
     main_module = reload(main_module)
     main_func = main_module.main
     main_func()
 
 
-def iterations2():
-    change_param(max_iter=10000, folder="iter2", description="Test of maximum iterations parameter (increased)")
+def iterations_recon():
+    change_param(max_iter=100, folder="iterrec", description="Test of reduced iteration in reconstruction")
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
+
+
+def iterations_repl():
+    change_param(max_iter=100, folder="iterrepl", description="Test of reduced iteration in replacing")
     global main_module
     main_module = reload(main_module)
     main_func = main_module.main
@@ -155,6 +180,38 @@ def utime2():
     main_func()
 
 
+def step1_back():
+    change_param(utime=20, folder="step1b", description="Test of step parameter in backtracking (increased)")
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
+
+
+def step2_back():
+    change_param(utime=20, folder="step2b", description="Test of step parameter in backtracking (reduced)")
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
+
+
+def step1_rec():
+    change_param(utime=20, folder="step1r", description="Test of step parameter in reconstruction (increased)")
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
+
+
+def step2_rec():
+    change_param(utime=20, folder="step2r", description="Test of step parameter in reconstruction (reduced)")
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
+
+
 # TODO zastanowić się jakie dane wejściowe chcemy przetestować
 def input_data1():
     change_param(rooms="sample data/sale_1.csv", folder="input_data1")
@@ -197,4 +254,4 @@ def input_data5():
 
 
 if __name__ == "__main__":
-    run_test()
+        reassign_test()
