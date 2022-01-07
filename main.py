@@ -41,7 +41,7 @@ def main():
             lecturer_has_no_time += 1
         elif flag == -2:
             group_has_no_time += 1
-        print("Best time generator obtained.")
+        #print("Best time generator obtained.")
         for time in best_time_generator:
             #print("Got next best time.")
             #print("Receiving available rooms...")
@@ -58,7 +58,7 @@ def main():
                 classes_manager.register_assignment(classes_)
                 #print("Assignment registered.")
                 assign_counter += 1
-                print(assign_counter)
+                #print(assign_counter)
                 break
             else:
                 no_available_room_counter += 1
@@ -67,17 +67,17 @@ def main():
             if can_not_assign_counter < MAX_ITER:
                 #print("Trying again...")
                 can_not_assign_counter += 1
-                print(can_not_assign_counter)
+                #print(can_not_assign_counter)
             else:
                 #print("algorithm couldn't find solution in defined number of iteration")
                 break
             classes_manager.can_not_assign(classes_, REASSIGN_TYPE, STEP, rm=room_manager)
 
-    print("clean up previous solution")
+    #print("clean up previous solution")
     save_solution(rooms, lecturers, groups, classes, assign_counter, can_not_assign_counter,
                   classes_manager.get_assigned_number(), classes_manager.get_not_assigned_number(),
                   (no_available_room_counter, lecturer_has_no_time, group_has_no_time), RESULT_FOLDER_NAME, FUN_WEIGHTS)
-    print("ALL DONE!")
+    #print("ALL DONE!")
 
 
 if __name__ == "__main__":

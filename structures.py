@@ -140,21 +140,18 @@ class Classes:  # zajęcia - ogólnie
         zwraca też flagę - 0: gdy znaleziono możliwy czas, -1: gdy prowadzący nie ma czasu, -2: gdy grupa nie ma czasu
         """
         ok_times = []
+        flag = -1
         for time in times:
             if self._lecturer.is_time_available(time, UTIME):
-                ok_times.append(time)
+                flag = 0
+                for group in self._groups:
+                    if not group.is_time_available(time, UTIME):
+                        break
+                else:
+                    ok_times.append(time)
         if not bool(ok_times):
-            return [], -1
-        for time in ok_times:
-            for group in self._groups:
-                if not group.is_time_available(time, UTIME):
-                    ok_times.remove(time)
-                    break
-            else:
-                ok_times.append(time)
-        if bool(ok_times):
-            return ok_times, 0
-        return [], -2
+            flag = -2
+        return ok_times, flag
 
     def _get_goal_func_vals(self, times):
         """
