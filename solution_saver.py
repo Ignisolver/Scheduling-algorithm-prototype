@@ -41,14 +41,26 @@ def get_scheduler_path():
 
 
 def _save_report(rooms, lecturers, groups, classes, assign_counter, can_not_assign_counter, assigned_number,
-                 not_assigned_number, folder_path):
-    fval = 0
+                 not_assigned_number, fail_cause, folder_path, fun_weights):
+    fval = [0, 0, 0, 0, 0]  # F, FO, FD, FP, FR
     for ro in rooms:
-        fval += ro.week_schedule.calc_goal_function()
+        fval[1] += ro.week_schedule.calc_week_FO()
+        fval[2] += ro.week_schedule.calc_week_FD()
+        fval[3] += ro.week_schedule.calc_week_FP()
+        fval[4] += ro.week_schedule.calc_week_FR()
     for le in lecturers:
-        fval += le.week_schedule.calc_goal_function()
+        fval[1] += le.week_schedule.calc_week_FO()
+        fval[2] += le.week_schedule.calc_week_FD()
+        fval[3] += le.week_schedule.calc_week_FP()
+        fval[4] += le.week_schedule.calc_week_FR()
     for gr in groups:
-        fval += gr.week_schedule.calc_goal_function()
+        fval[1] += gr.week_schedule.calc_week_FO()
+        fval[2] += gr.week_schedule.calc_week_FD()
+        fval[3] += gr.week_schedule.calc_week_FP()
+        fval[4] += gr.week_schedule.calc_week_FR()
+    fval[0] = fun_weights[0] * fval[1] + fun_weights[1] * fval[2] + \
+              fun_weights[2] * fval[3] + fun_weights[3] * fval[4]
+
     file_text = "Scheduler report \n" \
                 "=============================== \n\n"
 
@@ -64,12 +76,18 @@ def _save_report(rooms, lecturers, groups, classes, assign_counter, can_not_assi
                  "Classes number: {3} \n\n".format(len(rooms), len(lecturers), len(groups), len(classes))
 
     file_text += "\n# --------------------RESULTS-----------------------\n" \
-                 "assign counter: {0}\n" \
-                 "unassign counter: {1}\n" \
-                 "final number of assigned classes: {2}\n" \
-                 "final number of unassigned classes: {3}\n" \
-                 "final value of goal function: {4}\n".format(assign_counter, can_not_assign_counter, assigned_number,
-                                                              not_assigned_number, fval)
+                 "Assign counter: {0}\n" \
+                 "Unassign counter: {1}\n" \
+                 "Final number of assigned classes: {2}\n" \
+                 "Final number of unassigned classes: {3}\n" \
+                 "Final value of goal function: {4}\n" \
+                 "FO: {5}, FD {6}, FP: {7}, FR: {8}\n\n" \
+                 "Fail cause:\n" \
+                 "Lecturer has no time: {9}\n" \
+                 "Group has no time: {10}\n" \
+                 "Room has no time: {11}".format(assign_counter, can_not_assign_counter, assigned_number,
+                                                 not_assigned_number, fval[0], fval[1], fval[2], fval[3],
+                                                 fval[4], fail_cause[1], fail_cause[2], fail_cause[0])
 
     file_path = folder_path.joinpath("report.txt")
     with open(file_path, 'w') as f:
@@ -78,18 +96,17 @@ def _save_report(rooms, lecturers, groups, classes, assign_counter, can_not_assi
 
 
 def save_solution(rooms, lecturers, groups, classes, assign_counter, can_not_assign_counter, assign_number,
-                  not_assigned_number, dir_name):
+                  not_assigned_number, fail_cause, dir_name, fun_weights):
     print("creating report...")
     solution_dir_path = create_new_folder_for_result(dir_name)
     _save_report(rooms, lecturers, groups, classes, assign_counter, can_not_assign_counter, assign_number,
-                 not_assigned_number, solution_dir_path)
+                 not_assigned_number, fail_cause, solution_dir_path, fun_weights)
     _save_solution(lecturers, solution_dir_path, "lecturers")
     _save_solution(groups, solution_dir_path, "groups")
     _save_solution(rooms, solution_dir_path, "rooms")
 
 
 def _save_solution(planned_group: Tuple[WithSchedule], solution_dir_path, type_dir_name):
-
     for planned in planned_group:
         group_folder_path = solution_dir_path.joinpath(type_dir_name)
         file_path = group_folder_path.joinpath(str(planned.id_))
@@ -103,5 +120,3 @@ def clean_up_results():
     results_path = scheduler_path.joinpath("results")
     for folder in results_path.iterdir():
         os.remove(folder)
-
-

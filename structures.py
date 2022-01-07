@@ -137,16 +137,24 @@ class Classes:  # zajęcia - ogólnie
         """
         4
         zwraca wszystkie czasy pasujące grupom i prowadzącemu
+        zwraca też flagę - 0: gdy znaleziono możliwy czas, -1: gdy prowadzący nie ma czasu, -2: gdy grupa nie ma czasu
         """
         ok_times = []
         for time in times:
             if self._lecturer.is_time_available(time, UTIME):
-                for group in self._groups:
-                    if not group.is_time_available(time, UTIME):
-                        break
-                else:
-                    ok_times.append(time)
-        return ok_times
+                ok_times.append(time)
+        if not bool(ok_times):
+            return [], -1
+        for time in ok_times:
+            for group in self._groups:
+                if not group.is_time_available(time, UTIME):
+                    ok_times.remove(time)
+                    break
+            else:
+                ok_times.append(time)
+        if bool(ok_times):
+            return ok_times, 0
+        return [], -2
 
     def _get_goal_func_vals(self, times):
         """
@@ -178,10 +186,10 @@ class Classes:  # zajęcia - ogólnie
         generuje najlepsze czasy
         """
         times = self.get_all_times(self.duration)
-        available_times = self._get_available_times(times)
+        available_times, flag = self._get_available_times(times)
         goal_fun_vals = self._get_goal_func_vals(available_times)
         g_b_t_gen = self._get_best_time(available_times, goal_fun_vals)
-        return g_b_t_gen
+        return g_b_t_gen, flag
 
     def _get_groups_ids(self):
         return ", ".join([str(group.id_) for group in self._groups])

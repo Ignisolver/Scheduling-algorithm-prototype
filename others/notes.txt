@@ -13,5 +13,4 @@ BADANIA:
 7. Minimalna jedostka czasu
 
 Dodatkowo można dodać właściwości rozwiązania typu:
--średni czas rozpoczęcia zajęć
--wartości składowych funkcji celu
+

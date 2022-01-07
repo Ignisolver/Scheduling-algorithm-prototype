@@ -128,7 +128,7 @@ def utime2():
     main()
 
 
-#TODO zastanowić się jakie dane wejściowe chcemy przetestować
+# TODO zastanowić się jakie dane wejściowe chcemy przetestować
 def input_data1():
     from main import main
     change_param(rooms="sample data/sale_1.csv")
@@ -160,4 +160,4 @@ def input_data5():
 
 
 if __name__ == "__main__":
-    run_test()
+    change_param(description="jakis opis")

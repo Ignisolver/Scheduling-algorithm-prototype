@@ -56,10 +56,10 @@ class WeekSchedule:
                 free_days += 1
         return free_days
 
-    def _calc_week_FO(self) -> float:
+    def calc_week_FO(self) -> float:
         return sum([day.calc_day_FO() for day in self.day_schedules])
 
-    def _calc_week_FD(self) -> float:
+    def calc_week_FD(self) -> float:
         free_days = [1] * 4
         satisfaction = 0
         for i in reversed(range(5)):
@@ -71,10 +71,10 @@ class WeekSchedule:
                                   free_days[day - 1] * (1 + free_days[day - 2]))])
         return -satisfaction / MAX_FD
 
-    def _calc_week_FP(self, week_classes_time: int) -> float:
+    def calc_week_FP(self, week_classes_time: int) -> float:
         return sum([day.calc_day_FP(week_classes_time) for day in self.day_schedules])
 
-    def _calc_week_FR(self, week_classes_time: int, num_of_free_days: int) -> float:
+    def calc_week_FR(self, week_classes_time: int, num_of_free_days: int) -> float:
         return sum([day.calc_day_FR(week_classes_time, num_of_free_days) for day in self.day_schedules])
 
     def print_schedule(self):
