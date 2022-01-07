@@ -43,21 +43,18 @@ def get_scheduler_path():
 def _save_report(rooms, lecturers, groups, classes, assign_counter, can_not_assign_counter, assigned_number,
                  not_assigned_number, fail_cause, folder_path, fun_weights):
     fval = [0, 0, 0, 0, 0]  # F, FO, FD, FP, FR
-    for ro in rooms:
-        fval[1] += ro.week_schedule.calc_week_FO()
-        fval[2] += ro.week_schedule.calc_week_FD()
-        fval[3] += ro.week_schedule.calc_week_FP()
-        fval[4] += ro.week_schedule.calc_week_FR()
     for le in lecturers:
         fval[1] += le.week_schedule.calc_week_FO()
         fval[2] += le.week_schedule.calc_week_FD()
-        fval[3] += le.week_schedule.calc_week_FP()
-        fval[4] += le.week_schedule.calc_week_FR()
+        fval[3] += le.week_schedule.calc_week_FP(le.week_schedule.get_week_classes_time())
+        fval[4] += le.week_schedule.calc_week_FR(le.week_schedule.get_week_classes_time(),
+                                                 le.week_schedule.get_amount_of_free_days())
     for gr in groups:
         fval[1] += gr.week_schedule.calc_week_FO()
         fval[2] += gr.week_schedule.calc_week_FD()
-        fval[3] += gr.week_schedule.calc_week_FP()
-        fval[4] += gr.week_schedule.calc_week_FR()
+        fval[3] += gr.week_schedule.calc_week_FP(gr.week_schedule.get_week_classes_time())
+        fval[4] += gr.week_schedule.calc_week_FR(gr.week_schedule.get_week_classes_time(),
+                                                 gr.week_schedule.get_amount_of_free_days())
     fval[0] = fun_weights[0] * fval[1] + fun_weights[1] * fval[2] + \
               fun_weights[2] * fval[3] + fun_weights[3] * fval[4]
 
@@ -81,7 +78,7 @@ def _save_report(rooms, lecturers, groups, classes, assign_counter, can_not_assi
                  "Final number of assigned classes: {2}\n" \
                  "Final number of unassigned classes: {3}\n" \
                  "Final value of goal function: {4}\n" \
-                 "FO: {5}, FD {6}, FP: {7}, FR: {8}\n\n" \
+                 "FO: {5:.4f}, FD {6:.4f}, FP: {7:.4f}, FR: {8:.4f}\n\n" \
                  "Fail cause:\n" \
                  "Lecturer has no time: {9}\n" \
                  "Group has no time: {10}\n" \

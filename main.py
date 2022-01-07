@@ -32,7 +32,7 @@ def main():
     room_manager = RoomManager(rooms)
     classes_manager = ClassesManager(classes)
 
-    print("Starting main algorithm loop...")
+    #print("Starting main algorithm loop...")
     while classes_ := classes_manager.get_next_classes():
         #print("Assigning classes with id:", classes_.id_)
         #print("Obtaining best time generator...")

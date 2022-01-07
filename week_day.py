@@ -30,9 +30,9 @@ class WeekSchedule:
 
     def calc_goal_function(self) -> float:
         return FUN_WEIGHTS[0] * self.calc_week_FO() + \
-               FUN_WEIGHTS[1] * (1 - self.calc_week_FD()) + \
-               FUN_WEIGHTS[2] * self.calc_week_FP(self._get_week_classes_time()) + \
-               FUN_WEIGHTS[3] * self.calc_week_FR(self._get_week_classes_time(), self._get_amount_of_free_days())
+               FUN_WEIGHTS[1] * (5 - self.calc_week_FD()) + \
+               FUN_WEIGHTS[2] * self.calc_week_FP(self.get_week_classes_time()) + \
+               FUN_WEIGHTS[3] * self.calc_week_FR(self.get_week_classes_time(), self.get_amount_of_free_days())
 
     def assign(self, classes, break_time_):
         if self.is_time_available(classes.time, break_time_):
@@ -43,13 +43,13 @@ class WeekSchedule:
     def revert_assign(self, classes):
         self.day_schedules[classes.time.day_nr].revert_assign(classes)
 
-    def _get_week_classes_time(self):
+    def get_week_classes_time(self):
         time: int = 0
         for day in self.day_schedules:
             time += day.get_day_classes_time()
         return time
 
-    def _get_amount_of_free_days(self) -> int:
+    def get_amount_of_free_days(self) -> int:
         free_days: int = 0
         for day in self.day_schedules:
             if day.is_day_free():
