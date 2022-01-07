@@ -2,6 +2,7 @@ from test_files.set_parameters import change_param
 from importlib import reload
 import main as main_module
 
+
 # całość
 def run_test():
     base_test()
