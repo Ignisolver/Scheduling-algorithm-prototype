@@ -34,8 +34,8 @@ SEM2_NUMBER = 1  # 1
 MEAN_SUBJECT_NUM = 7  # 7
 
 EXERCISES_IN_SUBJECT = [1, 2]  # [1, 2]
-EIS_DISTR = [0.7, 1]  # [0.7, 1]
-SUBJECTS_WITH_LECTURES_RATIO = 0.8  # 0.8
+EIS_DISTR = [0.6, 1]  # [0.7, 1]
+SUBJECTS_WITH_LECTURES_RATIO = 0.9  # 0.9
 
 DURATION = [90, 135]  # [90, 135]
 DUR_DISTR = [0.9, 1]  # [0.9, 1]
@@ -71,6 +71,7 @@ def generate_classes_file():
         for i, n in enumerate(EXERCISES_IN_SUBJECT):
             if random.random() <= EIS_DISTR[i]:
                 n_exercises += n
+                break
     n_classes = int(n_subjects * SUBJECTS_WITH_LECTURES_RATIO) + n_exercises
 
     # przygotowuję miejsce do wpisania danych
