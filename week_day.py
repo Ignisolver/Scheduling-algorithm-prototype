@@ -30,7 +30,7 @@ class WeekSchedule:
 
     def calc_goal_function(self) -> float:
         return FUN_WEIGHTS[0] * self.calc_week_FO() + \
-               FUN_WEIGHTS[1] * (5 - self.calc_week_FD()) + \
+               FUN_WEIGHTS[1] * (1 - self.calc_week_FD()) + \
                FUN_WEIGHTS[2] * self.calc_week_FP(self.get_week_classes_time()) + \
                FUN_WEIGHTS[3] * self.calc_week_FR(self.get_week_classes_time(), self.get_amount_of_free_days())
 
@@ -69,7 +69,7 @@ class WeekSchedule:
                                  (1 +
                                   free_days[day + 1] * (1 + free_days[day + 2]) +
                                   free_days[day - 1] * (1 + free_days[day - 2]))])
-        return -satisfaction / MAX_FD
+        return satisfaction / MAX_FD
 
     def calc_week_FP(self, week_classes_time: int) -> float:
         return sum([day.calc_day_FP(week_classes_time) for day in self.day_schedules])
