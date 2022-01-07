@@ -4,7 +4,7 @@ import main as main_module
 
 # całość
 def run_test():
-    # base_test()
+    base_test()
     reassign_test()
     sections_test()
     iterations_test()
@@ -23,7 +23,7 @@ def base_test():
 
 # grupy testów
 def reassign_test():
-    # reconstruction_test()
+    reconstruction_test()
     replacing_test()
 
 
