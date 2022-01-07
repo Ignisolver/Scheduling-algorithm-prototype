@@ -1,7 +1,19 @@
+from time import sleep
 from typing import Tuple, TYPE_CHECKING
+from importlib import reload
+import parameters
+reload(parameters)
+SECTIONS_AMOUNT = parameters.SECTIONS_AMOUNT
+GROUPS_FILE = parameters.GROUPS_FILE
+CLASSES_FILE = parameters.CLASSES_FILE
+ROOMS_FILE = parameters.ROOMS_FILE
+LECTURERS_FILE = parameters.LECTURERS_FILE
+REASSIGN_TYPE = parameters.REASSIGN_TYPE
+STEP = parameters.STEP
+MAX_ITER = parameters.MAX_ITER
+RESULT_FOLDER_NAME = parameters.RESULT_FOLDER_NAME
+FUN_WEIGHTS = parameters.FUN_WEIGHTS
 
-from parameters import SECTIONS_AMOUNT, GROUPS_FILE, CLASSES_FILE, ROOMS_FILE, LECTURERS_FILE, \
-    REASSIGN_TYPE, STEP, MAX_ITER, RESULT_FOLDER_NAME, FUN_WEIGHTS
 from solution_saver import save_solution
 from utils import sort_classes, add_occupation, generate_groups, generate_classes, generate_lecturers, \
     generate_rooms
@@ -12,6 +24,7 @@ if TYPE_CHECKING:
 
 
 def main():
+    print("Generating...")
     can_not_assign_counter = 0
     assign_counter = 0
     lecturer_has_no_time = 0
@@ -30,8 +43,8 @@ def main():
     #print("Initializing needed objects")
     room_manager = RoomManager(rooms)
     classes_manager = ClassesManager(classes)
-
-    #print("Starting main algorithm loop...")
+    print("Algorithm...")
+    # print("Starting main algorithm loop...")
     while classes_ := classes_manager.get_next_classes():
         #print("Assigning classes with id:", classes_.id_)
         #print("Obtaining best time generator...")

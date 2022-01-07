@@ -1,9 +1,10 @@
 from test_files.set_parameters import change_param
-
+from importlib import reload
+import main as main_module
 
 # całość
 def run_test():
-    base_test()
+    # base_test()
     reassign_test()
     sections_test()
     iterations_test()
@@ -13,14 +14,16 @@ def run_test():
 
 
 def base_test():
-    from main import main
     change_param()
-    main()
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
 
 
 # grupy testów
 def reassign_test():
-    reconstruction_test()
+    # reconstruction_test()
     replacing_test()
 
 
@@ -56,108 +59,141 @@ def input_data_test():
 
 # pojedyncze testy
 def replacing_test():
-    from main import main
     change_param(reassign="replace", folder="replace", description="Test of replacing method of reassignment")
-    main()
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
 
 
 def reconstruction_test():
-    from main import main
-    change_param(reassign="reconstruction", folder="reconst", description="Test of reconstruction"
-                                                                          " method of reassignment")
-    main()
+    change_param(reassign="reconstruction", folder="reconst", description="Test of reconstruction"                                                                        " method of reassignment")
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
 
 
 def sections1():
-    from main import main
     change_param(sections=1, folder="section1", description="Test of section parameter (reduced)")
-    main()
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
 
 
 def sections2():
-    from main import main
     change_param(sections=200, folder="section1", description="Test of section parameter (increased)")
-    main()
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
 
 
 def iterations1():
-    from main import main
     change_param(max_iter=10, folder="iter1", description="Test of maximum iterations parameter (reduced)")
-    main()
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
 
 
 def iterations2():
-    from main import main
     change_param(max_iter=10000, folder="iter2", description="Test of maximum iterations parameter (increased)")
-    main()
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
 
 
 def FO_domination_test():
-    from main import main
     change_param(fun_weight=(2, 1, 1, 1), folder="domFO", description="Test of effect of domination of FO part")
-    main()
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
 
 
 def FP_domination_test():
-    from main import main
     change_param(fun_weight=(1, 1, 2, 1), folder="domFP", description="Test of effect of domination of FP part")
-    main()
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
 
 
 def FD_domination_test():
-    from main import main
     change_param(fun_weight=(1, 2, 1, 1), folder="domFD", description="Test of effect of domination of FD part")
-    main()
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
 
 
 def FR_domination_test():
-    from main import main
     change_param(fun_weight=(1, 1, 1, 2), folder="domFR", description="Test of effect of domination of FR part")
-    main()
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
 
 
 def utime1():
-    from main import main
     change_param(utime=5, folder="utime1", description="Test of section parameter (reduced)")
-    main()
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
 
 
 def utime2():
-    from main import main
     change_param(utime=20, folder="utime2", description="Test of section parameter (increased)")
-    main()
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
 
 
 # TODO zastanowić się jakie dane wejściowe chcemy przetestować
 def input_data1():
-    from main import main
-    change_param(rooms="sample data/sale_1.csv")
-    main()
+    change_param(rooms="sample data/sale_1.csv", folder="input_data1")
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
 
 
 def input_data2():
-    from main import main
-    change_param(lecturers="sample data/prowadzacy_1.csv")
-    main()
+    change_param(lecturers="sample data/prowadzacy_1.csv", folder="input_data2")
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
 
 
 def input_data3():
-    from main import main
-    change_param(groups="sample data/grupy_1.csv")
-    main()
+    change_param(groups="sample data/grupy_1.csv", folder="input_data3")
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
 
 
 def input_data4():
-    from main import main
-    change_param(classes="sample data/zajecia_1.csv")
-    main()
+    change_param(classes="sample data/zajecia_1.csv", folder="input_data4")
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
 
 
 def input_data5():
-    from main import main
-    change_param(classes="sample data/zajecia_2.csv")
-    main()
+    change_param(classes="sample data/zajecia_2.csv", folder="input_data5")
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
 
 
 if __name__ == "__main__":
-    change_param(description="jakis opis")
+    run_test()

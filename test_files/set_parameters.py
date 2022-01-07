@@ -15,7 +15,7 @@ def change_param(groups="sample data/grupy_baza.csv",
                  description=""):
     if description != "":
         description = '"""\n{0}\n"""\n\n# --------------------PARAMETERS-----------------------\n\n'.format(description)
-    with open('./parameters.py', 'w') as f:
+    with open('parameters.py', 'w') as f:
         f.write(description)
         f.write("# Structures files .csv\n")
         f.write("GROUPS_FILE = '{0}'\n".format(groups))

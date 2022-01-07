@@ -129,7 +129,7 @@ class ClassesManager:
             self._backtracking(classes_, step)
         elif sltn_type == "reconstruction":
             self._reconstruction(classes_, step)
-        elif sltn_type == "replacing":
+        elif sltn_type == "replace":
             self._replacing(classes_, rm)
         elif sltn_type == "ignore":
             self._ignore(classes_)
@@ -189,7 +189,7 @@ class ClassesManager:
         for idx, assigned_classes in enumerate(reversed(self.assignments)):
             time_assigned, room_assigned = assigned_classes.time, assigned_classes.room
             assigned_classes.revert_assign()
-            best_time_generator = classes_.get_best_time_generator()
+            best_time_generator, _ = classes_.get_best_time_generator()
             for time in best_time_generator:
                 avl_rooms = classes_.get_rooms()
                 room = room_manager.get_best_room(avl_rooms, time)

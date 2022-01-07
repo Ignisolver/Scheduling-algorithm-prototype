@@ -36,6 +36,8 @@ class Classes:  # zajęcia - ogólnie
         self.duration = duration
         self.available_rooms = rooms
         self._groups = groups
+        if len(self._groups) != len(set(self._groups)):
+            raise RuntimeError("Invalid data generation - classes has the same group twice")
         self._assigned = False
         # TO ASSIGN
         self._time: Time = ...
