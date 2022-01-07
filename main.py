@@ -34,15 +34,15 @@ def main():
 
     #print("Starting main algorithm loop...")
     while classes_ := classes_manager.get_next_classes():
-        print("Assigning classes with id:", classes_.id_)
+        #print("Assigning classes with id:", classes_.id_)
         #print("Obtaining best time generator...")
         best_time_generator, flag = classes_.get_best_time_generator()
         if flag == -1:
             lecturer_has_no_time += 1
-            print("Lecturer has no time")
+            #print("Lecturer has no time")
         elif flag == -2:
             group_has_no_time += 1
-            print("Group has no time")
+            #print("Group has no time")
         #print("Best time generator obtained.")
         for time in best_time_generator:
             #print("Got next best time.")
@@ -62,11 +62,9 @@ def main():
                 assign_counter += 1
                 #print(assign_counter)
                 break
-            else:
-                print("No available room found")
-                no_available_room_counter += 1
         else:
             #print("Available room NOT found :(")
+            no_available_room_counter += 1
             if can_not_assign_counter < MAX_ITER:
                 #print("Trying again...")
                 can_not_assign_counter += 1
