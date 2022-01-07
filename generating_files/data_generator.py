@@ -101,6 +101,7 @@ def generate_classes_file():
         for j, n in enumerate(DURATION):
             if random.random() <= DUR_DISTR[j]:
                 duration[i] = n
+                break
 
     # przypisanie sal
     for i in range(n_classes):
