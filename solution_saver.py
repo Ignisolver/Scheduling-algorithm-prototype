@@ -96,11 +96,11 @@ def save_solution(rooms, lecturers, groups, classes, assign_counter, can_not_ass
                   not_assigned_number, fail_cause, dir_name, fun_weights):
     print(f"creating report {dir_name}...")
     solution_dir_path = create_new_folder_for_result(dir_name)
-    # _save_report(rooms, lecturers, groups, classes, assign_counter, can_not_assign_counter, assign_number,
-    #              not_assigned_number, fail_cause, solution_dir_path, fun_weights)
-    # _save_solution(lecturers, solution_dir_path, "lecturers")
-    # _save_solution(groups, solution_dir_path, "groups")
-    # _save_solution(rooms, solution_dir_path, "rooms")
+    _save_report(rooms, lecturers, groups, classes, assign_counter, can_not_assign_counter, assign_number,
+                 not_assigned_number, fail_cause, solution_dir_path, fun_weights)
+    _save_solution(lecturers, solution_dir_path, "lecturers")
+    _save_solution(groups, solution_dir_path, "groups")
+    _save_solution(rooms, solution_dir_path, "rooms")
 
 
 def _save_solution(planned_group: Tuple[WithSchedule], solution_dir_path, type_dir_name):

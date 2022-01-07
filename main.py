@@ -46,7 +46,6 @@ def main():
     print("Algorithm...")
     # print("Starting main algorithm loop...")
     while classes_ := classes_manager.get_next_classes():
-        #print("Assigning classes with id:", classes_.id_)
         #print("Obtaining best time generator...")
         best_time_generator, flag = classes_.get_best_time_generator()
         if flag == -1:
