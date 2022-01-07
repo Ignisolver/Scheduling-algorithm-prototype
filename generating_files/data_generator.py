@@ -19,7 +19,7 @@ GROUP_NUMBER = 92  # 92
 MIN_GROUP_SIZE = 20
 MAX_GROUP_SIZE = 30
 
-CLASSES_FILE_NAME = "zajecia_2.csv"
+CLASSES_FILE_NAME = "zajecia_baza.csv"
 FIELD1_NUMBER = 7  # 7
 FIELD2_NUMBER = 15  # 15
 
@@ -115,6 +115,7 @@ def generate_classes_file():
             if gid == GROUP_NUMBER:
                 gid = 0
             groups[i] = [gid]
+            gid += 1
 
     data = {"lecturer": lecturer, "type": classes_type, "duration": duration, "rooms": rooms, "groups": groups}
     DataFrame(data).to_csv("../sample data/" + CLASSES_FILE_NAME)
@@ -123,4 +124,4 @@ def generate_classes_file():
 #generate_groups_file()
 #generate_lecturers_file()
 #generate_rooms_file()
-#generate_classes_file()
+generate_classes_file()
