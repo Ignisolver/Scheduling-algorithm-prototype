@@ -83,8 +83,8 @@ def _save_report(rooms, lecturers, groups, classes, assign_counter, can_not_assi
                  "Lecturer has no time: {9}\n" \
                  "Group has no time: {10}\n" \
                  "Room has no time: {11}".format(assign_counter, can_not_assign_counter, assigned_number,
-                                                 not_assigned_number, fval[0], fval[1], fval[2], fval[3],
-                                                 fval[4], fail_cause[1], fail_cause[2], fail_cause[0])
+                                                 not_assigned_number, fval[0], fval[1], fval[2], fval[3], fval[4],
+                                                 fail_cause[0], fail_cause[1], can_not_assign_counter - sum(fail_cause))
 
     file_path = folder_path.joinpath("report.txt")
     with open(file_path, 'w') as f:

@@ -14,7 +14,6 @@ if TYPE_CHECKING:
 def main():
     can_not_assign_counter = 0
     assign_counter = 0
-    no_available_room_counter = 0
     lecturer_has_no_time = 0
     group_has_no_time = 0
 
@@ -64,7 +63,6 @@ def main():
                 break
         else:
             #print("Available room NOT found :(")
-            no_available_room_counter += 1
             if can_not_assign_counter < MAX_ITER:
                 #print("Trying again...")
                 can_not_assign_counter += 1
@@ -77,7 +75,7 @@ def main():
     #print("clean up previous solution")
     save_solution(rooms, lecturers, groups, classes, assign_counter, can_not_assign_counter,
                   classes_manager.get_assigned_number(), classes_manager.get_not_assigned_number(),
-                  (no_available_room_counter, lecturer_has_no_time, group_has_no_time), RESULT_FOLDER_NAME, FUN_WEIGHTS)
+                  (lecturer_has_no_time, group_has_no_time), RESULT_FOLDER_NAME, FUN_WEIGHTS)
     #print("ALL DONE!")
 
 
