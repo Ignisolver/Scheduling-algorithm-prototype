@@ -105,9 +105,10 @@ class ClassesManager:
     def __init__(self, classes: Tuple[Classes]):
         self.assignments: List[Classes] = []
         self.classes2assign: List[Classes] = list(classes)
+        self.not_assigned: List[Classes] = []
 
     def get_not_assigned_number(self) -> int:
-        return len(self.classes2assign)
+        return len(self.classes2assign) + len(self.not_assigned)
 
     def get_next_classes(self) -> Optional[Classes]:
         if bool(self.classes2assign):
@@ -127,6 +128,8 @@ class ClassesManager:
             self._reconstruction(classes_, step)
         elif sltn_type == "replacing":
             self._replacing(classes_, rm)
+        elif sltn_type == "ignore":
+            self._ignore(classes_)
         else:
             raise KeyError("can_not_assign don't recognise parameter '{0}'".format(sltn_type))
 
@@ -193,3 +196,11 @@ class ClassesManager:
                     self.classes2assign.append(self.assignments.pop(-1 - idx))
                     return None
             assigned_classes.assign(time_assigned, room_assigned)
+
+    def _ignore(self, classes_: Classes):
+        """
+        Funkcja pomija zajęcia, których nie udało się przypisać, dodaje je na listę not_assigned
+        :param classes_: zajęcia, których nie udało się przypisać
+        :return:
+        """
+        self.not_assigned.append(classes_)

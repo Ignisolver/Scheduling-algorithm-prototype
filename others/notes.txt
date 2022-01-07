@@ -15,4 +15,3 @@ BADANIA:
 Dodatkowo można dodać właściwości rozwiązania typu:
 -średni czas rozpoczęcia zajęć
 -wartości składowych funkcji celu
--pomijanie niemożliwych do przypisania zajęć
