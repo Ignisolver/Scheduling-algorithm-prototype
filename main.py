@@ -85,7 +85,7 @@ def main():
     if GENERATE_REPORT:
         save_solution(rooms, lecturers, groups, classes, assign_counter, can_not_assign_counter,
                       classes_manager.get_assigned_number(), classes_manager.get_not_assigned_number(),
-                      (lecturer_has_no_time, group_has_no_time), RESULT_FOLDER_NAME, FUN_WEIGHTS)
+                      (lecturer_has_no_time, group_has_no_time), RESULT_FOLDER_NAME, FUN_WEIGHTS, GENERATE_REPORT)
     #print("ALL DONE!")
 
 
