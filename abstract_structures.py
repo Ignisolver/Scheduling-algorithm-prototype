@@ -1,9 +1,13 @@
 from typing import Tuple, List, Union, Optional
 from random import randint
+from importlib import reload
+import parameters
+reload(parameters)
+MAX_FAIL = parameters.MAX_FAIL
+UTIME = parameters.UTIME
 
 from basic_structures import Time, AssignError, ClassesID
 from constans import STARTOFDAY, ENDOFDAY
-from parameters import UTIME
 from structures import Classes, Room
 
 
@@ -127,7 +131,7 @@ class ClassesManager:
         if step <= 0:
             raise ValueError("step must be > 0")
 
-        if self.could_not_assign.count(classes_.id_) >= 3:
+        if self.could_not_assign.count(classes_.id_) >= MAX_FAIL:
             sltn_type = "ignore"
         else:
             self.could_not_assign.append(classes_.id_)

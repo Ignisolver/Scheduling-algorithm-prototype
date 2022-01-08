@@ -109,7 +109,7 @@ def sections2():
 
 
 def iterations_back():
-    change_param(max_iter=10, folder="iterback", description="Test of reduced iteration in backtracking")
+    change_param(max_fail=1, folder="iterback", description="Test of reduced failure counter in backtracking")
     global main_module
     main_module = reload(main_module)
     main_func = main_module.main
@@ -117,7 +117,7 @@ def iterations_back():
 
 
 def iterations_recon():
-    change_param(max_iter=10, folder="iterrec", description="Test of reduced iteration in reconstruction")
+    change_param(max_fail=1, folder="iterrec", description="Test of reduced failure counter in reconstruction")
     global main_module
     main_module = reload(main_module)
     main_func = main_module.main
@@ -125,7 +125,7 @@ def iterations_recon():
 
 
 def iterations_repl():
-    change_param(max_iter=100, folder="iterrepl", description="Test of reduced iteration in replacing")
+    change_param(max_fail=10, folder="iterrepl", description="Test of reduced failure counter in replacing")
     global main_module
     main_module = reload(main_module)
     main_func = main_module.main
@@ -254,4 +254,4 @@ def input_data5():
 
 
 if __name__ == "__main__":
-    reconstruction_test()
+    backtracking_test()

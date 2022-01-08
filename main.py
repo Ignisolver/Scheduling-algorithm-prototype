@@ -10,7 +10,6 @@ ROOMS_FILE = parameters.ROOMS_FILE
 LECTURERS_FILE = parameters.LECTURERS_FILE
 REASSIGN_TYPE = parameters.REASSIGN_TYPE
 STEP = parameters.STEP
-MAX_ITER = parameters.MAX_ITER
 RESULT_FOLDER_NAME = parameters.RESULT_FOLDER_NAME
 FUN_WEIGHTS = parameters.FUN_WEIGHTS
 GENERATE_REPORT = parameters.GENERATE_REPORT
@@ -47,6 +46,7 @@ def main():
     print("Algorithm...")
     # print("Starting main algorithm loop...")
     while classes_ := classes_manager.get_next_classes():
+        #print(classes_.id_)
         #print("Obtaining best time generator...")
         best_time_generator, flag = classes_.get_best_time_generator()
         if flag == -1:
@@ -76,13 +76,9 @@ def main():
                 break
         else:
             #print("Available room NOT found :(")
-            if can_not_assign_counter < MAX_ITER:
-                #print("Trying again...")
-                can_not_assign_counter += 1
-                #print(can_not_assign_counter)
-            else:
-                #print("algorithm couldn't find solution in defined number of iteration")
-                break
+            #print("Trying again...")
+            can_not_assign_counter += 1
+            #print(can_not_assign_counter)
             classes_manager.can_not_assign(classes_, REASSIGN_TYPE, STEP, rm=room_manager)
 
     #print("clean up previous solution")
