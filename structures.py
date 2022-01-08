@@ -5,8 +5,11 @@ from copy import deepcopy
 from math import inf
 from functools import cache
 from typing import List, Dict, Union, Optional
-
-from parameters import LECTURER_WEIGHT, UTIME
+from importlib import reload
+import parameters
+reload(parameters)
+UTIME = parameters.UTIME
+LECTURER_WEIGHT = parameters.LECTURER_WEIGHT
 from basic_structures import ClassesID, Lecture, Exercises, Time
 from constans import COLORS, DAY_LETTER
 from constans import ENDOFDAY, STARTOFDAY

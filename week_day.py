@@ -2,7 +2,11 @@ from typing import Callable, List, TYPE_CHECKING
 
 from basic_structures import Time
 from constans import MAX_FD, MAX_FO, MAX_FR, MAX_FP, STARTOFDAY, ENDOFDAY, DAY_LETTER
-from parameters import FUN_WEIGHTS, UTIME
+from importlib import reload
+import parameters
+reload(parameters)
+UTIME = parameters.UTIME
+FUN_WEIGHTS = parameters.FUN_WEIGHTS
 
 if TYPE_CHECKING:
     from structures import Classes

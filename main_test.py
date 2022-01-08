@@ -6,28 +6,28 @@ import main as main_module
 # całość
 def run_test():
     input_data_test()
-    # reassign_test()
-    # fun_weights_test()
-    # sections_test()
-    # utime_test()
+    reassign_test()
+    fun_weights_test()
+    sections_test()
+    utime_test()
 
 
 # grupy testów
 def input_data_test():
     input_data1()
-    # input_data2()
-    # input_data3()
-    # input_data4()
+    input_data2()
+    input_data3()
+    input_data4()
 
 
 def reassign_test():
-    ignore_test()
-
-    reconstruction_test()
-    reconstruction_fail1_test()
-    reconstruction_fail2_test()
-    reconstruction_step1_test()
-    reconstruction_step2_test()
+    # ignore_test()
+    #
+    # reconstruction_test()
+    # reconstruction_fail1_test()
+    # reconstruction_fail2_test()
+    # reconstruction_step1_test()
+    # reconstruction_step2_test()
 
     backtracking_test()
     backtracking_fail1_test()
@@ -50,6 +50,13 @@ def fun_weights_test():
     FO_domination_test()
     FP_domination_test()
     FR_domination_test()
+
+
+def fun_weights_test2():
+    FD_sub_test()
+    FO_sub_test()
+    FP_sub_test()
+    FR_sub_test()
 
 
 def utime_test():
@@ -204,6 +211,7 @@ def backtracking_test():
                  lecturers="sample data/prowadzacy_reassign.csv",
                  classes="sample data/zajecia_reassign.csv",
                  description="Test of backtracking method of reassignment",
+                 reassign="backtracking",
                  folder="back",
                  report=1)
     global main_module
@@ -324,6 +332,38 @@ def FR_domination_test():
     main_func()
 
 
+def FO_sub_test():
+    change_param(fun_weight=(1, 2, 2, 2), folder="subFO", report=1, description="Test of effect of submission of FO part")
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
+
+
+def FP_sub_test():
+    change_param(fun_weight=(2, 2, 1, 2), folder="subFP", report=1, description="Test of effect of submission of FP part")
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
+
+
+def FD_sub_test():
+    change_param(fun_weight=(2, 1, 2, 2), folder="subFD", report=1, description="Test of effect of submission of FD part")
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
+
+
+def FR_sub_test():
+    change_param(fun_weight=(2, 2, 2, 1), folder="subFR", report=1, description="Test of effect of submission of FR part")
+    global main_module
+    main_module = reload(main_module)
+    main_func = main_module.main
+    main_func()
+
+
 def utime1():
     change_param(utime=5, folder="utime1", report=1, description="Test of time unit parameter (reduced)")
     global main_module
@@ -390,4 +430,4 @@ def input_data4():
 
 
 if __name__ == "__main__":
-    run_test()
+    fun_weights_test2()

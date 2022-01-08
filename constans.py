@@ -1,5 +1,8 @@
 from basic_structures import Hour
-from parameters import UTIME
+from importlib import reload
+import parameters
+reload(parameters)
+UTIME = parameters.UTIME
 
 STARTOFDAY = Hour(8, 00)  # od której mogą zaczynać się zajęcia
 ENDOFDAY = Hour(18, 00)  # do której najpóźniej mogą być zajęcia
