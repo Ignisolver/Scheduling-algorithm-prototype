@@ -3,6 +3,7 @@ from os import system
 from pathlib import Path
 from typing import Tuple
 
+from basic_structures import Hour
 from structures import WithSchedule
 
 
@@ -44,13 +45,31 @@ def get_scheduler_path():
 def _save_report(rooms, lecturers, groups, classes, assign_counter, can_not_assign_counter, assigned_number,
                  not_assigned_number, fail_cause, folder_path, fun_weights):
     fval = [0, 0, 0, 0, 0]  # F, FO, FD, FP, FR
+    num_of_free_days = 0
+    day_classes_time = 0
+    av_start = 0
+    av_end = 0
     for le in lecturers:
+        num_of_free_days += le.week_schedule.get_amount_of_free_days()
+        if le.week_schedule.get_amount_of_free_days != 5:
+            day_classes_time += le.week_schedule.get_week_classes_time()/(5-le.week_schedule.get_amount_of_free_days())
+            av = le.week_schedule.get_average_start_end_time()
+            av_start += av[0]
+            av_end += av[1]
+
         fval[1] += le.week_schedule.calc_week_FO()
         fval[2] += le.week_schedule.calc_week_FD()
         fval[3] += le.week_schedule.calc_week_FP(le.week_schedule.get_week_classes_time())
         fval[4] += le.week_schedule.calc_week_FR(le.week_schedule.get_week_classes_time(),
                                                  le.week_schedule.get_amount_of_free_days())
     for gr in groups:
+        num_of_free_days += gr.week_schedule.get_amount_of_free_days()
+        if gr.week_schedule.get_amount_of_free_days != 5:
+            day_classes_time += gr.week_schedule.get_week_classes_time() / (5 - gr.week_schedule.get_amount_of_free_days())
+            av = gr.week_schedule.get_average_start_end_time()
+            av_start += av[0]
+            av_end += av[1]
+
         fval[1] += gr.week_schedule.calc_week_FO()
         fval[2] += gr.week_schedule.calc_week_FD()
         fval[3] += gr.week_schedule.calc_week_FP(gr.week_schedule.get_week_classes_time())
@@ -58,6 +77,12 @@ def _save_report(rooms, lecturers, groups, classes, assign_counter, can_not_assi
                                                  gr.week_schedule.get_amount_of_free_days())
     fval[0] = fun_weights[0] * fval[1] + fun_weights[1] * fval[2] + \
               fun_weights[2] * fval[3] + fun_weights[3] * fval[4]
+
+    n = (len(groups) + len(lecturers))
+    num_of_free_days = int(num_of_free_days / n)
+    day_classes_time = int(day_classes_time / n)
+    av_start = int(av_start / n)
+    av_end = int(av_end / n)
 
     file_text = "Scheduler report \n" \
                 "=============================== \n\n"
@@ -80,12 +105,19 @@ def _save_report(rooms, lecturers, groups, classes, assign_counter, can_not_assi
                  "Final number of unassigned classes: {3}\n" \
                  "Final value of goal function: {4}\n" \
                  "FO: {5:.4f}, FD {6:.4f}, FP: {7:.4f}, FR: {8:.4f}\n\n" \
+                 "Average daily classes time: {12}\n" \
+                 "Average start time of first classes: {13}\n" \
+                 "Average end time of last classes: {14}\n" \
+                 "Average number of free days: {15}\n\n" \
                  "Fail cause:\n" \
                  "Lecturer has no time: {9}\n" \
                  "Group has no time: {10}\n" \
                  "Room has no time: {11}".format(assign_counter, can_not_assign_counter, assigned_number,
                                                  not_assigned_number, fval[0], fval[1], fval[2], fval[3], fval[4],
-                                                 fail_cause[0], fail_cause[1], can_not_assign_counter - sum(fail_cause))
+                                                 fail_cause[0], fail_cause[1], can_not_assign_counter - sum(fail_cause),
+                                                 Hour(day_classes_time // 60, day_classes_time % 60),
+                                                 Hour(av_start // 60, av_start % 60),
+                                                 Hour(av_end // 60, av_end % 60), num_of_free_days)
 
     file_path = folder_path.joinpath("report.txt")
     with open(file_path, 'w') as f:

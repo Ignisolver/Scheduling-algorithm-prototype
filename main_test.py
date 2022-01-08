@@ -5,19 +5,19 @@ import main as main_module
 
 # całość
 def run_test():
-    #input_data_test()
-    reassign_test()
-    fun_weights_test()
-    sections_test()
-    utime_test()
+    input_data_test()
+    # reassign_test()
+    # fun_weights_test()
+    # sections_test()
+    # utime_test()
 
 
 # grupy testów
 def input_data_test():
     input_data1()
-    input_data2()
-    input_data3()
-    input_data4()
+    # input_data2()
+    # input_data3()
+    # input_data4()
 
 
 def reassign_test():
@@ -346,6 +346,7 @@ def input_data1():
                  lecturers="sample data/prowadzacy_test411.csv",
                  classes="sample data/zajecia_test411.csv",
                  description="Problem prosty test 4.1.1",
+                 fun_weight=(2, 1, 2, 2),
                  folder="input_data1")
     global main_module
     main_module = reload(main_module)
