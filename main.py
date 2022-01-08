@@ -1,4 +1,3 @@
-from time import sleep
 from typing import Tuple, TYPE_CHECKING
 from importlib import reload
 import parameters
