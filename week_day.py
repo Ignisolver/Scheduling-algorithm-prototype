@@ -56,6 +56,15 @@ class WeekSchedule:
                 free_days += 1
         return free_days
 
+    def get_average_start_end_time(self):
+        st_end = [day.get_start_end_of_day() for day in self.day_schedules]
+        if self.get_amount_of_free_days() != 5:
+            st = sum([int(t[0]) for t in st_end if t is not None]) / (5 - self.get_amount_of_free_days())
+            end = sum([int(t[1]) for t in st_end if t is not None]) / (5 - self.get_amount_of_free_days())
+            return st, end
+        else:
+            return None
+
     def calc_week_FO(self) -> float:
         return sum([day.calc_day_FO() for day in self.day_schedules])
 
@@ -100,6 +109,18 @@ class DaySchedule:
         for classes_ in self.classes:
             time += classes_.time.duration
         return time
+
+    def get_start_end_of_day(self):
+        if bool(self.classes):
+            start, end = ENDOFDAY, STARTOFDAY
+            for classes_ in self.classes:
+                if classes_.time.start < start:
+                    start = classes_.time.start
+                if classes_.time.end > end:
+                    end = classes_.time.end
+            return start, end
+        else:
+            return None
 
     def is_day_free(self) -> bool:
         return not bool(self.classes)
