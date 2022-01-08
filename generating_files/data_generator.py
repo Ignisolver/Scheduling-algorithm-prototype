@@ -5,21 +5,21 @@ from pandas import DataFrame
 Dane oparte mniej więcej na podstawie wydziału EAIiIB AGH, policzone na "oko"
 """
 
-ROOM_FILE_NAME = "sale_baza.csv"
-ROOM_NUMBER = 60  # 68
+ROOM_FILE_NAME = "sale_test414.csv"
+ROOM_NUMBER = 68  # 68
 ROOM_NUMBER_WITH_MAX_AVAILABILITY = 40  # 40
 MIN_AVAILABILITY = 2500
 MAX_AVAILABILITY = 3000  # 3000
 
-LECTURER_FILE_NAME = "prowadzacy_baza.csv"
-LECTURER_NUMBER = 55  # 66
+LECTURER_FILE_NAME = "prowadzacy_test414.csv"
+LECTURER_NUMBER = 66  # 66
 
-GROUPS_FILE_NAME = "grupy_baza.csv"
+GROUPS_FILE_NAME = "grupy_test414.csv"
 GROUP_NUMBER = 92  # 92
 MIN_GROUP_SIZE = 20
 MAX_GROUP_SIZE = 30
 
-CLASSES_FILE_NAME = "zajecia_baza.csv"
+CLASSES_FILE_NAME = "zajecia_test414.csv"
 FIELD1_NUMBER = 7  # 7
 FIELD2_NUMBER = 15  # 15
 
@@ -31,10 +31,10 @@ MAX_GROUPS_IN_YEAR = 6  # 6
 SEM1_NUMBER = 4  # 4
 SEM2_NUMBER = 1  # 1
 
-MEAN_SUBJECT_NUM = 8  # 7
+MEAN_SUBJECT_NUM = 10  # 7
 
 EXERCISES_IN_SUBJECT = [1, 2, 3]  # [1, 2]
-EIS_DISTR = [0.6, 0.95, 1]  # [0.7, 1]
+EIS_DISTR = [0.4, 0.8, 1]  # [0.7, 1]
 SUBJECTS_WITH_LECTURES_RATIO = 0.9  # 0.9
 
 DURATION = [90, 135]  # [90, 135]

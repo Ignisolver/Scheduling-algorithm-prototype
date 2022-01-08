@@ -254,4 +254,4 @@ def input_data5():
 
 
 if __name__ == "__main__":
-    backtracking_test()
+    base_test()
