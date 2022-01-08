@@ -344,7 +344,7 @@ def input_data1():
     change_param(rooms="sample data/sale_test411.csv",
                  groups="sample data/grupy_test411.csv",
                  lecturers="sample data/prowadzacy_test411.csv",
-                 classes="sample data/sale_test411.csv",
+                 classes="sample data/zajecia_test411.csv",
                  description="Problem prosty test 4.1.1",
                  folder="input_data1")
     global main_module
@@ -357,7 +357,7 @@ def input_data2():
     change_param(rooms="sample data/sale_test412.csv",
                  groups="sample data/grupy_test412.csv",
                  lecturers="sample data/prowadzacy_test412.csv",
-                 classes="sample data/sale_test412.csv",
+                 classes="sample data/zajecia_test412.csv",
                  description="Problem prosty test 4.1.2",
                  folder="input_data2")
     global main_module
@@ -379,7 +379,7 @@ def input_data4():
     change_param(rooms="sample data/sale_test414.csv",
                  groups="sample data/grupy_test414.csv",
                  lecturers="sample data/prowadzacy_test414.csv",
-                 classes="sample data/sale_test414.csv",
+                 classes="sample data/zajecia_test414.csv",
                  description="Problem zlozony test 4.1.4",
                  folder="input_data4")
     global main_module
