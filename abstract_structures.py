@@ -1,7 +1,7 @@
 from typing import Tuple, List, Union, Optional
 from random import randint
 
-from basic_structures import Time, AssignError
+from basic_structures import Time, AssignError, ClassesID
 from constans import STARTOFDAY, ENDOFDAY
 from parameters import UTIME
 from structures import Classes, Room
@@ -106,6 +106,7 @@ class ClassesManager:
         self.assignments: List[Classes] = []
         self.classes2assign: List[Classes] = list(classes)
         self.not_assigned: List[Classes] = []
+        self.could_not_assign: List[ClassesID] = []
 
     def get_not_assigned_number(self) -> int:
         return len(self.classes2assign) + len(self.not_assigned)
@@ -125,14 +126,20 @@ class ClassesManager:
     def can_not_assign(self, classes_: Classes, sltn_type: str = "backtracking", step: int = 5, rm: RoomManager = None):
         if step <= 0:
             raise ValueError("step must be > 0")
-        if sltn_type == "backtracking":
+
+        if self.could_not_assign.count(classes_.id_) >= 3:
+            sltn_type = "ignore"
+        else:
+            self.could_not_assign.append(classes_.id_)
+
+        if sltn_type == "ignore":
+            self._ignore(classes_)
+        elif sltn_type == "backtracking":
             self._backtracking(classes_, step)
         elif sltn_type == "reconstruction":
             self._reconstruction(classes_, step)
         elif sltn_type == "replace":
             self._replacing(classes_, rm)
-        elif sltn_type == "ignore":
-            self._ignore(classes_)
         else:
             raise KeyError("can_not_assign don't recognise parameter '{0}'".format(sltn_type))
 

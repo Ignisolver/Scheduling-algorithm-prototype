@@ -10,8 +10,9 @@ def change_param(groups="sample data/grupy_baza.csv",
                  sections=3,
                  reassign="ignore",
                  step=15,
-                 max_iter=1000,
+                 max_iter=100,
                  utime=10,
+                 report=True,
                  description=""):
     if description != "":
         description = '"""\n{0}\n"""\n\n# --------------------PARAMETERS-----------------------\n\n'.format(description)
@@ -23,6 +24,7 @@ def change_param(groups="sample data/grupy_baza.csv",
         f.write("ROOMS_FILE = '{0}'\n".format(rooms))
         f.write("LECTURERS_FILE = '{0}'\n".format(lecturers))
         f.write("RESULT_FOLDER_NAME = '{0}'\n".format(folder))
+        f.write("GENERATE_REPORT = '{0}'\n".format(report))
         f.write("\n")
         f.write("# weights\n")
         f.write("LECTURER_WEIGHT = {0} ".format(lweight) +

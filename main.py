@@ -13,6 +13,7 @@ STEP = parameters.STEP
 MAX_ITER = parameters.MAX_ITER
 RESULT_FOLDER_NAME = parameters.RESULT_FOLDER_NAME
 FUN_WEIGHTS = parameters.FUN_WEIGHTS
+GENERATE_REPORT = parameters.GENERATE_REPORT
 
 from solution_saver import save_solution
 from utils import sort_classes, add_occupation, generate_groups, generate_classes, generate_lecturers, \
@@ -85,9 +86,10 @@ def main():
             classes_manager.can_not_assign(classes_, REASSIGN_TYPE, STEP, rm=room_manager)
 
     #print("clean up previous solution")
-    save_solution(rooms, lecturers, groups, classes, assign_counter, can_not_assign_counter,
-                  classes_manager.get_assigned_number(), classes_manager.get_not_assigned_number(),
-                  (lecturer_has_no_time, group_has_no_time), RESULT_FOLDER_NAME, FUN_WEIGHTS)
+    if GENERATE_REPORT:
+        save_solution(rooms, lecturers, groups, classes, assign_counter, can_not_assign_counter,
+                      classes_manager.get_assigned_number(), classes_manager.get_not_assigned_number(),
+                      (lecturer_has_no_time, group_has_no_time), RESULT_FOLDER_NAME, FUN_WEIGHTS)
     #print("ALL DONE!")
 
 

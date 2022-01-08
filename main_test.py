@@ -6,12 +6,12 @@ import main as main_module
 # całość
 def run_test():
     base_test()
-    reassign_test()
-    sections_test()
-    iterations_test()
-    fun_weights_test()
-    utime_test()
-    input_data_test()
+    # reassign_test()
+    # sections_test()
+    # iterations_test()
+    # fun_weights_test()
+    # utime_test()
+    #input_data_test()
 
 
 def base_test():
@@ -109,7 +109,7 @@ def sections2():
 
 
 def iterations_back():
-    change_param(max_iter=100, folder="iterback", description="Test of reduced iteration in backtracking")
+    change_param(max_iter=10, folder="iterback", description="Test of reduced iteration in backtracking")
     global main_module
     main_module = reload(main_module)
     main_func = main_module.main
@@ -117,7 +117,7 @@ def iterations_back():
 
 
 def iterations_recon():
-    change_param(max_iter=100, folder="iterrec", description="Test of reduced iteration in reconstruction")
+    change_param(max_iter=10, folder="iterrec", description="Test of reduced iteration in reconstruction")
     global main_module
     main_module = reload(main_module)
     main_func = main_module.main
@@ -165,7 +165,7 @@ def FR_domination_test():
 
 
 def utime1():
-    change_param(utime=5, folder="utime1", description="Test of section parameter (reduced)")
+    change_param(utime=5, folder="utime1", description="Test of time unit parameter (reduced)")
     global main_module
     main_module = reload(main_module)
     main_func = main_module.main
@@ -173,7 +173,7 @@ def utime1():
 
 
 def utime2():
-    change_param(utime=20, folder="utime2", description="Test of section parameter (increased)")
+    change_param(utime=20, folder="utime2", description="Test of time unit parameter (increased)")
     global main_module
     main_module = reload(main_module)
     main_func = main_module.main
@@ -254,4 +254,4 @@ def input_data5():
 
 
 if __name__ == "__main__":
-        reassign_test()
+    reconstruction_test()
